@@ -1,15 +1,17 @@
 import { JSX, Suspense } from "react";
-import { Await, NavLink, useLoaderData } from "react-router-dom";
-import { getProjects } from "../api";
+import { Await, NavLink } from "react-router-dom";
 
 
-// eslint-disable-next-line @typescript-eslint/require-await, react-refresh/only-export-components
-export async function projectLoader() {
-  return { projectsName: getProjects() }
-}
-
-export default function Nav(props: { closeModal: () => void; }): JSX.Element {
-  const projects = useLoaderData<typeof projectLoader>();
+export default function Nav(props: {
+  closeModal: () => void;
+  loaderData: {
+    projects: Promise<{
+      projectName: string | undefined;
+      createdAt: number | undefined;
+      id: string;
+    }[]>;
+  }
+}): JSX.Element {
 
   function renderProjects(projects: {
     projectName: string | undefined;
@@ -31,7 +33,7 @@ export default function Nav(props: { closeModal: () => void; }): JSX.Element {
       <nav className="nav">
         <ul>
           <Suspense fallback={<h1>Loading</h1>}>
-            <Await resolve={projects.projectsName}>
+            <Await resolve={props.loaderData.projects}>
               {renderProjects}
             </Await>
           </Suspense>

@@ -1,20 +1,19 @@
 
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom';
 import './App.css';
-import Content, { todoLoader } from './components/Content';
-import Layout from './components/Layout';
+import Layout, { projectLoader } from './components/Layout';
 import { projectAction } from './components/Modal';
-import { projectLoader } from './components/Nav';
-import TodoForm, { todoFormAction } from './components/TodoForm';
+import AddTodo, { todoFormAction } from './Views/AddTodo';
+import HomePage, { todoAction, todoLoader } from './Views/HomePage';
 
 const router = createBrowserRouter(createRoutesFromElements(
   // all todos /todos
   // add todos /todos/new
   // edit or update /todos/:id
   <Route path={"/"} element={<Layout />} action={projectAction} loader={projectLoader}>
-    <Route path=':id/todos' element={<Content />} loader={todoLoader} action={todoLoader} />
-    <Route path=':id/todos/add' element={<TodoForm />} action={todoFormAction} />
-    <Route path=':id/todos/:todoId' element={<TodoForm />} action={todoFormAction} />
+    <Route path=':id/todos' element={<HomePage />} loader={todoLoader} action={todoAction} />
+    <Route path=':id/todos/add' element={<AddTodo />} action={todoFormAction} />
+    <Route path=':id/todos/:todoId' element={<AddTodo />} action={todoFormAction} />
   </Route>))
 
 function App() {
