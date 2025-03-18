@@ -1,11 +1,11 @@
 /* eslint-disable react-refresh/only-export-components */
-import { JSX } from "react";
-import { ActionFunctionArgs, Link, redirect, useLocation } from "react-router-dom";
-import { addTodos, MyTodo } from "../api";
+import {JSX} from "react";
+import {IoMdArrowBack} from "react-icons/io";
+import {ActionFunctionArgs, Link, redirect, useLocation} from "react-router-dom";
+import {addTodos, MyTodo} from "../api";
 import TodoForm from "../components/TodoForm.tsx";
-import { IoMdArrowBack } from "react-icons/io";
 
-export async function todoFormAction({ request, params }: ActionFunctionArgs) {
+export async function todoFormAction({request, params}: ActionFunctionArgs) {
     try {
         const formData = await request.formData();
         const title = formData.get('title');
@@ -16,7 +16,7 @@ export async function todoFormAction({ request, params }: ActionFunctionArgs) {
 
         const todo = {
             projectId: params.id,
-            todos: [{ title, dueDate, priority: Number(priority), description, notes }]
+            todos: [{title, dueDate, priority: Number(priority), description, notes}]
         } as MyTodo;
         await addTodos(todo);
         if (params.id) {
@@ -32,14 +32,13 @@ export async function todoFormAction({ request, params }: ActionFunctionArgs) {
 export default function AddTodo(): JSX.Element {
     const location = useLocation();
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const {projectName}: {projectName: string} = location.state;
-    return <>
+    const {projectName}: { projectName: string } = location.state;
+    return (<>
         <header>
-            <h1>Add {projectName} task</h1>
-            < Link to={'..'} relative={'path'}> <IoMdArrowBack />go back</Link>
+            <h1>Add {projectName} task </h1>
+            < Link to={'..'} relative={'path'}> <IoMdArrowBack/>go back</Link>
         </header>
-        <TodoForm />;
-
-    </>
+        < TodoForm/>
+    </>)
 }
 

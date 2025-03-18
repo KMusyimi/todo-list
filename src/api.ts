@@ -21,6 +21,11 @@ interface Project {
   createdAt: number;
 }
 
+export interface Recommendations {
+  id: string;
+  names: string[];
+  createdAt?: Date;
+}
 
 export interface MyTodo {
   projectId: string;
@@ -36,15 +41,39 @@ export interface MyTodo {
   }[]
 
 }
-
+const recs = ['personal', 'design', 'work', 'house', 'web development', 'construction', 'fishing', 'travel', 'solo project', 'music', 'outdoor', 'family']
 // Initialize Firebase
 const app: FirebaseApp = initializeApp(firebaseConfig);
 const db: Firestore = getFirestore(app);
 const projectsRef = collection(db, 'projects');
 const todosRef = collection(db, 'todos');
+const recommendationsRef = collection(db, 'recommendations')
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function addRecommendations() {
+  try {
+    const docRef = await addDoc(recommendationsRef, {
+      names: recs,
+      createdAt: Date.now()
+    })
+    console.log("Document written with ID: ", docRef.id);
+  } catch (e) {
+    console.error("Error adding document: ", e);
+  }
+}
 
-
+export async function getRecommendations() {
+  const querySnapshot = await getDocs(recommendationsRef);
+  if (!querySnapshot.empty) {
+    return querySnapshot.docs.map(doc => {
+      const data = doc.data();
+      const names = data.names as string[];
+      return { names, id: doc.id };
+    })[0];
+  }
+  return null;
+}
+await getRecommendations();
 export async function addProject(projectName: FormDataEntryValue) {
   try {
     const docRef = await addDoc(projectsRef, {
@@ -103,7 +132,7 @@ export async function getTodos(id: string | undefined) {
   return querySnapshot.docs.map((doc) => {
     const data = doc.data();
     const { todos }: Partial<MyTodo> = data;
-    if (todos){
+    if (todos) {
       return { id: doc.id, todos };
     }
     return null;

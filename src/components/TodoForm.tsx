@@ -1,12 +1,11 @@
 import {JSX} from "react";
-import {Form, Link} from "react-router-dom";
-import {IoMdArrowBack} from "react-icons/io";
+import {Form} from "react-router-dom";
 
 export default function TodoForm(): JSX.Element {
     return (<>
         <Form replace={true} method="post">
-           
-            < label htmlFor={'title'}> title: </label>
+
+            <label htmlFor={'title'}> title: </label>
             < input type={'text'}
                     id={'title'}
                     name={'title'}

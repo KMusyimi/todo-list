@@ -2,8 +2,80 @@
   max-width: 1280px;
   margin: 0 auto;
   text-align: center;
+  height: inherit;
+}
+#root:has(.intro-container) > .main{
+    display: none;
+}
+.intro-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100dvh;
+  padding: 1.5em;
+  background-image: url(assets/intro.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.intro-container > header {
+  padding: 6em;
+  padding-inline: .5em;
+}
+.intro-container > header h1{
+  font-size: 2.25rem;
+}
+.intro-container >  form {
+  margin-right: -1.5em;
+}
+.intro-container> form fieldset{
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: transparent;
+  padding-block-end: .85em;
+  margin-bottom: 2.125em;
 }
 
+.intro-container >  form legend {
+  color: var(--brown-color);
+  font-size: .75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  text-align: left;
+  margin-bottom: 1.35em;
+  padding-inline: 1.35em;
+}
+.intro-container> form .label-wrapper{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(auto-fit, minmax(30px, 1fr));
+  column-gap: 1em;
+  row-gap: .75em;
+  max-width: 300px;
+  height: fit-content;
+  text-overflow: ellipsis;
+}
+
+.intro-container> form label{
+  background-color: #F3EFEE;
+  font-size: 1.06rem;
+  padding: 0.706em 1.176em;
+  text-transform: capitalize;
+  border-radius: 0.706em;
+  text-wrap: nowrap;
+}
+.intro-container> form input[type=radio] {
+  appearance: none;
+  -webkit-appearance: none;
+}
+.intro-container > form button {
+  background-color: #393433;
+  font-size: 1.125rem;
+  border-radius: 0.667em;
+  width: 100%;
+  padding: 0.778em 1.167em;
+  margin-left: -1.5em;
+  margin-bottom: .5em;
+}
 .menu-btn {
   display: flex;
   position: relative;

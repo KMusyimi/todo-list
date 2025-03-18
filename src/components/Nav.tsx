@@ -1,17 +1,16 @@
-import { JSX, Suspense } from "react";
-import { Await, NavLink } from "react-router-dom";
+import { JSX } from "react";
+import { NavLink } from "react-router-dom";
 
 
 export default function Nav(props: {
   closeModal: () => void;
-  loaderData: {
-    projects: Promise<{
-      projectName: string | undefined;
-      createdAt: number | undefined;
-      id: string;
-    }[]>;
+  projects: {
+    projectName: string | undefined;
+    createdAt: number | undefined;
+    id: string;
+  }[]
   }
-}): JSX.Element {
+): JSX.Element {
 
   function renderProjects(projects: {
     projectName: string | undefined;
@@ -32,11 +31,7 @@ export default function Nav(props: {
     <>
       <nav className="nav">
         <ul>
-          <Suspense fallback={<h1>Loading</h1>}>
-            <Await resolve={props.loaderData.projects}>
-              {renderProjects}
-            </Await>
-          </Suspense>
+          {renderProjects(props.projects)}
         </ul>
       </nav>
     </>
