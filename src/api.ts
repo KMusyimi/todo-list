@@ -50,17 +50,17 @@ const todosRef = collection(db, 'todos');
 const recommendationsRef = collection(db, 'recommendations')
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function addRecommendations() {
-  try {
-    const docRef = await addDoc(recommendationsRef, {
-      names: recs,
-      createdAt: Date.now()
-    })
-    console.log("Document written with ID: ", docRef.id);
-  } catch (e) {
-    console.error("Error adding document: ", e);
-  }
-}
+// async function addRecommendations() {
+//   try {
+//     const docRef = await addDoc(recommendationsRef, {
+//       names: recs,
+//       createdAt: Date.now()
+//     })
+//     console.log("Document written with ID: ", docRef.id);
+//   } catch (e) {
+//     console.error("Error adding document: ", e);
+//   }
+// }
 
 export async function getRecommendations() {
   const querySnapshot = await getDocs(recommendationsRef);
@@ -73,7 +73,6 @@ export async function getRecommendations() {
   }
   return null;
 }
-await getRecommendations();
 export async function addProject(projectName: FormDataEntryValue) {
   try {
     const docRef = await addDoc(projectsRef, {

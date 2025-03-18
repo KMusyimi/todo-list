@@ -56,7 +56,7 @@ export default function Layout(): JSX.Element {
                     }}
                 </Await>
             </Suspense>
-            {displayModal && <Modal closeModal={closeModal} />}
+            {displayModal && <Modal closeModal={closeModal} />} 
         </>
 
     )
