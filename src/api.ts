@@ -41,7 +41,7 @@ export interface MyTodo {
   }[]
 
 }
-const recs = ['personal', 'design', 'work', 'house', 'web development', 'construction', 'fishing', 'travel', 'solo project', 'music', 'outdoor', 'family']
+// const recs = ['personal', 'design', 'work', 'house', 'web development', 'construction', 'fishing', 'travel', 'solo project', 'music', 'outdoor', 'family']
 // Initialize Firebase
 const app: FirebaseApp = initializeApp(firebaseConfig);
 const db: Firestore = getFirestore(app);
