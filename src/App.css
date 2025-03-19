@@ -1,33 +1,52 @@
 #root {
+  position: relative;
   max-width: 1280px;
   margin: 0 auto;
   text-align: center;
   height: inherit;
 }
-#root:has(.intro-container) > .main{
-    display: none;
+
+#root:has(.intro-container)>.main {
+  display: none;
 }
+
 .intro-container {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100dvh;
   padding: 1.5em;
+
+}
+
+.intro-container::before {
+  content: '';
+  position: absolute;
+  z-index: -100;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
   background-image: url(assets/intro.png);
-  background-size: cover;
+  background-size: contain;
   background-repeat: no-repeat;
 }
-.intro-container > header {
+
+.intro-container>header {
   padding: 6em;
   padding-inline: .5em;
 }
-.intro-container > header h1{
+
+.intro-container>header h1 {
   font-size: 2.25rem;
 }
-.intro-container >  form {
+
+.intro-container>form {
   margin-right: -1.5em;
 }
-.intro-container> form fieldset{
+
+.intro-container>form fieldset {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   border: transparent;
@@ -35,7 +54,7 @@
   margin-bottom: 2.125em;
 }
 
-.intro-container >  form legend {
+.intro-container>form legend {
   color: var(--brown-color);
   font-size: .75rem;
   font-weight: 600;
@@ -44,7 +63,8 @@
   margin-bottom: 1.35em;
   padding-inline: 1.35em;
 }
-.intro-container> form .label-wrapper{
+
+.intro-container>form .label-wrapper {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(auto-fit, minmax(30px, 1fr));
@@ -55,42 +75,80 @@
   text-overflow: ellipsis;
 }
 
-.intro-container> form label{
+.intro-container>form label {
   background-color: #F3EFEE;
   font-size: 1.06rem;
   padding: 0.706em 1.176em;
   text-transform: capitalize;
   border-radius: 0.706em;
   text-wrap: nowrap;
+  font-weight: 600;
+  border: 2px solid transparent;
+  transition: all .2s ease-in-out;
+
 }
-.intro-container> form input[type=radio] {
+
+.intro-container>form label:has(> input[type=radio]:checked) {
+  border-color: rgb(84, 58, 20);
+  background-color: #E6D9CB;
+}
+
+.intro-container>form input[type=radio] {
   appearance: none;
   -webkit-appearance: none;
 }
-.intro-container > form button {
+
+.intro-container>form button {
+  border: transparent;
   background-color: #393433;
   font-size: 1.125rem;
   border-radius: 0.667em;
   width: 100%;
   padding: 0.778em 1.167em;
   margin-left: -1.5em;
-  margin-bottom: .5em;
 }
+
+.menu {
+  text-align: left;
+}
+
+.menu-mobile::before {
+  content: '';
+  position: absolute;
+  background-color: var(--bg-color, transparent);
+  transition: background-color 400ms linear;
+
+}
+
+.menu-mobile--open::before {
+  --bg-color: rgba(52, 49, 49, .25);
+  width: 100dvw;
+  height: 100dvh;
+}
+
+.menu-mobile {
+  position: relative;
+  max-width: 285px;
+}
+
 .menu-btn {
   display: flex;
-  position: relative;
-  z-index: 100;
+  position: absolute;
+  margin-left: auto;
+  top: 1.5em;
+  left: 1.5em;
+  z-index: 65;
   background-color: transparent;
   border: none;
-  cursor: pointer;
-  width: 35px;
   height: fit-content;
   padding: 0;
+  margin-bottom: 1em;
 }
+
 
 .line {
   fill: none;
-  stroke: #D0D6F9;
+  stroke: #121212;
   stroke-width: 6;
   transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1),
     stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -127,4 +185,268 @@
   stroke-dasharray: 90 207;
   stroke-dashoffset: -134;
   stroke-width: 6;
+}
+
+.menu-mobile>div {
+  position: absolute;
+  height: 100dvh;
+  background-color: rgb(253, 250, 246);
+  top: 0;
+  left: -16em;
+  overflow: hidden;
+  z-index: 45;
+  padding: 2em 1.5em;
+  width: 255px;
+  transition: left 400ms ease-in-out;
+}
+
+.menu-mobile--open>div {
+  left: 0;
+}
+
+.menu>div header {
+  padding-block-start: 2.5em;
+  margin-bottom: .85em;
+}
+
+.menu>div nav {
+  padding: .25em;
+  margin-bottom: 1.65em;
+}
+
+.menu>div nav ul li a {
+  display: flex;
+  align-items: center;
+  background-color: var(--link-active, transparent);
+  gap: 1em;
+  width: 100%;
+  text-transform: capitalize;
+  font-weight: 600;
+  padding: .45em .85em;
+  transition: background-color 200ms linear;
+}
+
+.menu>div nav ul li a.active {
+  --link-active: #F3EFEE;
+  border-radius: 0.706em;
+}
+
+.menu>div .add-btn {
+  display: flex;
+  place-items: center;
+  gap: 1em;
+  background-color: #393433;
+  width: 100%;
+  border-radius: 0.703em;
+  padding: 0.778em 1.167em;
+  letter-spacing: 1;
+}
+
+
+.main {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  background-color: #F9F5F4;
+  min-height: 100dvh;
+  overflow: hidden;
+}
+
+.main>.todo-section {
+  text-align: left;
+  padding: 3.5em 1.375em;
+  margin-bottom: .438em;
+}
+
+.main>.todo-section>header,
+.main>.todo-section .calendar {
+  margin-bottom: 2em;
+}
+
+.main>.todo-section>header h1 {
+  font-size: 2.25rem;
+  padding-inline: .444em;
+  text-align: left;
+}
+
+.main>.todo-section .calendar,
+.main>.todo-section .calendar>button {
+  display: flex;
+  justify-content: space-between;
+}
+
+.main>.todo-section .calendar {
+  gap: .75em;
+  overflow-x: scroll;
+  padding-bottom: .65em;
+  margin-right: -1.5em;
+}
+
+.main>.todo-section .calendar>button {
+  display: flex;
+  flex-direction: column;
+  place-items: center;
+  background-color: transparent;
+  color: #121212;
+  flex: 0 0 60px;
+  height: 68px;
+  gap: .5em;
+  padding: 0.75em 0.375em;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  border-radius: 0.5em;
+  border: 1px solid #000;
+  opacity: .5;
+}
+
+.main>.todo-section .calendar>button.today {
+  background-color: #E6D9CB;
+  opacity: .8;
+  border-color: transparent;
+}
+
+.main>.todo-section .calendar>button .day {
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.main>.todo-section .calendar>button .date {
+  font-weight: bold;
+  font-size: 1.063rem;
+}
+
+.main>.todo-section > section header .project-name {
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: .75rem;
+  padding: 1.333em;
+  color: #D1A28B;
+}
+.main>.todo-section>section div ul li {
+  display: flex;
+  gap: 1em;
+  font-size: 1.063rem;
+  background-color: #F3EFEE;
+  padding: 1em;
+  border-radius: .706em;
+  cursor: pointer;
+  margin-bottom: 1em;
+  -webkit-box-shadow: 0 0 6px #9F9F9F;
+  box-shadow: 0 0 6px #9F9F9F;
+}
+.main>.todo-section>section div ul li:last-of-type{
+  margin-bottom: 0;
+}
+.main>.todo-section>section div ul span{
+  display: block;
+  width: inherit;
+  text-align: center;
+  font-weight: 600;
+  margin: auto;
+  padding: 2.5em 0;
+}
+.main>.todo-section>section .title {
+  font-size: inherit;
+  font-weight: 500;
+}
+.main>.todo-section>section .title::first-letter{
+  text-transform: capitalize;
+  
+}
+.main .link-wrapper {
+  width: calc(calc(100% - 1.375em * 2));
+  margin: 0 auto 1.375em auto;
+}
+.main .add-todo--link{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+  font-size: 1.125rem;
+  position: sticky;
+  text-align: center;
+  bottom: 0;
+  background-color: #393433;
+  color: #F9F5F4;
+  padding: 0.75em 0.375em;
+  border-radius: .735em;
+}
+
+.modal-container {
+  display: flex;
+  place-items: center;
+  position: absolute;
+  top: 0;
+  height: 100dvh;
+  width: 100%;
+  min-width: 320px;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(50px);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.modal {
+  position: relative;
+  --modal-width: min(90%, 450px);
+  background-color: rgb(253, 250, 246);
+  width: var(--modal-width);
+  padding: 2.85em 1.5em;
+  margin: auto;
+  border-radius: 0.703em;
+  -webkit-box-shadow: 0 0 10px #98a3ae;
+  box-shadow: 0 0 10px #9AA6B2;
+}
+
+.modal .close-btn {
+  position: absolute;
+  top: .35em;
+  right: .35em;
+  background-color: transparent;
+  color: #121212;
+  font-size: 2.25rem;
+}
+
+.modal header h1 {
+  margin-bottom: .45em;
+}
+
+.modal form {
+  text-align: left;
+  padding: .25em;
+}
+
+.modal form label,
+.modal form div input,
+.modal form div input::placeholder {
+  color: #222222;
+  font-size: 1rem;
+}
+
+.modal form label {
+  display: block;
+  font-weight: 600;
+  width: 100%;
+  padding-left: .85em;
+  margin-bottom: .45em;
+}
+
+.modal form div {
+  display: flex;
+  gap: 0.75em;
+}
+
+.modal form div input {
+  background-color: #F3EFEE;
+  border-radius: 0.703em;
+  padding: 0.875em 1.313em;
+  border-color: transparent;
+  width: 100%;
+}
+
+.modal form div button {
+  background-color: #393433;
+  border-radius: 0.703em;
+  padding: 0.875em 1.313em;
+  font-weight: 400;
 }

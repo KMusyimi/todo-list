@@ -14,7 +14,7 @@ export default function TodoForm(): JSX.Element {
                     required/>
 
             <label htmlFor={'due-date'}> due date: </label>
-            < input type={'date'}
+            <input type={'date'}
                     id={'due-date'}
                     name={'due-date'}
                     className={'form-input'}

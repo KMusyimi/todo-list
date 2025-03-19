@@ -1,17 +1,20 @@
 /* eslint-disable react-refresh/only-export-components */
-import {JSX, Suspense, useEffect, useId, useState} from "react";
-import {ActionFunctionArgs, Await, Link, LoaderFunctionArgs, useLoaderData, useSearchParams} from "react-router-dom";
-import {getProjectName, getTodos} from "../api";
-import {daysInWeekArr} from "../utils";
+import { JSX, Suspense, useEffect, useId, useState } from "react";
+import { ActionFunctionArgs, Await, Link, LoaderFunctionArgs, useLoaderData, useSearchParams } from "react-router-dom";
+import { getProjectName, getTodos } from "../api";
+import { daysInWeekArr } from "../utils";
 import SuccessMsg from "../components/SuccessMsg.tsx";
+import { FaPlus } from "react-icons/fa6";
+import moment from "moment";
+import checkboxIcon from '../assets/checkbox.svg';
 
 
-export async function todoLoader({params}: LoaderFunctionArgs) {
+export async function todoLoader({ params }: LoaderFunctionArgs) {
     const project = getProjectName();
-    return {todos: getTodos(params.id), projectName: await project.projectName(params.id)}
+    return { todos: getTodos(params.id), projectName: await project.projectName(params.id) }
 }
 
-export async function todoAction({request}: ActionFunctionArgs) {
+export async function todoAction({ request }: ActionFunctionArgs) {
     try {
         const formData = await request.formData();
         console.log(formData.get('name'));
@@ -21,7 +24,7 @@ export async function todoAction({request}: ActionFunctionArgs) {
 }
 
 export default function HomePage(): JSX.Element {
-    const {todos, projectName} = useLoaderData<typeof todoLoader>();
+    const { todos, projectName } = useLoaderData<typeof todoLoader>();
     const [currentDate,] = useState(() => new Date());
     const [searchParams, setSearchParams] = useSearchParams();
     const successMsg = searchParams.get('message');
@@ -57,46 +60,56 @@ export default function HomePage(): JSX.Element {
             return (
                 <button className={strDate === formatDate ? 'date-btn today' : 'date-btn'
                 } type="button"
-                        key={`day-${id + idx.toString()}`}>
-                    <span className="day"> {daysStr.slice(0, 3)} </span>
-                    < span className="date"> {dateWeek} </span>
+                    key={`day-${id + idx.toString()}`}>
+                    <div className="day"> {daysStr.slice(0, 3)} </div>
+                    < div className="date"> {dateWeek} </div>
                 </button>)
         })
 
     }
 
     return (
-        <div className="todo-container">
-            {successMsg && <SuccessMsg successMsg={successMsg}/>}
-            <header>
-                <h1>{projectName} </h1>
-            </header>
-            < Suspense fallback={< h1> Loading...</h1>}>
-                <Await resolve={todos}>
-                    {(loadedTodos) => {
-                        const {todos} = loadedTodos ?? {};
-                        return (
-                            <>
-                                <Link className="add-todo--link" to={'add'} state={{projectName}
-                                }> + Add Task </Link>
-                                {todos && <RenderDates/>}
-                                <div className="todos-wrapper">
-                                    {
-                                        todos ? todos.map((todo, idx) => {
-                                            return (
-                                                <li key={`list-${idx.toString()}`
-                                                }>
-                                                    <h2>{todo.title} </h2>
-                                                    < p> {todo.priority} </p>
-                                                    < p> {todo.dueDate} </p>
-                                                    < p> {todo.description} </p>
-                                                </li>)
-                                        }) : <p>Currently no todos.Add a Todo to be able to view one.</p>}
-                                </div>
-                            </>)
-                    }}
-                </Await>
-            </Suspense>
-        </div>
+        <>
+            <section className="todo-section">
+                <header>
+                    <h1>{moment().calendar().split(' ')[0]} </h1>
+                </header>
+                {successMsg && <SuccessMsg successMsg={successMsg} />}
+                <div className="calendar">
+                    <RenderDates />
+                </div>
+                <section className="todo-container">
+                    <header>
+                        <h2 className="project-name">{projectName} </h2>
+                    </header>
+                    <div className="todos-wrapper">
+                        <ul>
+                            <Suspense fallback={< h1> Loading...</h1>}>
+                                <Await resolve={todos}>
+                                    {(loadedTodos) => {
+                                        const { todos } = loadedTodos ?? {};
+                                        return (
+                                            <>
+                                                {todos ? todos.map((todo, idx) => {
+                                                    return (
+                                                        <li key={`list-${idx.toString()}`}>
+                                                            <img src={checkboxIcon} alt="greyish checkbox icon" />
+                                                            <h3 className="title">{todo.title}</h3>
+                                                        </li>)
+                                                }) : <span>Currently no tasks.</span>}
+                                            </>)
+                                    }}
+                                </Await>
+                            </Suspense>
+                        </ul>
+                    </div>
+                </section>
+            </section>
+            <div className="link-wrapper">
+                <Link className="add-todo--link" to={'add'} state={{ projectName }
+                }> <FaPlus />  Add Task </Link>
+            </div>
+
+        </>
     )
 }

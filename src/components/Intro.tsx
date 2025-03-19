@@ -1,5 +1,5 @@
 import { JSX, useId } from "react";
-import { Form } from "react-router-dom";
+import { Form, useNavigation } from "react-router-dom";
 
 export default function Intro({ recommendations }: {
   recommendations: {
@@ -8,7 +8,7 @@ export default function Intro({ recommendations }: {
   } | null
 }): JSX.Element {
   const id = useId();
-
+  const navigation = useNavigation();
   const renderRec = (recs: string[] | undefined) => {
     if (recs) {
       return recs.map((rec, idx) => {
@@ -33,7 +33,7 @@ export default function Intro({ recommendations }: {
             {renderRec(recommendations?.names)}
           </div>
         </fieldset>
-        <button type="submit" className="continue-btn">Continue</button>
+  <button type = "submit" className = "continue-btn" disabled = { navigation.state === 'submitting' } > {navigation.state === 'submitting'?  'Creating project...': 'Continue'} </button>
       </Form>
 
     </div>);

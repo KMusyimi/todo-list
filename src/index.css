@@ -35,13 +35,14 @@ img {
 }
 
 a {
+  display: block;
   color: inherit;
   text-decoration: inherit;
   transition: color .25s ease-in-out;
 }
 
 a:hover {
-  color: #0D9276;
+  color:var(--brown-color);
 }
 
 li {
@@ -51,4 +52,13 @@ input,
 button,
 input::placeholder {
   font-family: inherit;
+}
+button{
+  border-color: transparent;
+}
+
+@media only screen and (min-width: 1024px) {
+  button{
+    cursor: pointer;
+  }
 }

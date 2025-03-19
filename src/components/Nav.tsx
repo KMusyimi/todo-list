@@ -1,5 +1,6 @@
 import { JSX } from "react";
 import { NavLink } from "react-router-dom";
+import projectIcon from '../assets/projects.svg';
 
 
 export default function Nav(props: {
@@ -21,8 +22,10 @@ export default function Nav(props: {
       const { id, projectName } = project;
 
       return (
-        <li key={id}>
-          <NavLink to={`${id.toString()}/todos`} onClick={props.closeModal}>{projectName}</NavLink>
+        <li key= { id } > 
+        <NavLink to={ `${id.toString()}/todos` } onClick = { props.closeModal } >  
+        <img src={projectIcon} alt="image of project icon"/>
+        {projectName}</NavLink>
         </li>);
     });
   }

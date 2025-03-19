@@ -1,9 +1,11 @@
 import { JSX, useState, Suspense } from "react";
-import { Await, Outlet, useLoaderData } from "react-router-dom";
+import { Await, useLoaderData } from "react-router-dom";
 import { getProjects, getRecommendations } from "../api";
 import Modal from "./Modal";
 import Nav from "./Nav";
 import Intro from "./Intro";
+import Main from "./Content";
+import { FaPlus } from "react-icons/fa6";
 // TODO: break into components
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -16,18 +18,21 @@ export default function Layout(): JSX.Element {
     const [toggleMenu, setToggleMenu] = useState(false);
     const { projects, recommendations } = useLoaderData<typeof projectLoader>();
 
+  
+    
     function closeModal(): void {
         if (displayModal) {
             setDisplayModal(!displayModal);
+            setToggleMenu(false);
         }
     }
-   
+
     return (
         <>
             <Suspense fallback={<h1>Loading...</h1>}>
                 <Await resolve={projects}>
                     {(loadedProjects) => {
-                        return (<>{loadedProjects.length > 0 ? <> <div className="nav-container">
+                        return (<>{loadedProjects.length > 0 ? <> <div className={`menu menu-mobile ${toggleMenu ? 'menu-mobile--open' : ''}`}>
                             <button type="button" className={`menu-btn ${toggleMenu ? 'open' : ''} `}
                                 onClick={() => { setToggleMenu(!toggleMenu) }}
                                 aria-label={'Main Menu button'}>
@@ -39,24 +44,24 @@ export default function Layout(): JSX.Element {
                                         d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
                                 </svg>
                             </button>
-                            <header>
-                                <h1>To-do App</h1>
-                            </header>
-                            <Nav closeModal={closeModal} projects={loadedProjects} />
-                            <button
-                                id={'add-project'}
-                                className={'add-btn'}
-                                type={'button'}
-                                onClick={() => { setDisplayModal(true) }}>+ add project</button>
+                            <div>
+                                <header>
+                                    <h1>My Projects</h1>
+                                </header>
+                                <Nav closeModal={closeModal} projects={loadedProjects} />
+                                <button
+                                    id={'add-project'}
+                                    className={'add-btn'}
+                                    type={'button'}
+                                    onClick={() => { setDisplayModal(true) }}><FaPlus />Create new project</button>
+                            </div>
                         </div>
-                        <main className="main">
-                            <Outlet />
-                        </main>
+                        <Main/>
                         </> : <Intro recommendations={recommendations} />}</>)
                     }}
                 </Await>
             </Suspense>
-            {displayModal && <Modal closeModal={closeModal} />} 
+            {displayModal && <Modal closeModal={closeModal} />}
         </>
 
     )
