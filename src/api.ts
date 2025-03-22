@@ -1,7 +1,18 @@
-import { addDoc, arrayUnion, collection, doc, getDoc, getDocs, orderBy, query, updateDoc, where } from "firebase/firestore";
+import {
+  addDoc,
+  arrayUnion,
+  collection,
+  doc,
+  Firestore,
+  getDoc,
+  getDocs,
+  getFirestore,
+  orderBy,
+  query,
+  updateDoc
+} from "firebase/firestore";
 // Import the functions you need from the SDKs you need
 import { FirebaseApp, initializeApp } from "firebase/app";
-import { Firestore, getFirestore } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -15,11 +26,6 @@ const firebaseConfig = {
   appId: "1:627588620012:web:9c64e9dd5fc43a72af4fc9"
 };
 
-interface Project {
-  id: string;
-  projectName: string;
-  createdAt: number;
-}
 
 export interface Recommendations {
   id: string;
@@ -28,28 +34,34 @@ export interface Recommendations {
 }
 
 export interface MyTodo {
-  projectId: string;
-  todos: {
-    title: string;
-    dueDate: string;
-    isDue: boolean;
-    priority: number;
-    description: string;
-    notes: string;
-    updatedAt?: Date;
-    createdAt?: Date;
-  }[]
-
+  id: string;
+  projectName: string;
+  tasks: MyTask;
+  createdAt: number;
+  updatedAt: number;
 }
+
+export type MyTask = {
+  todoId: string;
+  title: string;
+  dueDate: string;
+  isDue: boolean;
+  priority: number;
+  description: string;
+  notes: string;
+  isCompleted: boolean;
+  updatedAt: number;
+  createdAt: number;
+}[];
+
 // const recs = ['personal', 'design', 'work', 'house', 'web development', 'construction', 'fishing', 'travel', 'solo project', 'music', 'outdoor', 'family']
 // Initialize Firebase
 const app: FirebaseApp = initializeApp(firebaseConfig);
 const db: Firestore = getFirestore(app);
 const projectsRef = collection(db, 'projects');
-const todosRef = collection(db, 'todos');
 const recommendationsRef = collection(db, 'recommendations')
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 // async function addRecommendations() {
 //   try {
 //     const docRef = await addDoc(recommendationsRef, {
@@ -73,11 +85,14 @@ export async function getRecommendations() {
   }
   return null;
 }
+
 export async function addProject(projectName: FormDataEntryValue) {
   try {
     const docRef = await addDoc(projectsRef, {
       projectName: projectName,
+      tasks: [],
       createdAt: Date.now(),
+      updateAt: '',
     });
     console.log("Document written with ID: ", docRef.id);
     return docRef.id.toString();
@@ -86,69 +101,40 @@ export async function addProject(projectName: FormDataEntryValue) {
   }
 }
 
+export async function isProjectsEmpty(): Promise<boolean> {
+  const querySnapshot = await getDocs(projectsRef);
+  return querySnapshot.empty;
+}
 
-export async function getProjects(): Promise<{
-  projectName: string | undefined;
-  createdAt: number | undefined;
-  id: string;
-}[]> {
+
+export async function getProjects() {
   const qry = query(projectsRef, orderBy('createdAt', 'desc'));
   const querySnapshot = await getDocs(qry);
   return querySnapshot.docs.map((doc) => {
-    const data = doc.data();
-    const { projectName, createdAt }: Partial<Project> = data;
-    return { projectName, createdAt, id: doc.id }
+    const data = doc.data() as MyTodo;
+    return { ...data, id: doc.id }
   });
 }
 
-export async function addTodos(todo: MyTodo): Promise<void> {
+export async function updateTasks(task: MyTodo): Promise<void> {
   try {
-    const myTodo = todo.todos.map(todo => ({ ...todo, createdAt: Date.now(), updateAt: '' }));
-    const qry = query(todosRef, where('projectId', '==', todo.projectId));
-    const querySnapshot = await getDocs(qry);
-
-    if (!querySnapshot.empty) {
-      const id = querySnapshot.docs.map(doc => doc.id);
-      const todoRef = doc(db, 'todos', ...id);
-      await updateDoc(todoRef, { todos: arrayUnion(...myTodo) });
-      console.log("Document updated with ID: ", ...id);
-      return;
-    }
-    const docRef = await addDoc(todosRef, { projectId: todo.projectId, todos: myTodo });
-    console.log("Document written with ID: ", docRef.id);
-
-
+    const docRef = doc(db, 'projects', task.id);
+    await updateDoc(docRef, { tasks: arrayUnion(...task.tasks) });
+    console.log("Document updated with ID: ", task.id);
   } catch (e) {
     console.error("Error adding document: ", e);
   }
 }
 
 
-
-export async function getTodos(id: string | undefined) {
-  const qry = query(todosRef, where('projectId', '==', id));
-  const querySnapshot = await getDocs(qry);
-  return querySnapshot.docs.map((doc) => {
-    const data = doc.data();
-    const { todos }: Partial<MyTodo> = data;
-    if (todos) {
-      return { id: doc.id, todos };
-    }
-    return null;
-  })[0];
-}
-
-export function getProjectName() {
+export function getProject() {
   return {
-    projectName: async (id: string | undefined) => {
+    project: async (id: string | undefined) => {
       if (id) {
         const docRef = doc(db, 'projects', id);
         const projectSnapshot = await getDoc(docRef);
-        const data = projectSnapshot.data();
-        if (data) {
-          const { projectName } = data;
-          return (projectName ?? 'New Project') as string;
-        }
+        const data = projectSnapshot.data() as MyTodo;
+        return { ...data, id: projectSnapshot.id }
       }
     }
   };

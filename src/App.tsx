@@ -1,27 +1,31 @@
-
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom';
 import './App.css';
-import Layout, { projectLoader } from './components/Layout';
 import { projectAction } from './components/Modal';
-import AddTodo, { todoFormAction } from './Views/AddTodo';
-import HomePage, { todoAction, todoLoader } from './Views/HomePage';
+import AllTasks from "./Views/AllTasks.tsx";
+import StartPage, { introLoader, startPageAction } from './Views/StartPage';
+import Task, { taskLoader } from './Views/Task.tsx';
+import TaskLayout, { allTasksLoader } from "./Views/TaskLayout.tsx";
+import { todoFormAction } from './components/TaskForm.tsx';
 
 const router = createBrowserRouter(createRoutesFromElements(
-  // all todos /todos
-  // add todos /todos/new
-  // edit or update /todos/:id
-  <Route path={"/"} element={<Layout />} action={projectAction} loader={projectLoader}>
-    <Route path=':id/todos' element={<HomePage />} loader={todoLoader} action={todoAction} />
-    <Route path=':id/todos/add' element={<AddTodo />} action={todoFormAction} />
-    <Route path=':id/todos/:todoId' element={<AddTodo />} action={todoFormAction} />
-  </Route>))
+    // all todos /todos
+    // add todos /todos/new
+    // edit or update /todos/:id
+    <Route path={"/"} action={projectAction}>
+        <Route index element={< StartPage />} loader={introLoader} action={startPageAction} />
+        <Route path={'projects'} element={< TaskLayout />} loader={allTasksLoader}>
+            <Route index element={< AllTasks />} />
+            <Route path='add' element={<></>} action={todoFormAction} />
+            <Route path=':id/todo' element={< Task />} loader={taskLoader} />
+            {/*<Route path=':id/todos/:todoId' element={< AddTodo/>} action={todoFormAction}/>*/}
+        </Route>
+
+    </Route>));
 
 function App() {
-
-
-  return (
-    <RouterProvider router={router}></RouterProvider>
-  )
+    return (
+        <RouterProvider router={router} />
+    )
 }
 
 export default App;

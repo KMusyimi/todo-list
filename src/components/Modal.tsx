@@ -1,7 +1,7 @@
 import { JSX, useEffect } from "react";
 import { ActionFunctionArgs, Form, Navigation, redirect, useNavigation, useSearchParams } from "react-router-dom";
 import { addProject } from "../api";
-import { IoCloseCircleOutline } from "react-icons/io5";
+import { IoClose } from "react-icons/io5";
 
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -15,7 +15,7 @@ export async function projectAction({ request }: ActionFunctionArgs): Promise<Re
             newStr = newStr.charAt(0).toUpperCase() + newStr.slice(1);
 
             if (projectID) {
-                return redirect(`${projectID}/todos?message=${newStr} project added successfully to your projects&&submitted=true`);
+                return redirect(`projects/${projectID}/todo?message=${newStr} project added successfully to your projects&&submitted=true`);
             }
         }
 
@@ -42,10 +42,7 @@ export default function Modal(props: { closeModal: () => void; }): JSX.Element {
     return (
         <div className="modal-container">
             <div className="modal">
-                <button className="close-btn" type={"button"} onClick={props.closeModal}> <IoCloseCircleOutline /></button>
-                <header>
-                    <h1>Create new project</h1>
-                </header>
+        <button className="close-btn" type = { "button"} onClick = { props.closeModal } > <IoClose /></button>
                 <Form id="modal-form" action="/" method="post" className="form form-projects">
                     <label htmlFor="projectName"> Project Name </label>
                     <div className="input-container">

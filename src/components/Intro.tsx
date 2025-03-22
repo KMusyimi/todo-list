@@ -19,7 +19,6 @@ export default function Intro({ recommendations }: {
       });
     } return <p>No recommendations.</p>;
   }
-
   return (
     <div className="intro-container">
       <header>

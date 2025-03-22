@@ -5,11 +5,10 @@
   text-align: center;
   height: inherit;
 }
-
-#root:has(.intro-container)>.main {
-  display: none;
+#root:has(.task-form),
+#root:has(.menu-mobile--open) {
+  position: fixed;
 }
-
 .intro-container {
   position: relative;
   display: flex;
@@ -137,7 +136,7 @@
   margin-left: auto;
   top: 1.5em;
   left: 1.5em;
-  z-index: 65;
+  z-index: 99;
   background-color: transparent;
   border: none;
   height: fit-content;
@@ -204,9 +203,14 @@
   left: 0;
 }
 
-.menu>div header {
+.menu>div .project-link--wrapper {
   padding-block-start: 2.5em;
   margin-bottom: .85em;
+}
+
+.menu>div .project-link--wrapper a {
+  font-size: 2em;
+  font-weight: bold;
 }
 
 .menu>div nav {
@@ -244,6 +248,7 @@
 
 
 .main {
+  position: relative;
   display: flex;
   justify-content: space-between;
   flex-direction: column;
@@ -315,14 +320,15 @@
   font-size: 1.063rem;
 }
 
-.main>.todo-section > section header .project-name {
+.main>.todo-section>section header .project-name {
   text-transform: uppercase;
   font-weight: 600;
   font-size: .75rem;
   padding: 1.333em;
   color: #D1A28B;
 }
-.main>.todo-section>section div ul li {
+
+.main>.todo-section>section li {
   display: flex;
   gap: 1em;
   font-size: 1.063rem;
@@ -334,10 +340,8 @@
   -webkit-box-shadow: 0 0 6px #9F9F9F;
   box-shadow: 0 0 6px #9F9F9F;
 }
-.main>.todo-section>section div ul li:last-of-type{
-  margin-bottom: 0;
-}
-.main>.todo-section>section div ul span{
+
+.main>.todo-section>section ul span {
   display: block;
   width: inherit;
   text-align: center;
@@ -345,31 +349,169 @@
   margin: auto;
   padding: 2.5em 0;
 }
+
 .main>.todo-section>section .title {
   font-size: inherit;
   font-weight: 500;
 }
-.main>.todo-section>section .title::first-letter{
+
+.main>.todo-section>section .title::first-letter {
   text-transform: capitalize;
-  
+
 }
-.main .link-wrapper {
-  width: calc(calc(100% - 1.375em * 2));
-  margin: 0 auto 1.375em auto;
+
+.main .todo-btn-wrapper {
+  --todo-btn-width: calc(calc(100% - 1.375em * 2));
+  position: fixed;
+  width: var(--todo-btn-width);
+  bottom: 1.375em;
+  left: calc(calc(100% - var(--todo-btn-width)) / 2);
+  z-index: 200;
 }
-.main .add-todo--link{
+
+.main .add-btn {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 1em;
+  width: 100%;
   font-size: 1.125rem;
-  position: sticky;
   text-align: center;
-  bottom: 0;
   background-color: #393433;
   color: #F9F5F4;
   padding: 0.75em 0.375em;
   border-radius: .735em;
+  opacity: 1;
+  visibility: visible;
+  transition: visibility 0s var(--vis-delay, 0ms),opacity 350ms cubic-bezier(0.175, 0.885, 0.32, 1.275) var(--trs-delay, 350ms);
+}
+
+.main .add-btn.hidden {
+  --trs-delay: 0ms;
+  --vis-delay: 350ms;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.main .add-btn>.icon {
+  rotate: 0deg;
+  transition: rotate 250ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
+}
+
+.main .add-btn>.close-icon {
+  rotate: -135deg;
+}
+
+.main .task-form-container {
+  position: absolute;
+  height: 100dvh;
+  top: 0;
+  width: 100%;
+  background-color: rgb(166, 174, 191, .2);
+  z-index: 120;
+}
+
+.main .task-form {
+  --task-form-width: calc(calc(100% - 1.375em * 2));
+  position: absolute;
+  background-color: #F9F5F4;
+  width: var(--task-form-width);
+  max-height: 525px;
+  overflow-y: scroll;
+  margin: auto;
+  padding: 2em 1.5em;
+  left: calc(calc(100% - var(--task-form-width)) / 2);
+  bottom: 5.75em;
+  border-radius: .735em;
+  z-index: 100;
+  box-shadow: 0px 0px 30px #9AA6B2;
+}
+.main .task-form select,
+.main .task-form label,
+.main .task-form input:not([type=radio]),
+.main .task-form textarea {
+  display: block;
+  width: 100%;
+
+}
+
+.main .task-form label,
+.main .task-form input,
+.main .task-form textarea,
+.main .task-form select,
+.main .task-form input::placeholder,
+.main .task-form textarea::placeholder {
+  color: #222222;
+}
+
+.main .task-form option,
+.main .task-form select,
+.main .task-form input::placeholder,
+.main .task-form textarea::placeholder{
+  
+  text-transform: capitalize;
+}
+.main .task-form input,
+.main .task-form select,
+.main .task-form textarea {
+  background-color: #F3EFEE;
+  border-radius: 0.75em;
+  margin-bottom: 1.15em;
+}
+
+.main .task-form label,
+.main .task-form legend {
+  text-align: left;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: .75rem;
+  padding: 1em;
+
+}
+.main .task-form select,
+.main .task-form input {
+  border: 1px solid #ACACAC;
+  padding: 1.063em 1.313em;
+}
+.main .task-form input[type=date] {
+  text-transform: uppercase;
+}
+
+.main .task-form fieldset {
+  border-color: #ACACAC;
+  border-radius: .75em;
+  margin-bottom: 1em;
+}
+
+.main .task-form fieldset>.radio-wrapper,
+.main .task-form fieldset>.radio-wrapper>div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  gap: .35em;
+}
+
+.main .task-form fieldset>.radio-wrapper {
+  padding: .85em .5em;
+}
+
+.main .task-form fieldset>.radio-wrapper label,
+.main .task-form fieldset>.radio-wrapper input {
+  padding: 0;
+  margin-bottom: 0;
+  font-size: .85rem;
+}
+
+.main .task-form textarea {
+  height: 150px;
+  resize: none;
+  padding: .85em 1.113em;
+}
+
+.main .task-form textarea:last-of-type {
+  height: 80px;
+  margin-bottom: 2em;
 }
 
 .modal-container {
@@ -391,7 +533,7 @@
   --modal-width: min(90%, 450px);
   background-color: rgb(253, 250, 246);
   width: var(--modal-width);
-  padding: 2.85em 1.5em;
+  padding: 2em 1.5em;
   margin: auto;
   border-radius: 0.703em;
   -webkit-box-shadow: 0 0 10px #98a3ae;
@@ -400,15 +542,17 @@
 
 .modal .close-btn {
   position: absolute;
-  top: .35em;
-  right: .35em;
+  right: -.15em;
+  top: -1.85em;
+  display: flex;
+  align-items: center;
+  gap: .4em;
   background-color: transparent;
   color: #121212;
-  font-size: 2.25rem;
-}
-
-.modal header h1 {
-  margin-bottom: .45em;
+  font-size: 2rem;
+  margin-left: auto;
+  border: 3px solid #121212;
+  border-radius: 50%;
 }
 
 .modal form {
@@ -442,6 +586,7 @@
   padding: 0.875em 1.313em;
   border-color: transparent;
   width: 100%;
+  border: 1px solid #ACACAC;
 }
 
 .modal form div button {
