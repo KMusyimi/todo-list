@@ -8,6 +8,7 @@
 #root:has(.task-form) .todo-section,
 #root:has(.menu-mobile--open) .todo-section {
   position: fixed;
+  width: 100%;
 }
 .intro-container {
   position: relative;
