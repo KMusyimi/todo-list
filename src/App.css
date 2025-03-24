@@ -5,8 +5,8 @@
   text-align: center;
   height: inherit;
 }
-#root:has(.task-form),
-#root:has(.menu-mobile--open) {
+#root:has(.task-form) .todo-section,
+#root:has(.menu-mobile--open) .todo-section {
   position: fixed;
 }
 .intro-container {
@@ -115,6 +115,7 @@
   content: '';
   position: absolute;
   background-color: var(--bg-color, transparent);
+  z-index: 1;
   transition: background-color 400ms linear;
 
 }
