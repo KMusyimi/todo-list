@@ -23,6 +23,7 @@ export default function TaskLayout(): JSX.Element {
     const [toggleMenu, setToggleMenu] = useState(false);
     const { projects } = useLoaderData<typeof allTasksLoader>();
     const [toggleForm, setToggleForm] = useState(false);
+
     
     function closeModal(): void {
         if (displayModal) {
@@ -33,6 +34,7 @@ export default function TaskLayout(): JSX.Element {
 
     const [searchParams, setSearchParams] = useSearchParams();
     const successMsg = searchParams.get('message');
+    const submitted = searchParams.get('submitted');
     
     useEffect(() => {
         let timer: string | number | NodeJS.Timeout | undefined;
@@ -44,11 +46,18 @@ export default function TaskLayout(): JSX.Element {
                 });
             }, 5000);
         }
-       
+        if (submitted){
+            setToggleForm(!toggleForm);
+            setSearchParams((prev)=> {
+                console.log(prev);
+                prev.delete('submitted');
+                return prev;
+            })
+        }
         return () => {
             clearTimeout(timer);
         }
-    }, [setSearchParams, successMsg]);
+    }, [setSearchParams, submitted, successMsg, toggleForm]);
     
 
     return (<>

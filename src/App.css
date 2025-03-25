@@ -383,8 +383,9 @@
 }
 
 
-.main>.todo-section>section.task-card .task-wrapper .task-info {
+.main>.todo-section>section .task-card .task-wrapper .task-info {
   cursor: pointer;
+  margin-top: .15em;
 }
 
 .main>.todo-section>section .task-card .task-wrapper .title {
@@ -458,25 +459,32 @@
 
 
 .main .todo-btn-wrapper {
-  --todo-btn-width: calc(calc(100% - 1.375em * 2));
+  background-color:rgba(253, 250, 246, .35);
+  backdrop-filter: blur(3px);
   position: fixed;
-  width: var(--todo-btn-width);
-  bottom: 1.375em;
-  left: calc(calc(100% - var(--todo-btn-width)) / 2);
+  width: 100%;
+  bottom: 0em;
+  padding-bottom: 1.375em;
+  padding-top: .25em;
   z-index: 200;
 }
-
+.main .todo-btn-wrapper:has(> .add-btn.hidden){
+  z-index: 0;
+  padding-top: 0;
+}
 .main .add-btn {
+  --todo-btn-width: calc(calc(100% - 1.375em * 2));
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 1em;
-  width: 100%;
+  width: var(--todo-btn-width);
   font-size: 1.125rem;
   text-align: center;
   background-color: #393433;
   color: #F9F5F4;
   padding: 0.75em 0.375em;
+  margin: 0 auto;
   border-radius: .735em;
   opacity: 1;
   visibility: visible;
@@ -518,7 +526,7 @@
   margin: auto;
   padding: 2em 1.5em;
   left: calc(calc(100% - var(--task-form-width)) / 2);
-  bottom: 5.75em;
+  bottom: 5.35em;
   border-radius: .735em;
   z-index: 100;
   box-shadow: 0px 0px 30px #9AA6B2;
@@ -536,9 +544,7 @@
 .main .task-form label,
 .main .task-form input,
 .main .task-form textarea,
-.main .task-form select,
-.main .task-form input::placeholder,
-.main .task-form textarea::placeholder {
+.main .task-form select {
   color: #222222;
 }
 
@@ -576,10 +582,11 @@
 
 .main .task-form input[type=date] {
   text-transform: uppercase;
+  color-scheme: light;
 }
 
 .main .task-form fieldset {
-  border-color: #ACACAC;
+  border: 1px solid #ACACAC;
   border-radius: .75em;
   margin-bottom: 1em;
 }
@@ -614,11 +621,13 @@
   height: 80px;
   margin-bottom: 2em;
 }
-
-.modal-container {
+.main .task-form .add-btn{
+  width: 100%;
+}
+.modal-wrapper {
   display: flex;
   place-items: center;
-  position: absolute;
+  position: fixed;
   top: 0;
   height: 100dvh;
   width: 100%;
@@ -635,13 +644,19 @@
   background-color: rgb(253, 250, 246);
   width: var(--modal-width);
   padding: 2em 1.5em;
-  margin: auto;
+  margin: 0 auto;
   border-radius: 0.703em;
   -webkit-box-shadow: 0 0 10px #98a3ae;
   box-shadow: 0 0 10px #9AA6B2;
 }
 
-
+.modal .close-btn{
+  position: absolute;
+  right: 0;
+  top: -1.5em;
+  background-color: transparent;
+  font-size: 2em;
+}
 .modal form {
   text-align: left;
   padding: .25em;
