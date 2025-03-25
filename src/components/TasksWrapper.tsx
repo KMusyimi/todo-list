@@ -3,6 +3,8 @@ import checkboxIcon from "../assets/checkbox.svg";
 import {MyTask} from "../api";
 import moment from "moment";
 import calendarIcon from '../assets/calendar.svg';
+import { MdStickyNote2 } from "react-icons/md";
+import { LiaTasksSolid } from "react-icons/lia";
 
 function DueDate({date}: { date: string }) {
     const [dueDate,] = useState(() => moment(date.split('-').join(''), 'YYYYMMDD').fromNow());
@@ -54,11 +56,11 @@ function TasksWrapper({projectName, tasks, cls}: {
                             </div>
                             <div className="info-container">
                                 {task.notes && <section className="info-section">
-                                    <h4 className="fw-500">Notes</h4>
+                                    <h4 className="fw-500"><MdStickyNote2 />Notes</h4>
                                     <p className="notes">{task.notes}</p>
                                 </section>}
                                 <section className="info-section">
-                                    <h4 className="fw-500">Description</h4>
+                                    <h4 className="fw-500"><LiaTasksSolid />Description</h4>
                                     <p className="description">{task.description}</p>
                                 </section>
                             </div>

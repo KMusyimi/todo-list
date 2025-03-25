@@ -273,10 +273,7 @@
   margin-bottom: 1.5em;
 }
 
-.main>.todo-section .calendar {
-  margin-bottom: 2em;
-}
-
+.main>.todo-section .calendar >
 .main>.todo-section>header h1 {
   font-size: 2.25rem;
   padding-inline: .444em;
@@ -292,6 +289,7 @@
 .main>.todo-section .calendar {
   gap: .75em;
   overflow-x: scroll;
+  margin-bottom: 2em;
   padding-bottom: .65em;
   margin-right: -1.5em;
 }
@@ -312,7 +310,9 @@
   border: 1px solid #000;
   opacity: .5;
 }
-
+.main>.todo-section .calendar>button:last-of-type{
+  margin-right: 1.65em;
+}
 .main>.todo-section .calendar>button.today {
   background-color: #E6D9CB;
   opacity: .8;
@@ -338,7 +338,6 @@
 }
 .main>.todo-section>section.tasks.project header .project-name {
   text-transform: capitalize;
-  font-weight: 600;
   font-size: 2rem;
   padding: .444em;
   margin-bottom: .444em;
@@ -359,14 +358,16 @@
   margin-bottom: 1em;
   max-height: 90px;
   overflow: hidden;
-  transition: max-height .55s cubic-bezier(0.215, 0.610, 0.355, 1);
+  transition: max-height .55s cubic-bezier(0.65, -0.12, 0.08, 1.1);
 }
 
 .main>.todo-section>section .task-card.open {
   height: fit-content;
   max-height: 350px;
 }
-
+.main>.todo-section>section.tasks.project .task-card:last-of-type{
+  margin-bottom: 2.5em;
+}
 .main>.todo-section>section .task-wrapper .title::first-letter,
 .main>.todo-section>section .info-section .notes::first-letter,
 .main>.todo-section>section .info-section .description::first-letter {
@@ -423,13 +424,13 @@
   padding: .75em 2.188em;
   visibility: hidden;
   opacity: 0;
-  transition: visibility 0ms var(--_visibility-delay, 100ms),
-    opacity 400ms cubic-bezier(0.455, 0.03, 0.515, 0.955) var(--_opacity-delay, 150ms);
+  transition: visibility 0ms var(--_visibility-delay, 450ms),
+    opacity 450ms linear(0 0%, 0.35 63.31%, 1 100%) var(--_op-delay, 0ms);
 }
 
 .main>.todo-section>section .task-card.open>.info-container {
-  --_opacity-delay: 0ms;
   --_visibility-delay: 0ms;
+  --_op-delay: 75ms;
   visibility: visible;
   opacity: 1;
   height: fit-content;
@@ -443,6 +444,15 @@
 
 .main>.todo-section .info-container>.info-section {
   padding-inline: .65em;
+}
+.main>.todo-section .info-container>.info-section h4{
+  display: inline-flex;
+  gap: .35em;
+  align-items: center;
+  color: #393433;
+}
+.main>.todo-section .info-container>.info-section h4 > svg{
+  font-size: 1.5rem;
 }
 
 .main>.todo-section .info-container>.info-section p {
