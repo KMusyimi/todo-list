@@ -1,8 +1,8 @@
-import {useId, useState} from "react";
+import {JSX, useId, useState} from "react";
 import {daysInWeekArr} from "../utils.ts";
 import moment from "moment";
 
-export default function Calendar() {
+export default function Calendar(): JSX.Element {
     const [currentDate,] = useState(() => new Date());
 
     function RenderDates() {
@@ -31,7 +31,7 @@ export default function Calendar() {
     }
     return (<>
         <header>
-            <h1>{moment().calendar().split(' ')[0]} </h1>
+            <h1>{moment().calendar().split(' ')[0]}</h1>
         </header>
         <div className="calendar">
             <RenderDates/>

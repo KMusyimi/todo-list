@@ -1,25 +1,66 @@
-import {JSX} from "react";
+import { JSX, useState } from "react";
 import checkboxIcon from "../assets/checkbox.svg";
-import {MyTask} from "../api";
+import { MyTask } from "../api";
+import moment from "moment";
+import calendarIcon from '../assets/calendar.svg';
 
-
-function TasksWrapper({projectName, tasks}: { projectName: string | undefined, tasks: MyTask | undefined }): JSX.Element {
+function DueDate({ date }: { date: string }) {
+    const [dueDate,] = useState(() => moment(date.split('-').join(''), 'YYYYMMDD').fromNow());
     return (
-        <section className={'tasks'}>
+        <p className="due-date" style={{ color: "#776EC9" }}>
+            <img src={calendarIcon} alt="a purplish calendar icon" /> Due {dueDate}
+        </p>)
+}
+
+
+function TasksWrapper({ projectName, tasks, cls }: { projectName: string | undefined, tasks: MyTask | undefined, cls: string }): JSX.Element {
+    function handleClick(e: React.MouseEvent<HTMLElement>) {
+        const { dataset } = e.currentTarget;
+        const {task} = dataset;
+        const taskCard = document.getElementById(`task-${task ?? ''}`)
+        if (taskCard){
+            taskCard.classList.toggle('open');
+        }
+    }
+
+    return (
+        <section className={`tasks ${cls}`}>
             <header>
                 <h2 className="project-name"> {projectName} </h2>
             </header>
-            <ul>
-                {
-                    tasks && tasks.length > 0 ? tasks.map((task, idx) => {
-                        return (
-                            <li key={`list-${idx.toString()}`}>
-                                <img src={checkboxIcon} alt="greyish checkbox icon"/>
-                                <h3 className="title"> {task.title} </h3>
-                            </li>)
-                    }) : <span>Currently no {projectName} tasks.</span>
-                }
-            </ul>
+            {
+                tasks && tasks.length > 0 ? tasks.map((task) => {
+
+                    return (
+                        <div id={`task-${task.todoId}`} key={`list-${task.todoId}`} className={`task-card`}>
+                            <div className="task-wrapper">
+                                <img src={checkboxIcon} alt="greyish checkbox icon" />
+                                <section className={`task-info`} onClick={handleClick} data-task={task.todoId}>
+                                    <h3 className="title"> {task.title} </h3>
+                                    <DueDate date={task.dueDate} />
+                                </section>
+                                <button type="button" className="options-btn" >
+                                    {Array.from(Array(6), (_, idx) => <svg key={`rect-${idx.toString()}`} width="3" height="4" viewBox="0 0 3 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect y="0.5" width="3" height="3" fill="#D9D9D9" />
+                                    </svg>)}
+                                </button>
+                            </div>
+                            <div className="info-container">
+                                {task.notes && <section className="info-section">
+                                    <h4 className="fw-500">Notes</h4>
+                                    <p className="notes">{task.notes}</p>
+                                </section>}
+                                <section className="info-section">
+                                    <h4 className="fw-500">Description</h4>
+                                    <p className="description">{task.description}</p>
+                                </section>
+                            </div>
+
+                        </div>
+
+                    )
+                }) : <p className="empty-task">Currently no {projectName} tasks.</p>
+            }
         </section>)
 }
 

@@ -55,10 +55,9 @@ input::placeholder {
 }
 button{
   border-color: transparent;
+  cursor: pointer;
 }
 
-@media only screen and (min-width: 1024px) {
-  button{
-    cursor: pointer;
-  }
+.fw-500{
+  font-weight: 500;
 }

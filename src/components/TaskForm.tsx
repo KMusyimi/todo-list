@@ -107,14 +107,14 @@ style = {{ height: '25px', width: '25px', verticalAlign: 'middle' }}/>
 name = { 'description'}
 className = { 'form-textarea'}
 placeholder = { 'Write a brief description...'}
-maxLength = { 250}
+maxLength = { 250} required
     > </textarea>
     < label htmlFor = { 'notes'} > Notes </label>
         < textarea id = { 'notes'}
 name = { 'notes'}
 className = { 'form-textarea'}
 placeholder = { 'Write a brief note...'}
-maxLength = { 100}
+maxLength = { 100} 
     > </textarea>
     < button type = "submit" className = "add-btn" > Add task </button>
         </Form>

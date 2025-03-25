@@ -1,7 +1,6 @@
 import { JSX, useEffect } from "react";
 import { ActionFunctionArgs, Form, Navigation, redirect, useNavigation, useSearchParams } from "react-router-dom";
 import { addProject } from "../api";
-import { IoClose } from "react-icons/io5";
 
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -40,9 +39,8 @@ export default function Modal(props: { closeModal: () => void; }): JSX.Element {
     }, [props, setSearchParams, submitted])
 
     return (
-        <div className="modal-container">
+        <div className= "modal-container"  onClick = { props.closeModal } >
             <div className="modal">
-        <button className="close-btn" type = { "button"} onClick = { props.closeModal } > <IoClose /></button>
                 <Form id="modal-form" action="/" method="post" className="form form-projects">
                     <label htmlFor="projectName"> Project Name </label>
                     <div className="input-container">

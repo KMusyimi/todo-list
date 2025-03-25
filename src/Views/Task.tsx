@@ -15,7 +15,7 @@ export default function Task() {
     return (<Suspense fallback={<h1>Loading... </h1>}>
         <Await resolve={project}>{(loadedTask) => {
             const {projectName, tasks} = loadedTask ?? {};
-            return <TasksWrapper projectName={projectName} tasks={tasks}/>;
+            return <TasksWrapper projectName={projectName} tasks={tasks} cls="project"/>;
         }}</Await>
     </Suspense>)
 }

@@ -23,7 +23,7 @@ export default function AllTasks() {
     }[]) {
         return projects.map((project, idx) => {
             const {projectName, tasks} = project;
-            return <TasksWrapper key={`task-${id + idx.toString()}`} projectName={projectName} tasks={tasks}/>
+            return <TasksWrapper key={`task-${id + idx.toString()}`} projectName={projectName} tasks={tasks} cls=""/>
         })
     }
 

@@ -5,11 +5,13 @@
   text-align: center;
   height: inherit;
 }
+
 #root:has(.task-form) .todo-section,
 #root:has(.menu-mobile--open) .todo-section {
   position: fixed;
   width: 100%;
 }
+
 .intro-container {
   position: relative;
   display: flex;
@@ -263,9 +265,14 @@
   text-align: left;
   padding: 3.5em 1.375em;
   margin-bottom: .438em;
+
 }
 
-.main>.todo-section>header,
+.main>.todo-section>header {
+  margin-top: 1em;
+  margin-bottom: 1.5em;
+}
+
 .main>.todo-section .calendar {
   margin-bottom: 2em;
 }
@@ -322,45 +329,133 @@
   font-size: 1.063rem;
 }
 
-.main>.todo-section>section header .project-name {
+.main>.todo-section>section.tasks header .project-name {
   text-transform: uppercase;
   font-weight: 600;
   font-size: .75rem;
   padding: 1.333em;
   color: #D1A28B;
 }
-
-.main>.todo-section>section li {
-  display: flex;
-  gap: 1em;
-  font-size: 1.063rem;
-  background-color: #F3EFEE;
-  padding: 1em;
-  border-radius: .706em;
-  cursor: pointer;
-  margin-bottom: 1em;
-  -webkit-box-shadow: 0 0 6px #9F9F9F;
-  box-shadow: 0 0 6px #9F9F9F;
+.main>.todo-section>section.tasks.project header .project-name {
+  text-transform: capitalize;
+  font-weight: 600;
+  font-size: 2rem;
+  padding: .444em;
+  margin-bottom: .444em;
+  color: #121212;
 }
-
-.main>.todo-section>section ul span {
-  display: block;
-  width: inherit;
+.main>.todo-section>section .empty-task {
   text-align: center;
   font-weight: 600;
-  margin: auto;
-  padding: 2.5em 0;
+  padding: 1.85em 0;
 }
 
-.main>.todo-section>section .title {
-  font-size: inherit;
-  font-weight: 500;
+.main>.todo-section>section .task-card {
+  background-color: #F3EFEE;
+  -webkit-box-shadow: 0 0 6px #9F9F9F;
+  box-shadow: 0 0 6px #9F9F9F;
+  padding: 1em;
+  border-radius: .706em;
+  margin-bottom: 1em;
+  max-height: 90px;
+  overflow: hidden;
+  transition: max-height .55s cubic-bezier(0.215, 0.610, 0.355, 1);
 }
 
-.main>.todo-section>section .title::first-letter {
+.main>.todo-section>section .task-card.open {
+  height: fit-content;
+  max-height: 350px;
+}
+
+.main>.todo-section>section .task-wrapper .title::first-letter,
+.main>.todo-section>section .info-section .notes::first-letter,
+.main>.todo-section>section .info-section .description::first-letter {
   text-transform: capitalize;
-
 }
+
+.main>.todo-section>section .task-card .task-wrapper {
+  display: grid;
+  grid-template-columns: 25px 1fr 25px;
+  grid-template-rows: repeat(1, 1fr);
+  align-items: center;
+  column-gap: 1.15em;
+  font-size: inherit;
+}
+
+
+.main>.todo-section>section.task-card .task-wrapper .task-info {
+  cursor: pointer;
+}
+
+.main>.todo-section>section .task-card .task-wrapper .title {
+  font-size: 1.073rem;
+  font-weight: 500;
+  margin: 0 0 .35em 0;
+  transition: margin 450ms cubic-bezier(0.86, 0, 0.07, 1);
+}
+
+.main>.todo-section>section .task-card.open .task-wrapper .title {
+  margin: .65em 0;
+}
+
+.main>.todo-section>section .task-card .task-wrapper .due-date {
+  display: inline-flex;
+  align-items: center;
+  gap: .35em;
+  font-size: .85rem;
+  font-weight: bold;
+}
+
+.main>.todo-section>section .task-card .task-wrapper>.options-btn {
+  align-self: flex-start;
+  background-color: transparent;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(3, 3.25px);
+  gap: 0.25em;
+  margin-left: auto;
+  margin-top: .35em;
+}
+
+
+.main>.todo-section>section .task-card>.info-container {
+  padding: .75em 2.188em;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0ms var(--_visibility-delay, 100ms),
+    opacity 400ms cubic-bezier(0.455, 0.03, 0.515, 0.955) var(--_opacity-delay, 150ms);
+}
+
+.main>.todo-section>section .task-card.open>.info-container {
+  --_opacity-delay: 0ms;
+  --_visibility-delay: 0ms;
+  visibility: visible;
+  opacity: 1;
+  height: fit-content;
+  position: static;
+}
+
+.main>.todo-section .info-container>.info-section:first-of-type {
+  border-top: 2px solid #BCBCC3;
+  padding-top: .45em;
+}
+
+.main>.todo-section .info-container>.info-section {
+  padding-inline: .65em;
+}
+
+.main>.todo-section .info-container>.info-section p {
+  padding-left: .55em;
+}
+
+.main>.todo-section .info-container .notes {
+  margin-bottom: .75em;
+}
+
+.main>.todo-section .info-container .description {
+  margin-bottom: 0;
+}
+
 
 .main .todo-btn-wrapper {
   --todo-btn-width: calc(calc(100% - 1.375em * 2));
@@ -385,7 +480,7 @@
   border-radius: .735em;
   opacity: 1;
   visibility: visible;
-  transition: visibility 0s var(--vis-delay, 0ms),opacity 350ms cubic-bezier(0.175, 0.885, 0.32, 1.275) var(--trs-delay, 350ms);
+  transition: visibility 0s var(--vis-delay, 0ms), opacity 350ms cubic-bezier(0.175, 0.885, 0.32, 1.275) var(--trs-delay, 350ms);
 }
 
 .main .add-btn.hidden {
@@ -428,6 +523,7 @@
   z-index: 100;
   box-shadow: 0px 0px 30px #9AA6B2;
 }
+
 .main .task-form select,
 .main .task-form label,
 .main .task-form input:not([type=radio]),
@@ -449,10 +545,11 @@
 .main .task-form option,
 .main .task-form select,
 .main .task-form input::placeholder,
-.main .task-form textarea::placeholder{
-  
+.main .task-form textarea::placeholder {
+
   text-transform: capitalize;
 }
+
 .main .task-form input,
 .main .task-form select,
 .main .task-form textarea {
@@ -470,11 +567,13 @@
   padding: 1em;
 
 }
+
 .main .task-form select,
 .main .task-form input {
   border: 1px solid #ACACAC;
   padding: 1.063em 1.313em;
 }
+
 .main .task-form input[type=date] {
   text-transform: uppercase;
 }
@@ -542,20 +641,6 @@
   box-shadow: 0 0 10px #9AA6B2;
 }
 
-.modal .close-btn {
-  position: absolute;
-  right: -.15em;
-  top: -1.85em;
-  display: flex;
-  align-items: center;
-  gap: .4em;
-  background-color: transparent;
-  color: #121212;
-  font-size: 2rem;
-  margin-left: auto;
-  border: 3px solid #121212;
-  border-radius: 50%;
-}
 
 .modal form {
   text-align: left;
