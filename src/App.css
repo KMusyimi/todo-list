@@ -582,6 +582,7 @@
 
 .main .task-form input[type=date] {
   text-transform: uppercase;
+  color: #222222;
   color-scheme: light;
 }
 
