@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { nanoid } from "nanoid";
-import { JSX, Suspense, use } from "react";
+import { JSX, Suspense, use, useEffect, useRef } from "react";
 import { ActionFunctionArgs, Form, redirect } from "react-router-dom";
 import { MyTask, MyTodo, updateTasks } from "../api";
 
@@ -21,6 +21,7 @@ export async function todoFormAction({ request }: ActionFunctionArgs) {
                 dueDate,
                 priority: Number(priority),
                 description,
+                status: 'active',
                 notes,
                 createdAt: Date.now()
             }]
@@ -48,12 +49,12 @@ function FormOptions({ projects }: {
     return (
         <Suspense fallback={<h1>Loading...</h1>}>
             {projectPromise.map((project) => {
-                const {id, projectName} = project;
+                const { id, projectName } = project;
                 return (<option key={id} value={id}> {projectName} </option>)
             })
             }
         </Suspense>
-    
+
     )
 }
 
@@ -66,9 +67,21 @@ export default function TaskForm({ projects }: {
         updatedAt: number;
     }[]>
 }): JSX.Element {
+    const formContainerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (formContainerRef.current) {
+                formContainerRef.current.classList.add('mounted');
+            }
+        }, 10);
+        return () => {
+            clearTimeout(timer)
+        }
+    }, []);
 
     return (
-        <div className="task-form-container">
+        <div ref={formContainerRef} className={"task-form-container"}>
             <Form action={"/projects/add"} className={'task-form'} replace={true} method="post">
                 <label htmlFor={'title'}> Title </label>
                 <input type={'text'}

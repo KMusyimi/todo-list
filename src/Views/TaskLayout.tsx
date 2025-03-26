@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { JSX, useEffect, useState } from "react";
+import { JSX, useCallback, useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { Link, Outlet, useLoaderData, useSearchParams } from "react-router-dom";
 import { getProjects } from "../api.ts";
@@ -23,14 +23,11 @@ export default function TaskLayout(): JSX.Element {
     const [toggleMenu, setToggleMenu] = useState(false);
     const { projects } = useLoaderData<typeof allTasksLoader>();
     const [toggleForm, setToggleForm] = useState(false);
-
     
-    function closeModal(): void {
-        if (displayModal) {
-            setDisplayModal(!displayModal);
-            setToggleMenu(false);
-        }
-    }
+    const closeModal = useCallback(()=> {
+        if (displayModal) {setDisplayModal(!displayModal);}
+    }, [displayModal])
+    
 
     const [searchParams, setSearchParams] = useSearchParams();
     const successMsg = searchParams.get('message');
@@ -49,7 +46,6 @@ export default function TaskLayout(): JSX.Element {
         if (submitted){
             setToggleForm(!toggleForm);
             setSearchParams((prev)=> {
-                console.log(prev);
                 prev.delete('submitted');
                 return prev;
             })
@@ -100,10 +96,7 @@ export default function TaskLayout(): JSX.Element {
             <div className="todo-btn-wrapper">
                 <button type="button" 
                 className={toggleMenu ?"add-btn hidden": 'add-btn'}
-                onClick={()=>{
-                    setToggleForm(!toggleForm)
-                    }}><FaPlus className={toggleForm ? "icon close-icon": 'icon'} /> 
-                    {toggleForm?"Close form":'Create new task'}</button>
+                onClick={()=>{setToggleForm(!toggleForm)}}><FaPlus className={toggleForm ? "icon close-icon": 'icon'} /> {toggleForm?'Close form':'Create new task'}</button>
             </div>
             
             {toggleForm && <TaskForm projects={projects}/>}

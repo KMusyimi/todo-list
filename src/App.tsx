@@ -6,6 +6,7 @@ import StartPage, { introLoader, startPageAction } from './Views/StartPage';
 import Task, { taskLoader } from './Views/Task.tsx';
 import TaskLayout, { allTasksLoader } from "./Views/TaskLayout.tsx";
 import { todoFormAction } from './components/TaskForm.tsx';
+import { fetcherAction } from './components/TasksWrapper.tsx';
 
 const router = createBrowserRouter(createRoutesFromElements(
     // all todos /todos
@@ -15,9 +16,10 @@ const router = createBrowserRouter(createRoutesFromElements(
         <Route index element={< StartPage />} loader={introLoader} action={startPageAction} />
         <Route path={'projects'} element={< TaskLayout />} loader={allTasksLoader}>
             <Route index element={< AllTasks />} />
+            < Route path = ':todoId' element = {<></>} action={fetcherAction}/>
             <Route path='add' element={<></>} action={todoFormAction} />
             <Route path=':id/todo' element={< Task />} loader={taskLoader} />
-            {/*<Route path=':id/todos/:todoId' element={< AddTodo/>} action={todoFormAction}/>*/}
+            <Route path=':id/todo/:todoId' element={<></>} action={fetcherAction}/>
         </Route>
 
     </Route>));

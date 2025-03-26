@@ -48,7 +48,7 @@ export type MyTask = {
   priority: number;
   description: string;
   notes: string;
-  status: 'completed'| 'active'| 'overdue';
+  status: 'completed' | 'active' | 'overdue';
   updatedAt: number;
   createdAt: number;
 }[];

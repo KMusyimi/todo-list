@@ -309,9 +309,11 @@
   border: 1px solid #000;
   opacity: .5;
 }
-.main>.todo-section .calendar>button:last-of-type{
+
+.main>.todo-section .calendar>button:last-of-type {
   margin-right: 1.65em;
 }
+
 .main>.todo-section .calendar>button.today {
   background-color: #E6D9CB;
   opacity: .8;
@@ -335,6 +337,7 @@
   padding: 1.333em;
   color: #D1A28B;
 }
+
 .main>.todo-section>section.tasks.project header .project-name {
   text-transform: capitalize;
   font-size: 2rem;
@@ -342,6 +345,7 @@
   margin-bottom: .444em;
   color: #121212;
 }
+
 .main>.todo-section>section .empty-task {
   text-align: center;
   font-weight: 600;
@@ -364,9 +368,11 @@
   height: fit-content;
   max-height: 350px;
 }
-.main>.todo-section>section.tasks.project .task-card:last-of-type{
+
+.main>.todo-section>section.tasks.project .task-card:last-of-type {
   margin-bottom: 2.5em;
 }
+
 .main>.todo-section>section .task-wrapper .title::first-letter,
 .main>.todo-section>section .info-section .notes::first-letter,
 .main>.todo-section>section .info-section .description::first-letter {
@@ -381,7 +387,29 @@
   column-gap: 1.15em;
   font-size: inherit;
 }
+.main>.todo-section>section .task-card .task-wrapper label{
+  display: block;
+  height: 27px;
+  width: 27px;
+}
+.main>.todo-section>section .task-card .task-wrapper label::before{
+  --_checkbox-url: url(assets/checkbox.svg);
+  display: inline-block;
+  content: '';
+  background-image: var(--_checkbox-url);
+  background-size: contain;
+  width:25px;
+  height: 25px;
+  background-repeat: no-repeat;
+}
+.main>.todo-section>section .task-card .task-wrapper label:has(:checked):before{
+  --_checkbox-url: url(assets/checked.svg);
+}
 
+.main>.todo-section>section .task-card .task-wrapper input{
+  appearance: none;
+  -webkit-appearance: none;
+}
 
 .main>.todo-section>section .task-card .task-wrapper .task-info {
   cursor: pointer;
@@ -450,7 +478,7 @@
   padding-inline: .65em;
 }
 
-.main>.todo-section .info-container>.info-section svg{
+.main>.todo-section .info-container>.info-section svg {
   display: block;
   align-self: flex-start;
   font-size: 1.35rem;
@@ -468,7 +496,7 @@
 
 
 .main .todo-btn-wrapper {
-  background-color:rgba(253, 250, 246, .35);
+  background-color: rgba(253, 250, 246, .35);
   backdrop-filter: blur(3px);
   position: fixed;
   width: 100%;
@@ -477,10 +505,12 @@
   padding-top: .25em;
   z-index: 200;
 }
-.main .todo-btn-wrapper:has(> .add-btn.hidden){
+
+.main .todo-btn-wrapper:has(> .add-btn.hidden) {
   z-index: 0;
   padding-top: 0;
 }
+
 .main .add-btn {
   --todo-btn-width: calc(calc(100% - 1.375em * 2));
   display: flex;
@@ -517,12 +547,21 @@
 }
 
 .main .task-form-container {
+  background-color: var(--_bg-color, transparent);
   position: absolute;
-  height: 100dvh;
   top: 0;
-  width: 100%;
-  background-color: rgb(166, 174, 191, .2);
+  height: 0;
+  width: 0;
+  height: 100dvh;
+  backdrop-filter: blur(3px);
   z-index: 120;
+  width: 100%;
+  transition: background-color 200ms linear;
+}
+
+.main .task-form-container.mounted {
+  --_bg-color: rgb(166, 174, 191, .2);
+
 }
 
 .main .task-form {
@@ -530,15 +569,22 @@
   position: absolute;
   background-color: #F9F5F4;
   width: var(--task-form-width);
-  max-height: 525px;
   overflow-y: scroll;
   margin: auto;
+  max-height: var(--_mx-height, 0);
   padding: 2em 1.5em;
   left: calc(calc(100% - var(--task-form-width)) / 2);
   bottom: 5.35em;
   border-radius: .735em;
+  opacity: var(--_op, 0);
   z-index: 100;
   box-shadow: 0px 0px 30px #9AA6B2;
+  transition: max-height 350ms cubic-bezier(0.78, 0.11, 0.31, 1.02), opacity 300ms linear(0 0%, 0.35 63.31%, 1 100%);
+}
+
+.main .task-form-container.mounted .task-form {
+  --_op: 1;
+  --_mx-height: 525px;
 }
 
 .main .task-form select,
@@ -631,9 +677,11 @@
   height: 80px;
   margin-bottom: 2em;
 }
-.main .task-form .add-btn{
+
+.main .task-form .add-btn {
   width: 100%;
 }
+
 .modal-wrapper {
   display: flex;
   place-items: center;
@@ -645,28 +693,43 @@
   z-index: 100;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(50px);
-  background: rgba(255, 255, 255, 0.04);
+  background-color: var(--_bg-color, transparent);
+  transition: background-color 300ms linear;
 }
 
-.modal {
+.modal-wrapper.mounted {
+  --_bg-color: rgba(255, 255, 255, 0.04);
+}
+
+.modal-wrapper .modal {
   position: relative;
   --modal-width: min(90%, 450px);
   background-color: rgb(253, 250, 246);
   width: var(--modal-width);
   padding: 2em 1.5em;
   margin: 0 auto;
+  opacity: var(--_op, 0);
   border-radius: 0.703em;
   -webkit-box-shadow: 0 0 10px #98a3ae;
   box-shadow: 0 0 10px #9AA6B2;
+  transform: translate3d(-50%, 0, 0);
+  transition: opacity 250ms linear(0 0%, 0.35 63.31%, 1 100%) 125ms, transform 350ms cubic-bezier(0.215, 0.610, 0.355, 1);
 }
 
-.modal .close-btn{
+.modal-wrapper.mounted .modal {
+  --_scale-y: 10%;
+  transform: translate3d(0, 0, 0);
+  --_op: 1;
+}
+
+.modal .close-btn {
   position: absolute;
   right: 0;
   top: -1.5em;
   background-color: transparent;
   font-size: 2em;
 }
+
 .modal form {
   text-align: left;
   padding: .25em;
