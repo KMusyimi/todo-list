@@ -9,7 +9,7 @@ import { CgNotes } from "react-icons/cg";
 function DueDate({date}: { date: string }) {
     const [dueDate,] = useState(() => moment(date.split('-').join(''), 'YYYYMMDD').fromNow());
     return (
-        <p className="due-date" style={{ color: "#2EC4B6"}}>
+        <p className="due-date" style={{ color: "rgb(22, 196, 127)"}}>
             <img src={calendarIcon} alt="a purplish calendar icon"/> Due {dueDate}
         </p>)
 }
