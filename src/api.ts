@@ -45,11 +45,10 @@ export type MyTask = {
   todoId: string;
   title: string;
   dueDate: string;
-  isDue: boolean;
   priority: number;
   description: string;
   notes: string;
-  isCompleted: boolean;
+  status: 'completed'| 'active'| 'overdue';
   updatedAt: number;
   createdAt: number;
 }[];

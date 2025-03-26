@@ -439,28 +439,28 @@
 
 .main>.todo-section .info-container>.info-section:first-of-type {
   border-top: 2px solid #BCBCC3;
-  padding-top: .45em;
+  padding-top: .75em;
+  margin-bottom: .85em;
 }
 
 .main>.todo-section .info-container>.info-section {
-  padding-inline: .65em;
-}
-.main>.todo-section .info-container>.info-section h4{
-  display: inline-flex;
+  display: grid;
+  grid-template-columns: 27px 1fr;
   gap: .35em;
   align-items: center;
-  color: #393433;
+  padding-inline: .65em;
 }
-.main>.todo-section .info-container>.info-section h4 > svg{
+
+.main>.todo-section .info-container>.info-section svg{
+  display: block;
+  align-self: flex-start;
   font-size: 1.5rem;
+  margin-top: .1em;
+  color: rgb(36, 54, 66);
 }
 
 .main>.todo-section .info-container>.info-section p {
   padding-left: .55em;
-}
-
-.main>.todo-section .info-container .notes {
-  margin-bottom: .75em;
 }
 
 .main>.todo-section .info-container .description {
