@@ -1,5 +1,6 @@
 import {
   addDoc,
+  arrayRemove,
   arrayUnion,
   collection,
   doc,
@@ -40,7 +41,6 @@ export interface MyTodo {
   createdAt: number;
   updatedAt: number;
 }
-
 export type MyTask = {
   todoId: string;
   title: string;
@@ -50,15 +50,17 @@ export type MyTask = {
   notes: string;
   status: 'completed' | 'active' | 'overdue';
   updatedAt: number;
+  completedAt: number;
   createdAt: number;
 }[];
 
+export type CompleteTaskParams = Record<string, string>;
 // const recs = ['personal', 'design', 'work', 'house', 'web development', 'construction', 'fishing', 'travel', 'solo project', 'music', 'outdoor', 'family']
 // Initialize Firebase
 const app: FirebaseApp = initializeApp(firebaseConfig);
 const db: Firestore = getFirestore(app);
 const projectsRef = collection(db, 'projects');
-const recommendationsRef = collection(db, 'recommendations')
+const recommendationsRef = collection(db, 'recommendations');
 
 
 // async function addRecommendations() {
@@ -124,6 +126,25 @@ export async function updateTasks(task: MyTodo): Promise<void> {
     console.error("Error adding document: ", e);
   }
 }
+export async function completeTask(params: CompleteTaskParams) {
+  try {
+    const docRef = doc(db, 'projects', params.projectId);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const data = docSnap.data() as MyTodo;
+      const { tasks } = data;
+      const completedTask = tasks.find(el => el.todoId === params.taskId);
+      if (completedTask) {
+        await updateDoc(docRef, { tasks: arrayRemove(completedTask)});
+        completedTask.status = 'completed';
+        completedTask.completedAt = Date.now();
+        const updatedTask = { ...completedTask };
+        await updateDoc(docRef, { tasks: arrayUnion(updatedTask)});
+       } }
+  } catch (e) {
+    console.error('error => ', e)
+  }
+}
 
 
 export function getProject() {
@@ -131,9 +152,11 @@ export function getProject() {
     project: async (id: string | undefined) => {
       if (id) {
         const docRef = doc(db, 'projects', id);
-        const projectSnapshot = await getDoc(docRef);
-        const data = projectSnapshot.data() as MyTodo;
-        return { ...data, id: projectSnapshot.id }
+        const projectSnap = await getDoc(docRef);
+        if (projectSnap.exists()) {
+          const data = projectSnap.data() as MyTodo;
+          return { ...data, id: projectSnap.id }
+        }
       }
     }
   };

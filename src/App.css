@@ -1,4 +1,15 @@
+#root::before {
+  display: block;
+  content: '';
+  background-image: url(assets/top-image.svg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 14px;
+  width: 100%;
+}
+
 #root {
+
   position: relative;
   max-width: 1280px;
   margin: 0 auto;
@@ -6,8 +17,8 @@
   height: inherit;
 }
 
-#root:has(.task-form) .todo-section,
-#root:has(.menu-mobile--open) .todo-section {
+#root:has(.task-form) .task-section,
+#root:has(.menu-mobile--open) .task-section {
   position: fixed;
   width: 100%;
 }
@@ -172,19 +183,19 @@
   stroke-width: 6;
 }
 
-.menu-btn.open .line1 {
+.menu-btn.expand .line1 {
   stroke-dasharray: 90 207;
   stroke-dashoffset: -134;
   stroke-width: 6;
 }
 
-.menu-btn.open .line2 {
+.menu-btn.expand .line2 {
   stroke-dasharray: 1 60;
   stroke-dashoffset: -30;
   stroke-width: 6;
 }
 
-.menu-btn.open .line3 {
+.menu-btn.expand .line3 {
   stroke-dasharray: 90 207;
   stroke-dashoffset: -134;
   stroke-width: 6;
@@ -207,12 +218,12 @@
   left: 0;
 }
 
-.menu>div .project-link--wrapper {
+.menu>div .link--wrapper {
   padding-block-start: 2.5em;
   margin-bottom: .85em;
 }
 
-.menu>div .project-link--wrapper a {
+.menu>div .link--wrapper a {
   font-size: 2em;
   font-weight: bold;
 }
@@ -261,31 +272,31 @@
   overflow: hidden;
 }
 
-.main>.todo-section {
+.main>.task-section {
   text-align: left;
-  padding: 3.5em 1.375em;
+  padding: 3.5em 1.962em;
   margin-bottom: .438em;
 
 }
 
-.main>.todo-section>header {
+.main>.task-section>header {
   margin-top: 1em;
   margin-bottom: 1.5em;
 }
 
-.main>.todo-section>header h1 {
+.main>.task-section>header h1 {
   font-size: 2.25rem;
   padding-inline: .444em;
   text-align: left;
 }
 
-.main>.todo-section .calendar,
-.main>.todo-section .calendar>button {
+.main>.task-section .calendar,
+.main>.task-section .calendar>button {
   display: flex;
   justify-content: space-between;
 }
 
-.main>.todo-section .calendar {
+.main>.task-section .calendar {
   gap: .75em;
   overflow-x: scroll;
   margin-bottom: 2em;
@@ -293,7 +304,7 @@
   margin-right: -1.5em;
 }
 
-.main>.todo-section .calendar>button {
+.main>.task-section .calendar>button {
   display: flex;
   flex-direction: column;
   place-items: center;
@@ -310,132 +321,202 @@
   opacity: .5;
 }
 
-.main>.todo-section .calendar>button:last-of-type {
+.main>.task-section .calendar>button:last-of-type {
   margin-right: 1.65em;
 }
 
-.main>.todo-section .calendar>button.today {
+.main>.task-section .calendar>button.today {
   background-color: #E6D9CB;
   opacity: .8;
   border-color: transparent;
 }
 
-.main>.todo-section .calendar>button .day {
+.main>.task-section .calendar>button .day {
   font-weight: 600;
   font-size: 0.75rem;
 }
 
-.main>.todo-section .calendar>button .date {
+.main>.task-section .calendar>button .date {
   font-weight: bold;
   font-size: 1.063rem;
 }
-
-.main>.todo-section>section.tasks header .project-name {
-  text-transform: uppercase;
-  font-weight: 600;
-  font-size: .75rem;
-  padding: 1.333em;
-  color: #D1A28B;
+.main>.task-section>section.tasks {
+  max-height: 40px;
+  overflow: hidden;
+  margin-bottom: 2.494em;
+  transition: max-height 550ms cubic-bezier(0.65, -0.12, 0.08, 1.1);
+}
+.main>.task-section>section.tasks.expand{
+  max-height: 1000px;
+}
+.main>.task-section>section.tasks header {
+  display: grid;
+  grid-template-columns: 25px 2fr;
+  cursor: pointer;
+  align-items: center;
+  column-gap: .563em;
+  padding-block-start: 0.187em;
+}
+.main>.task-section>section.tasks header .folder-icon{
+  align-self: self-start;
+  padding: .312em 0.187em;
 }
 
-.main>.todo-section>section.tasks.project header .project-name {
+.main>.task-section>section.tasks header .heading-container {
+  display: flex;
+  align-items: center;
+  gap: 0.869em;
+  margin-bottom: .81em;
+  
+}
+.main>.task-section>section.tasks header .heading-container > .project-name{
   text-transform: capitalize;
-  font-size: 2rem;
-  padding: .444em;
-  margin-bottom: .444em;
-  color: #121212;
+  font-weight: bold;
+  font-size: .936rem;
+  text-wrap: nowrap;
+  color: #413F3F;
+
 }
 
-.main>.todo-section>section .empty-task {
+.main>.task-section>section.tasks header .heading-container > .line {
+  display: block;
+  background-color: #BCBCC3;
+  width: 100%;
+  height: 1px;
+}
+.main>.task-section>section.tasks header .heading-container>div {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(20px, 1fr));
+  align-items: center;
+  gap: 0.375em;
+  margin-right: .55em;
+}
+.main>.task-section>section.tasks.expand header .heading-container>div{
+  display: block;
+  margin-right: 0em;
+}
+.main>.task-section>section.tasks header .heading-container > div .dropdown-icon{
+  rotate: 0deg;
+  width: 12px;
+  height: 15px;
+  transition: rotate 550ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  margin-right: 0.375em;
+}
+.main>.task-section>section.tasks.expand header .heading-container> div .dropdown-icon{
+  rotate: 180deg;
+}
+.main>.task-section>section.tasks header .heading-container > div .count{
+  position: relative;
+  display:flex;
+  place-items: center;
+  justify-content: center;
+  font-size: 0.699rem;
+  font-weight: 600;
+  color: #F4F4F4;
+  width: 1.887em;
+  height: 1.887em;
+z-index: 1;
+}
+.main>.task-section>section.tasks header .heading-container> div .count::before{
+  content: '';
+  display: block;
+  position: absolute;
+  background-color: #413F3F;
+  height: inherit;
+  width: inherit;
+  border-radius: .535em;
+  z-index: -1;
+}
+
+.main>.task-section>section .empty-task {
   text-align: center;
   font-weight: 600;
   padding: 1.85em 0;
 }
 
-.main>.todo-section>section .task-card {
-  background-color: #F3EFEE;
-  -webkit-box-shadow: 0 0 6px #9F9F9F;
-  box-shadow: 0 0 6px #9F9F9F;
-  padding: 1em;
-  border-radius: .706em;
+.main>.task-section>section .task-card {
   margin-bottom: 1em;
-  max-height: 90px;
-  overflow: hidden;
+  max-height: 45px;
   transition: max-height .55s cubic-bezier(0.65, -0.12, 0.08, 1.1);
 }
-
-.main>.todo-section>section .task-card.open {
+.main>.task-section>section .task-card:first-of-type{
+  padding-top: .86em;
+}
+.main>.task-section>section .task-card.expand {
   height: fit-content;
   max-height: 350px;
 }
 
-.main>.todo-section>section.tasks.project .task-card:last-of-type {
+.main>.task-section>section.tasks.project .task-card:last-of-type {
   margin-bottom: 2.5em;
 }
 
-.main>.todo-section>section .task-wrapper .title::first-letter,
-.main>.todo-section>section .info-section .notes::first-letter,
-.main>.todo-section>section .info-section .description::first-letter {
+.main>.task-section>section .task-wrapper .title::first-letter,
+.main>.task-section>section .info-section .notes::first-letter,
+.main>.task-section>section .info-section .description::first-letter {
   text-transform: capitalize;
 }
 
-.main>.todo-section>section .task-card .task-wrapper {
+.main>.task-section>section .task-card .task-wrapper {
   display: grid;
   grid-template-columns: 25px 1fr 25px;
   grid-template-rows: repeat(1, 1fr);
   align-items: center;
-  column-gap: 1.15em;
+  column-gap: 0.544em;
   font-size: inherit;
 }
-.main>.todo-section>section .task-card .task-wrapper label{
+
+.main>.task-section>section .task-card .task-wrapper label {
   display: block;
-  height: 27px;
-  width: 27px;
+  height: 28px;
+  width: 25px;
+  padding: 0.249em 0;
 }
-.main>.todo-section>section .task-card .task-wrapper label::before{
+.main>.task-section>section .task-card .task-wrapper label:disabled{
+  pointer-events: none;
+}
+.main>.task-section>section .task-card .task-wrapper label::before {
   --_checkbox-url: url(assets/checkbox.svg);
   display: inline-block;
   content: '';
+  cursor: pointer;
   background-image: var(--_checkbox-url);
   background-size: contain;
-  width:25px;
-  height: 25px;
+  width: 20px;
+  height: 20px;
   background-repeat: no-repeat;
 }
-.main>.todo-section>section .task-card .task-wrapper label:has(:checked):before{
+.main>.task-section>section .task-card .task-wrapper label.priority-medium::before{
+  --_checkbox-url: url(assets/checkbox-orange.svg);
+}
+.main>.task-section>section .task-card .task-wrapper label.priority-high::before{
+  --_checkbox-url: url(assets/checkbox-red.svg);
+}
+.main>.task-section>section .task-card .task-wrapper label:has(:checked):before,
+.main>.task-section>section .task-card .task-wrapper label:has(:disabled):before {
   --_checkbox-url: url(assets/checked.svg);
 }
 
-.main>.todo-section>section .task-card .task-wrapper input{
+.main>.task-section>section .task-card .task-wrapper input {
   appearance: none;
   -webkit-appearance: none;
 }
 
-.main>.todo-section>section .task-card .task-wrapper .task-info {
+.main>.task-section>section .task-card .task-wrapper .task-info {
   cursor: pointer;
-  margin-top: .15em;
 }
-
-.main>.todo-section>section .task-card .task-wrapper .title {
+.main>.task-section>section .task-card .task-wrapper .task-info:has(.strikethrough){
+  pointer-events: none;
+}
+.main>.task-section>section .task-card .task-wrapper .title {
   font-size: 1.073rem;
-  font-weight: 500;
-  margin: 0 0 .35em 0;
+  font-weight: 400;
   transition: margin 450ms cubic-bezier(0.86, 0, 0.07, 1);
 }
-
-.main>.todo-section>section .task-card.open .task-wrapper .title {
-  margin: .65em 0;
+.main>.task-section>section .task-card .task-wrapper .title .strikethrough{
+  color: #B5B5BA;
 }
-
-.main>.todo-section>section .task-card .task-wrapper .due-date {
-  display: inline-flex;
-  align-items: center;
-  gap: .35em;
-  font-size: .85rem;
-  font-weight: bold;
-}
-
-.main>.todo-section>section .task-card .task-wrapper>.options-btn {
+.main>.task-section>section .task-card .task-wrapper>.options-btn {
   align-self: flex-start;
   background-color: transparent;
   display: grid;
@@ -447,15 +528,15 @@
 }
 
 
-.main>.todo-section>section .task-card>.info-container {
+.main>.task-section>section .task-card>.info-container {
   padding: .75em 2.188em;
   visibility: hidden;
   opacity: 0;
-  transition: visibility 0ms var(--_visibility-delay, 450ms),
-    opacity 450ms linear(0 0%, 0.35 63.31%, 1 100%) var(--_op-delay, 0ms);
+  transition: visibility 0ms var(--_visibility-delay, 300ms),
+  opacity 450ms linear(0 0%, 0.35 63.31%, 1 100%) var(--_op-delay, 0ms);
 }
 
-.main>.todo-section>section .task-card.open>.info-container {
+.main>.task-section>section .task-card.expand>.info-container {
   --_visibility-delay: 0ms;
   --_op-delay: 75ms;
   visibility: visible;
@@ -464,13 +545,20 @@
   position: static;
 }
 
-.main>.todo-section .info-container>.info-section:first-of-type {
-  border-top: 2px solid #BCBCC3;
+.main>.task-section>section .task-card .info-container .due-date {
+  display: inline-flex;
+  align-items: center;
+  gap: .35em;
+  font-size: .888rem;
+  font-weight: bold;
+}
+
+.main>.task-section .info-container>.info-section:first-of-type {
   padding-top: .75em;
   margin-bottom: .85em;
 }
 
-.main>.todo-section .info-container>.info-section {
+.main>.task-section .info-container>.info-section {
   display: grid;
   grid-template-columns: 27px 1fr;
   gap: .35em;
@@ -478,24 +566,32 @@
   padding-inline: .65em;
 }
 
-.main>.todo-section .info-container>.info-section svg {
+.main>.task-section .info-container>.info-section svg {
   display: block;
   align-self: flex-start;
   font-size: 1.35rem;
   margin-top: .1em;
-  color: rgb(36, 54, 66);
+  color: #9F9F9F;
 }
 
-.main>.todo-section .info-container>.info-section p {
+.main>.task-section .info-container>.info-section p {
   padding-left: .55em;
 }
 
-.main>.todo-section .info-container .description {
+.main>.task-section .info-container .description {
   margin-bottom: 0;
 }
 
+.main > .task-section .tasks .btn-container{
+  display: flex;
+  gap: 0.544em;
+}
+.main > .task-section .tasks .btn-container button{
+  font-size: 0.922rem;
+  color: #413F3F;
 
-.main .todo-btn-wrapper {
+}
+.main .task-btn-wrapper {
   background-color: rgba(253, 250, 246, .35);
   backdrop-filter: blur(3px);
   position: fixed;
@@ -506,7 +602,7 @@
   z-index: 200;
 }
 
-.main .todo-btn-wrapper:has(> .add-btn.hidden) {
+.main .task-btn-wrapper:has(> .add-btn.hidden) {
   z-index: 0;
   padding-top: 0;
 }
@@ -553,7 +649,6 @@
   height: 0;
   width: 0;
   height: 100dvh;
-  backdrop-filter: blur(3px);
   z-index: 120;
   width: 100%;
   transition: background-color 200ms linear;

@@ -51,8 +51,7 @@ function FormOptions({ projects }: {
             {projectPromise.map((project) => {
                 const { id, projectName } = project;
                 return (<option key={id} value={id}> {projectName} </option>)
-            })
-            }
+            })}
         </Suspense>
 
     )
@@ -111,7 +110,7 @@ export default function TaskForm({ projects }: {
 
                         <div className={'radio-container'}>
                             <input id={'high'} type={'radio'} name={'priority'} value={3}
-                                style={{ height: '25px', width: '25px', verticalAlign: 'middle' }} />
+                                style={{ height: '25px', width: '25px', verticalAlign: 'middle' }} required/>
                             <label htmlFor={'high'}> High </label>
                         </div>
                         <div className={'radio-container'}>

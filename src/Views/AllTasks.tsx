@@ -14,7 +14,7 @@ export default function AllTasks() {
             updatedAt: Date;
         }[]>
     } = useOutletContext();
-    const id = useId();
+    const idStr = useId();
 
     function renderAllTasks(projects: {
         id: string;
@@ -22,13 +22,13 @@ export default function AllTasks() {
         tasks: MyTask;
     }[]) {
         return projects.map((project, idx) => {
-            const {projectName, tasks} = project;
-            return <TasksWrapper key={`task-${id + idx.toString()}`} projectName={projectName} tasks={tasks} cls=""/>
+            const {id, projectName, tasks} = project;
+            return <TasksWrapper key={`task-${idStr + idx.toString()}`} id={id} projectName={projectName} tasks={tasks} />
         })
     }
 
     return (
-        <Suspense fallback={< h1> Loading...</h1>}>
+        <Suspense fallback={<h1> Loading...</h1>}>
             <Await resolve={projects}>{renderAllTasks}</Await>
         </Suspense>
     );
