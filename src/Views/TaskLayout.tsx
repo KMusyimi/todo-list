@@ -2,62 +2,56 @@
 import { JSX, useCallback, useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { Link, Outlet, useLoaderData, useSearchParams } from "react-router-dom";
-import { getProjects } from "../api.ts";
+import { getProjectNames, getProjects } from "../api.ts";
 import Calendar from "../components/Calendar.tsx";
 import Modal from "../components/Modal.tsx";
 import Nav from "../components/Nav.tsx";
 import SuccessMsg from "../components/SuccessMsg.tsx";
 import { checkUserProjects } from "../utils.ts";
-import TaskForm from "../components/TaskForm.tsx";
 
 
-export async function allTasksLoader() {
+export async function projectsLoader() {
     const userProjects = await checkUserProjects();
     userProjects.hasProjects();
-    return { projects: getProjects() }
+    return { projects: getProjects(), projectNames: await getProjectNames()}
 }
 
 
 export default function TaskLayout(): JSX.Element {
     const [displayModal, setDisplayModal] = useState(false);
     const [toggleMenu, setToggleMenu] = useState(false);
-    const { projects } = useLoaderData<typeof allTasksLoader>();
-    const [toggleForm, setToggleForm] = useState(false);
+    const { projects, projectNames } = useLoaderData<typeof projectsLoader>();
+    
+    const [searchParams, setSearchParams] = useSearchParams();
+    const successMsg = searchParams.get('message');
+    
     const closeModal = useCallback(() => {
         if (displayModal) { setDisplayModal(!displayModal); }
     }, [displayModal])
 
 
-    const [searchParams, setSearchParams] = useSearchParams();
-    const successMsg = searchParams.get('message');
-    const submitted = searchParams.get('submitted');
-
-    useEffect(() => {
-        let timer: string | number | NodeJS.Timeout | undefined;
+    const displaySuccessMsg = useCallback(()=> {
         if (successMsg) {
-            timer = setTimeout(() => {
+            return setTimeout(() => {
                 setSearchParams(prev => {
                     prev.delete('message');
                     return prev
                 });
             }, 5000);
         }
-        if (submitted) {
-            setToggleForm(!toggleForm);
-            setSearchParams((prev) => {
-                prev.delete('submitted');
-                return prev;
-            })
-        }
+    }, [setSearchParams, successMsg]);
+    
+    useEffect(() => {
+        const timer = displaySuccessMsg();
         return () => {
             clearTimeout(timer);
         }
-    }, [setSearchParams, submitted, successMsg, toggleForm]);
+    }, [displaySuccessMsg]);
 
 
     return (<>
         <div className={`menu menu-mobile ${toggleMenu ? 'menu-mobile--open' : ''}`}>
-            <button type="button" className={`menu-btn ${toggleMenu ? 'open' : ''} `}
+            <button type="button" className={`menu-btn ${toggleMenu ? 'expand' : ''} `}
                 onClick={() => {
                     setToggleMenu(!toggleMenu)
                 }}
@@ -75,7 +69,7 @@ export default function TaskLayout(): JSX.Element {
                     <Link to='/projects'>My Projects</Link>
                 </div>
 
-                <Nav projects={projects} />
+                <Nav projectNames={projectNames} />
                 <button
                     id={'add-project'}
                     className={'add-btn'}
@@ -84,7 +78,7 @@ export default function TaskLayout(): JSX.Element {
                         setDisplayModal(true)
                     }}><FaPlus />Create new project
                 </button>
-                
+
             </div>
         </div>
         <main className={'main'}>
@@ -93,13 +87,7 @@ export default function TaskLayout(): JSX.Element {
                 {successMsg && <SuccessMsg successMsg={successMsg} />}
                 <Outlet context={{ projects }} />
             </section>
-            <div className="task-btn-wrapper">
-                <button type="button"
-                    className={toggleMenu ? "add-btn hidden" : 'add-btn'}
-                    onClick={() => { setToggleForm(!toggleForm) }}><FaPlus className={toggleForm ? "icon close-icon" : 'icon'} /> {toggleForm ? 'Close form' : 'Create new task'}</button>
-            </div>
-
-            {toggleForm && <TaskForm projects={projects} />}
+           
         </main>
         {displayModal && <Modal closeModal={closeModal} />}
     </>)

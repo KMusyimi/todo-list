@@ -1,48 +1,32 @@
-import {JSX, Suspense, use} from "react";
-import { NavLink} from "react-router-dom";
+import { JSX } from "react";
+import { NavLink } from "react-router-dom";
 import projectIcon from '../assets/projects.svg';
-import { MyTask } from "../api";
-interface NavProps{
-    projects: Promise<{
-        id: string;
-        projectName: string;
-        tasks: MyTask;
-        createdAt: number;
-        updatedAt: number;
-    }[]>;
+import { Project } from "../api";
+interface NavProps {
+    projectNames: Project[] | null
 }
-interface LoadedProjectsProps{
-    projects: {
-        id: string;
-        projectName: string;
-        tasks: MyTask;
-        createdAt: number;
-        updatedAt: number;
-    }[]
-};
 
-function RenderProjects({projects}: LoadedProjectsProps) {
-    return projects.map((project) => {
+
+function Render({ projectNames }: NavProps) {
+    if (!projectNames) { console.error('no project names'); }
+    return projectNames?.map((project) => {
         const { id, projectName } = project;
         return (
-            <li key= { id } >
-                <NavLink to={ `${id.toString()}/todo` } >
-                    <img src={ projectIcon } alt = "image of project icon" />
-                    { projectName }
+            <li key={id} >
+                <NavLink to={`${id.toString()}/todo`} >
+                    <img src={projectIcon} alt="image of project icon" />
+                    {projectName}
                 </NavLink>
             </li>);
-});
-    }
+    });
+}
 
 
-export default function Nav({projects}:NavProps): JSX.Element {
-    const loadedProjects = use(projects);
+export default function Nav({ projectNames }: NavProps): JSX.Element {
     return (
         <nav className="nav">
             <ul>
-                <Suspense fallback={<h1>Loading</h1>}>
-                    <RenderProjects projects={loadedProjects}/>
-                </Suspense>
+                {projectNames?<Render projectNames={projectNames} />: <span>no projects available</span>}
             </ul>
         </nav>
     )

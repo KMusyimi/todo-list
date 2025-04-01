@@ -9,7 +9,6 @@
 }
 
 #root {
-
   position: relative;
   max-width: 1280px;
   margin: 0 auto;
@@ -440,7 +439,7 @@ z-index: 1;
   transition: max-height .55s cubic-bezier(0.65, -0.12, 0.08, 1.1);
 }
 .main>.task-section>section .task-card:first-of-type{
-  padding-top: .86em;
+  margin-top: .86em;
 }
 .main>.task-section>section .task-card.expand {
   height: fit-content;
@@ -505,7 +504,7 @@ z-index: 1;
 .main>.task-section>section .task-card .task-wrapper .task-info {
   cursor: pointer;
 }
-.main>.task-section>section .task-card .task-wrapper .task-info:has(.strikethrough){
+.main>.task-section>section .task-card .task-wrapper .task-info:has(.strike) {
   pointer-events: none;
 }
 .main>.task-section>section .task-card .task-wrapper .title {
@@ -513,7 +512,7 @@ z-index: 1;
   font-weight: 400;
   transition: margin 450ms cubic-bezier(0.86, 0, 0.07, 1);
 }
-.main>.task-section>section .task-card .task-wrapper .title .strikethrough{
+.main>.task-section>section .task-card .task-wrapper .title .strike{
   color: #B5B5BA;
 }
 .main>.task-section>section .task-card .task-wrapper>.options-btn {
@@ -554,7 +553,7 @@ z-index: 1;
 }
 
 .main>.task-section .info-container>.info-section:first-of-type {
-  padding-top: .75em;
+  margin-top: .75em;
   margin-bottom: .85em;
 }
 
@@ -578,7 +577,7 @@ z-index: 1;
   padding-left: .55em;
 }
 
-.main>.task-section .info-container .description {
+.main>.task-section .info-container .notes {
   margin-bottom: 0;
 }
 
@@ -591,56 +590,7 @@ z-index: 1;
   color: #413F3F;
 
 }
-.main .task-btn-wrapper {
-  background-color: rgba(253, 250, 246, .35);
-  backdrop-filter: blur(3px);
-  position: fixed;
-  width: 100%;
-  bottom: 0em;
-  padding-bottom: 1.375em;
-  padding-top: .25em;
-  z-index: 200;
-}
 
-.main .task-btn-wrapper:has(> .add-btn.hidden) {
-  z-index: 0;
-  padding-top: 0;
-}
-
-.main .add-btn {
-  --todo-btn-width: calc(calc(100% - 1.375em * 2));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1em;
-  width: var(--todo-btn-width);
-  font-size: 1.125rem;
-  text-align: center;
-  background-color: #393433;
-  color: #F9F5F4;
-  padding: 0.75em 0.375em;
-  margin: 0 auto;
-  border-radius: .735em;
-  opacity: 1;
-  visibility: visible;
-  transition: visibility 0s var(--vis-delay, 0ms), opacity 350ms cubic-bezier(0.175, 0.885, 0.32, 1.275) var(--trs-delay, 350ms);
-}
-
-.main .add-btn.hidden {
-  --trs-delay: 0ms;
-  --vis-delay: 350ms;
-  opacity: 0;
-  visibility: hidden;
-}
-
-.main .add-btn>.icon {
-  rotate: 0deg;
-  transition: rotate 250ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
-}
-
-.main .add-btn>.close-icon {
-  rotate: -135deg;
-}
 
 .main .task-form-container {
   background-color: var(--_bg-color, transparent);
@@ -774,7 +724,18 @@ z-index: 1;
 }
 
 .main .task-form .add-btn {
-  width: 100%;
+    display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1em;
+      width: var(--todo-btn-width);
+      font-size: 1.125rem;
+      text-align: center;
+      background-color: #393433;
+      color: #F9F5F4;
+      padding: 0.75em 0.375em;
+      border-radius: .735em;
+      width: 100%;
 }
 
 .modal-wrapper {

@@ -1,7 +1,5 @@
 import {
   addDoc,
-  arrayRemove,
-  arrayUnion,
   collection,
   doc,
   Firestore,
@@ -10,7 +8,8 @@ import {
   getFirestore,
   orderBy,
   query,
-  updateDoc
+  updateDoc,
+  where
 } from "firebase/firestore";
 // Import the functions you need from the SDKs you need
 import { FirebaseApp, initializeApp } from "firebase/app";
@@ -34,25 +33,37 @@ export interface Recommendations {
   createdAt?: Date;
 }
 
-export interface MyTodo {
+export interface Project {
   id: string;
   projectName: string;
-  tasks: MyTask;
-  createdAt: number;
-  updatedAt: number;
+  updatedAt?: Date | null;
+  createdAt: Date;
 }
-export type MyTask = {
-  todoId: string;
+
+export type MyProject ={
+  id: string;
+  projectName: string;
+  tasks: MyTask[]
+  updatedAt?: Date | null;
+  createdAt: Date;
+} | null;
+
+export type MyProjects = MyProject[];
+export interface MyTask {
+  projectId: string;
+  id: string;
   title: string;
-  dueDate: string;
+  status: 'active' | 'overdue' | 'completed';
+  dueDate: Date | string;
   priority: number;
   description: string;
   notes: string;
-  status: 'completed' | 'active' | 'overdue';
-  updatedAt: number;
-  completedAt: number;
-  createdAt: number;
-}[];
+  updatedAt?: Date | null;
+  completedAt?: Date |null;
+  createdAt: Date;
+}
+
+
 
 export type CompleteTaskParams = Record<string, string>;
 // const recs = ['personal', 'design', 'work', 'house', 'web development', 'construction', 'fishing', 'travel', 'solo project', 'music', 'outdoor', 'family']
@@ -60,7 +71,11 @@ export type CompleteTaskParams = Record<string, string>;
 const app: FirebaseApp = initializeApp(firebaseConfig);
 const db: Firestore = getFirestore(app);
 const projectsRef = collection(db, 'projects');
+const tasksRef = collection(db, 'tasks');
 const recommendationsRef = collection(db, 'recommendations');
+
+const currentDate = new Date(Date.now());
+const createdAt =  currentDate;
 
 
 // async function addRecommendations() {
@@ -91,9 +106,8 @@ export async function addProject(projectName: FormDataEntryValue) {
   try {
     const docRef = await addDoc(projectsRef, {
       projectName: projectName,
-      tasks: [],
-      createdAt: Date.now(),
       updateAt: '',
+      createdAt
     });
     console.log("Document written with ID: ", docRef.id);
     return docRef.id.toString();
@@ -111,36 +125,64 @@ export async function isProjectsEmpty(): Promise<boolean> {
 export async function getProjects() {
   const qry = query(projectsRef, orderBy('createdAt', 'desc'));
   const querySnapshot = await getDocs(qry);
-  return querySnapshot.docs.map((doc) => {
-    const data = doc.data() as MyTodo;
-    return { ...data, id: doc.id }
-  });
+  return await Promise.all(querySnapshot.docs.map(async (doc) => {
+    const data = doc.data() as Project;
+    const tasks = await getTasks(doc.id);
+    return { ...data, id: doc.id, tasks };
+  })) as MyProjects;
 }
 
-export async function updateTasks(task: MyTodo): Promise<void> {
+export async function getProjectNames() {
+  const projectsSnapshot = await getDocs(projectsRef);
+  if(projectsSnapshot.empty){return null;}
+  return projectsSnapshot.docs.map((doc)=>{
+    const data = doc.data() as Project;
+    return {...data, id: doc.id};
+  }) as Project[]
+}
+
+
+export async function addTask(task: Record<string, FormDataEntryValue>): Promise<void> {
   try {
-    const docRef = doc(db, 'projects', task.id);
-    await updateDoc(docRef, { tasks: arrayUnion(...task.tasks) });
-    console.log("Document updated with ID: ", task.id);
+    const dueDate = task.dueDate as unknown as Date;
+    const docRef = await addDoc(tasksRef, {
+      ...task,
+      dueDate,
+      status: 'active',
+      priority: Number(task.priority),
+      updatedAt: '',
+      createdAt
+    });
+    console.log("Document updated with ID: ", docRef.id);
   } catch (e) {
     console.error("Error adding document: ", e);
   }
 }
+
+async function getTasks(id: string) {
+  const q = query(tasksRef, where('projectId', '==', id), orderBy('priority','desc'), orderBy('dueDate', 'asc'));
+  const taskSnapshot = await getDocs(q);
+
+  if (taskSnapshot.empty) { return []; }
+
+  return taskSnapshot.docs.map((doc) => {
+    const taskData = doc.data() as MyTask;
+    // const dueDate = moment(taskData.dueDate);
+    // console.log(moment().diff(dueDate, 'days', true));
+    return { ...taskData, id: doc.id };
+  }) as MyTask[];
+
+}
+
+
 export async function completeTask(params: CompleteTaskParams) {
   try {
-    const docRef = doc(db, 'projects', params.projectId);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      const data = docSnap.data() as MyTodo;
-      const { tasks } = data;
-      const completedTask = tasks.find(el => el.todoId === params.taskId);
-      if (completedTask) {
-        await updateDoc(docRef, { tasks: arrayRemove(completedTask)});
-        completedTask.status = 'completed';
-        completedTask.completedAt = Date.now();
-        const updatedTask = { ...completedTask };
-        await updateDoc(docRef, { tasks: arrayUnion(updatedTask)});
-       } }
+    const docRef = doc(db, 'tasks', params.taskId);
+    await updateDoc(docRef, {
+      status: 'completed',
+      priority: 0 ,
+      dueDate: '',
+      completedAt: currentDate});
   } catch (e) {
     console.error('error => ', e)
   }
@@ -150,14 +192,18 @@ export async function completeTask(params: CompleteTaskParams) {
 export function getProject() {
   return {
     project: async (id: string | undefined) => {
-      if (id) {
-        const docRef = doc(db, 'projects', id);
-        const projectSnap = await getDoc(docRef);
-        if (projectSnap.exists()) {
-          const data = projectSnap.data() as MyTodo;
-          return { ...data, id: projectSnap.id }
-        }
-      }
+      if (!id) { return null; }
+
+      const docRef = doc(db, 'projects', id);
+      const projectSnap = await getDoc(docRef);
+      if (!projectSnap.exists()) { return null; }
+
+      const data = projectSnap.data() as Project;
+      const tasks = await getTasks(projectSnap.id);
+      return { ...data, id: projectSnap.id, tasks } as MyProject;
     }
   };
 }
+
+const oneday = 60 * 60 * 24 * 1000;
+console.log((Date.now() +oneday), new Date(oneday) );

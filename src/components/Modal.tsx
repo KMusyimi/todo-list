@@ -30,23 +30,33 @@ export default function Modal(props: { closeModal: () => void; }): JSX.Element {
     const submitted = searchParams.get('submitted');
     const mountedRef = useRef<HTMLDivElement>(null)
 
-    useEffect(() => {
-        const timer  = setTimeout(() => {
-            if (mountedRef.current){
-                mountedRef.current.classList.add('mounted')
+    const displayModal = useCallback(()=> {
+        return setTimeout(() => {
+            if (mountedRef.current) {
+                mountedRef.current.classList.add('mounted');
             }
         }, 10);
-        if (submitted) {
+    }, []);
+
+    const closeModalOnSubmit = useCallback((submit: string | null)=> {
+        if (submit) {
             props.closeModal();
             setSearchParams((prev) => {
                 prev.delete('submitted');
                 return prev;
             });
         }
+    }, [props, setSearchParams]);
+    
+    useEffect(() => {
+        const timer  = displayModal();
+        closeModalOnSubmit(submitted);
         return ()=>{
             clearTimeout(timer);
         }
-    }, [props, setSearchParams, submitted]);
+    }, [closeModalOnSubmit, displayModal, submitted]);
+    
+    
     const handleClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
         const {id} = e.target as HTMLDivElement;
         if (id === 'modal-container') {
