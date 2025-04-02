@@ -7,6 +7,7 @@ import calendarIcon from '../assets/calendar.svg';
 import folderIcon from '../assets/projects.svg';
 import RectSolidSvg, { DescriptionSvg, NotesSvg } from "./Svg";
 import TaskForm from "./TaskForm";
+import { MdDeleteOutline, MdOutlineEditNote } from "react-icons/md";
 
 
 interface TaskWrapperProps {
@@ -117,7 +118,7 @@ function TasksWrapper({project}: TaskWrapperProps): JSX.Element {
                             <div className="task-wrapper">
                                 {/* TODO: change into inputs and useFetcher */}
 
-                                < FetcherCell projectId={id ?? ''} taskId={task.id} intent="status">
+                                <FetcherCell projectId={id ?? ''} taskId={task.id} intent="status">
                                     <label className={getPriority(task.priority)} htmlFor={`c-${task.id}`}>
                                         <input 
                                         className="form-checkbox" 
@@ -131,18 +132,13 @@ function TasksWrapper({project}: TaskWrapperProps): JSX.Element {
 
 
                                 <section className={`task-info`} onClick={handleTaskClick} data-task={task.id}>
-                                    <h3 className="title">{task.status === 'active'? task.title: <s className="strike">{task.title}</s>}</h3>
+                                    <h3 className="title">{task.status !== 'completed'? task.title: <s className="strike">{task.title}</s>}</h3>
                                     </section>
+                                <div className="btn-container">
+                                    {task.status !== 'completed' &&<button type="button"> <MdOutlineEditNote/></button>}
+                                    <button type="button"><MdDeleteOutline/></button>
+                                </div>
 
-
-                                <button type="button" className="options-btn">
-                                    {Array.from(Array(6), (_, idx) => <svg key={`rect-${idx.toString()}`} width="3"
-                                                                           height="4" viewBox="0 0 3 4" fill="none"
-                                                                           xmlns="http://www.w3.org/2000/svg">
-                                        <rect y="0.5" width="3" height="3" fill="#D9D9D9"/>
-                                    </svg>)
-                                    }
-                                </button>
                             </div>
 
 
@@ -180,11 +176,27 @@ function TasksWrapper({project}: TaskWrapperProps): JSX.Element {
 }
 
 function DueDate({date}: { date: string | Date }) {
-    const [dueDate,] = useState(() => moment(new Date(date)).fromNow());
+    const [dueDate,setDueDate] = useState<string | null>(null);
+    
+    const updateDueDate = useCallback((date: string | Date)=> {
+        setDueDate(prev => {
+            prev = moment(new Date(date)).fromNow();
+            return prev;
+        })
+
+    }, [])
+    
+    useEffect(()=> {
+        updateDueDate(date);
+        const timer = setInterval(() => {
+            updateDueDate(date);
+        }, 1000 * 60);
+        return ()=> {clearInterval(timer)}
+    }, [date, updateDueDate]);
+
     return (
-        <p className="due-date" style={{color: "rgb(22, 196, 127)"}
-        }>
-            <img src={calendarIcon} alt="a purplish calendar icon"/> Due {dueDate}
+        <p className="due-date" style={{color: "rgb(22, 196, 127)"}}>
+            <img src={calendarIcon} alt="a dark greenish calendar icon"/> Due {dueDate}
         </p>)
 }
 

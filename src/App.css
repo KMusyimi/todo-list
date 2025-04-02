@@ -458,7 +458,7 @@ z-index: 1;
 
 .main>.task-section>section .task-card .task-wrapper {
   display: grid;
-  grid-template-columns: 25px 1fr 25px;
+  grid-template-columns: 25px 2fr 1fr;
   grid-template-rows: repeat(1, 1fr);
   align-items: center;
   column-gap: 0.544em;
@@ -515,17 +515,17 @@ z-index: 1;
 .main>.task-section>section .task-card .task-wrapper .title .strike{
   color: #B5B5BA;
 }
-.main>.task-section>section .task-card .task-wrapper>.options-btn {
-  align-self: flex-start;
-  background-color: transparent;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(3, 3.25px);
-  gap: 0.25em;
-  margin-left: auto;
-  margin-top: .35em;
-}
 
+.main>.task-section>section .task-card .task-wrapper > div {
+  font-size: 1.55rem;
+  justify-self: right;
+}
+.main>.task-section>section .task-card .task-wrapper>div button{
+  font-size: inherit;
+}
+.main>.task-section>section .task-card .task-wrapper>div button svg{
+  color: #222222;
+}
 
 .main>.task-section>section .task-card>.info-container {
   padding: .75em 2.188em;
