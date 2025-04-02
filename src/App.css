@@ -568,9 +568,8 @@ z-index: 1;
 .main>.task-section .info-container>.info-section svg {
   display: block;
   align-self: flex-start;
-  font-size: 1.35rem;
   margin-top: .1em;
-  color: #9F9F9F;
+  color: #222222;
 }
 
 .main>.task-section .info-container>.info-section p {
