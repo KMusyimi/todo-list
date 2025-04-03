@@ -77,8 +77,10 @@ const projectsRef = collection(db, 'projects');
 const tasksRef = collection(db, 'tasks');
 const recommendationsRef = collection(db, 'recommendations');
 
-const currentDate = new Date(Date.now());
+export const currentDate = new Date(Date.now());
 const createdAt = currentDate;
+const dateFormatted = moment(currentDate).local().format('YYYY-MM-DDTHH:mm');
+
 
 
 // async function addRecommendations() {
@@ -95,7 +97,7 @@ const createdAt = currentDate;
 
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-setInterval(async ()=> await checkOverDueTasks(), 1000*60);
+setInterval(async () => await checkOverDueTasks(), 1000 * 60);
 
 
 export async function getRecommendations() {
@@ -130,12 +132,12 @@ export async function isProjectsEmpty(): Promise<boolean> {
 }
 
 
-export async function getProjects() {
+export async function getProjects(date: string) {
   const qry = query(projectsRef, orderBy('createdAt', 'desc'));
   const querySnapshot = await getDocs(qry);
   return await Promise.all(querySnapshot.docs.map(async (doc) => {
     const data = doc.data() as Project;
-    const tasks = await getTasks(doc.id);
+    const tasks = date ? await getTasksByDate(doc.id, date) : await getTasks(doc.id);
     return { ...data, id: doc.id, tasks };
   })) as MyProjects;
 }
@@ -171,20 +173,28 @@ async function getTasks(id: string) {
   const q = query(tasksRef, where('projectId', '==', id), orderBy('priority', 'desc'), orderBy('dueDate', 'asc'));
 
   const taskSnapshot = await getDocs(q);
-  const completedTask = await getCompletedTasks(id);
 
   if (taskSnapshot.empty) { return []; }
-
-  const tasks = taskSnapshot.docs.map((doc) => {
+  
+  return taskSnapshot.docs.map((doc) => {
     const taskData = doc.data() as MyTask;
     return { ...taskData, id: doc.id };
   }) as MyTask[];
+}
 
-  if (completedTask) {
-    return [...tasks, ...completedTask] as unknown as MyTask[]
-  }
+async function getTasksByDate(id: string, date: string) {
+  const q = query(tasksRef, where('projectId', '==', id), orderBy('priority', 'desc'), orderBy('dueDate', 'asc'));
 
-  return tasks;
+  const taskSnapshot = await getDocs(q);
+
+  if (taskSnapshot.empty) { return []; }
+  
+  return taskSnapshot.docs.filter((doc) => {
+    const taskData = doc.data() as MyTask;
+    const fmt = moment(taskData.dueDate).format('YYYY-MM-DD');
+    return fmt === date && { ...taskData, id: doc.id };
+  }).map((doc) =>  ({ ...doc.data(), id: doc.id } as MyTask));
+
 }
 
 
@@ -201,13 +211,14 @@ async function getCompletedTasks(id: string) {
   }
 }
 
+
+
 async function checkOverDueTasks() {
-  const currentDateFmt = moment(new Date(Date.now())).local().format('YYYY-MM-DDTHH:mm');
-  const qry = query(tasksRef, where('dueDate', '<', currentDateFmt));
+  const qry = query(tasksRef, where('dueDate', '<', dateFormatted));
   const taskSnapshot = await getDocs(qry);
-  
+
   if (!taskSnapshot.empty) {
-    return await Promise.all(taskSnapshot.docs.map(async(doc) => {
+    return await Promise.all(taskSnapshot.docs.map(async (doc) => {
       const taskData = doc.data() as MyTask;
       taskData.status = 'overdue';
       const status = taskData.status;
@@ -246,16 +257,20 @@ export async function completeTask(params: CompleteTaskParams) {
 
 export function getProject() {
   return {
-    project: async (id: string | undefined) => {
+    project: async (id: string | undefined, date: string) => {
       if (!id) { return null; }
 
       const docRef = doc(db, 'projects', id);
       const projectSnap = await getDoc(docRef);
       if (!projectSnap.exists()) { return null; }
-
+      const completedTask = await getCompletedTasks(id);
       const data = projectSnap.data() as Project;
-      const tasks = await getTasks(projectSnap.id);
-      return { ...data, id: projectSnap.id, tasks } as MyProject;
+      const tasks = date? await getTasksByDate(id, date) : await getTasks(id);
+
+      if (completedTask){
+        return { ...data, id: projectSnap.id, tasks: [...tasks, ...completedTask] } as MyProject;
+      }
+      return { ...data, id: projectSnap.id, tasks} as MyProject
     }
   };
 }

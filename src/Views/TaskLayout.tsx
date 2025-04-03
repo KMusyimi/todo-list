@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { JSX, useCallback, useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
-import { Link, Outlet, useLoaderData, useSearchParams } from "react-router-dom";
+import { Link, LoaderFunctionArgs, Outlet, useLoaderData, useSearchParams } from "react-router-dom";
 import { getProjectNames, getProjects } from "../api.ts";
 import Calendar from "../components/Calendar.tsx";
 import Modal from "../components/Modal.tsx";
@@ -10,10 +10,13 @@ import SuccessMsg from "../components/SuccessMsg.tsx";
 import { checkUserProjects } from "../utils.ts";
 
 
-export async function projectsLoader() {
+export async function projectsLoader({ request }: LoaderFunctionArgs) {
+    const param = new URL(request.url).searchParams;
+    const date = param.get('date');
     const userProjects = await checkUserProjects();
     userProjects.hasProjects();
-    return { projects: getProjects(), projectNames: await getProjectNames()}
+    
+    return { projects: getProjects(date ?? ''), projectNames: await getProjectNames() }
 }
 
 
@@ -21,16 +24,16 @@ export default function TaskLayout(): JSX.Element {
     const [displayModal, setDisplayModal] = useState(false);
     const [toggleMenu, setToggleMenu] = useState(false);
     const { projects, projectNames } = useLoaderData<typeof projectsLoader>();
-    
+
     const [searchParams, setSearchParams] = useSearchParams();
     const successMsg = searchParams.get('message');
-    
+
     const closeModal = useCallback(() => {
         if (displayModal) { setDisplayModal(!displayModal); }
     }, [displayModal])
 
 
-    const displaySuccessMsg = useCallback(()=> {
+    const displaySuccessMsg = useCallback(() => {
         if (successMsg) {
             return setTimeout(() => {
                 setSearchParams(prev => {
@@ -40,7 +43,7 @@ export default function TaskLayout(): JSX.Element {
             }, 5000);
         }
     }, [setSearchParams, successMsg]);
-    
+
     useEffect(() => {
         const timer = displaySuccessMsg();
         return () => {
@@ -83,11 +86,12 @@ export default function TaskLayout(): JSX.Element {
         </div>
         <main className={'main'}>
             <section className={'task-section'}>
+
                 <Calendar />
                 {successMsg && <SuccessMsg successMsg={successMsg} />}
                 <Outlet context={{ projects }} />
             </section>
-           
+
         </main>
         {displayModal && <Modal closeModal={closeModal} />}
     </>)

@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import moment from "moment";
 import { JSX, useEffect, useRef } from "react";
-import { ActionFunctionArgs, Form, redirect, useNavigation } from "react-router-dom";
+import { ActionFunctionArgs, Form, redirect, useNavigation, useSearchParams } from "react-router-dom";
 import { addTask } from "../api";
 
 interface FormProps {
@@ -32,6 +32,8 @@ export default function TaskForm({ id, projectName }: FormProps): JSX.Element {
     const formContainerRef = useRef<HTMLDivElement>(null);
     const navigation = useNavigation();
     const status = navigation.state;
+    const [searchParams] = useSearchParams();
+    const paramDate = searchParams.get('date');
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -67,7 +69,7 @@ export default function TaskForm({ id, projectName }: FormProps): JSX.Element {
                     id={'dueDate'}
                     name={'dueDate'}
                     className={'form-input'}
-                    min={moment().format('YYYY-MM-DDTHH:mm')}
+                    min={moment(paramDate ?? Date.now()).format('YYYY-MM-DDTHH:mm')}
                     required />
 
                 <fieldset>

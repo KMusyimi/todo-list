@@ -8,6 +8,7 @@ import folderIcon from '../assets/projects.svg';
 import RectSolidSvg, { DescriptionSvg, NotesSvg } from "./Svg";
 import TaskForm from "./TaskForm";
 import { MdDeleteOutline, MdOutlineEditNote } from "react-icons/md";
+import { IoTimeOutline } from "react-icons/io5";
 
 
 interface TaskWrapperProps {
@@ -62,6 +63,7 @@ function TasksWrapper({project}: TaskWrapperProps): JSX.Element {
     const [toggle, setToggle] = useState(false);
     const [searchParams, setSearchParams] = useSearchParams();
     const submitted = searchParams.get('submitted');
+    const filterDate = searchParams.get('date');
 
     const {id, projectName, tasks} = project;
     
@@ -95,7 +97,6 @@ function TasksWrapper({project}: TaskWrapperProps): JSX.Element {
         return `priority-${priority === 3 ? 'high' : (priority === 2) ? 'medium' : 'low'}`;
     }, []); 
 
-
     return (
         <>
         <section className={`tasks ${toggle ? 'expand' : ''}`}>
@@ -106,7 +107,7 @@ function TasksWrapper({project}: TaskWrapperProps): JSX.Element {
                     <span className="line"> </span>
                     <div>
                         <img className="dropdown-icon" src={dropDownIcon} alt="a black arrow down icon"/>
-                        {!toggle && <span className="count"> {tasks?.length} </span>}
+                        {!toggle && <span className="count"> {tasks?.length ?? 0} </span>}
 
                     </div>
                 </div>
@@ -133,6 +134,9 @@ function TasksWrapper({project}: TaskWrapperProps): JSX.Element {
 
                                 <section className={`task-info`} onClick={handleTaskClick} data-task={task.id}>
                                     <h3 className="title">{task.status !== 'completed'? task.title: <s className="strike">{task.title}</s>}</h3>
+                                    {filterDate && <span className="due-time">
+                                        <IoTimeOutline /> {moment(task.dueDate).format("LT")}
+                                    </span>}
                                     </section>
                                 <div className="btn-container">
                                     {task.status !== 'completed' &&<button type="button"> <MdOutlineEditNote/></button>}
