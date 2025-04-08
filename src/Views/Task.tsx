@@ -16,7 +16,6 @@ export default function Task() {
     const { project } = useLoaderData<typeof taskLoader>();
     const loadedTask = use(project);
     const { id, projectName, tasks } = loadedTask ?? {};
-
     return (
         <Suspense fallback={<h1> Loading... </h1>}>
             {<TasksWrapper project={{ id, projectName, tasks }} />}

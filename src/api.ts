@@ -1,6 +1,7 @@
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   Firestore,
   getDoc,
@@ -8,7 +9,6 @@ import {
   getFirestore,
   orderBy,
   query,
-  setDoc,
   updateDoc,
   where
 } from "firebase/firestore";
@@ -39,6 +39,7 @@ export interface Recommendations {
 export interface Project {
   id: string;
   projectName: string;
+  avatarColor: string;
   updatedAt?: Date | null;
   createdAt: Date;
 }
@@ -46,6 +47,7 @@ export interface Project {
 export type MyProject = {
   id: string;
   projectName: string;
+  avatarColor: string;
   tasks: MyTask[]
   updatedAt?: Date | null;
   createdAt: Date;
@@ -57,7 +59,8 @@ export interface MyTask {
   id: string;
   title: string;
   status: 'active' | 'overdue' | 'completed';
-  dueDate: Date | string;
+  dueDate: string;
+  dueTime: string;
   priority: number;
   description: string;
   notes: string;
@@ -69,31 +72,18 @@ export interface MyTask {
 
 
 export type CompleteTaskParams = Record<string, string>;
-// const recs = ['personal', 'design', 'work', 'house', 'web development', 'construction', 'fishing', 'travel', 'solo project', 'music', 'outdoor', 'family']
+
 // Initialize Firebase
 const app: FirebaseApp = initializeApp(firebaseConfig);
 const db: Firestore = getFirestore(app);
 const projectsRef = collection(db, 'projects');
 const tasksRef = collection(db, 'tasks');
+const completedRef = collection(db, 'completed');
 const recommendationsRef = collection(db, 'recommendations');
 
 export const currentDate = new Date(Date.now());
 const createdAt = currentDate;
 const dateFormatted = moment(currentDate).local().format('YYYY-MM-DDTHH:mm');
-
-
-
-// async function addRecommendations() {
-//   try {
-//     const docRef = await addDoc(recommendationsRef, {
-//       names: recs,
-//       createdAt: Date.now()
-//     })
-//     console.log("Document written with ID: ", docRef.id);
-//   } catch (e) {
-//     console.error("Error adding document: ", e);
-//   }
-// }
 
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -112,10 +102,10 @@ export async function getRecommendations() {
   return null;
 }
 
-export async function addProject(projectName: FormDataEntryValue) {
+export async function addProject(payload: Record<string, FormDataEntryValue>) {
   try {
     const docRef = await addDoc(projectsRef, {
-      projectName: projectName,
+      ...payload,
       updateAt: '',
       createdAt
     });
@@ -135,22 +125,13 @@ export async function isProjectsEmpty(): Promise<boolean> {
 export async function getProjects(date: string) {
   const qry = query(projectsRef, orderBy('createdAt', 'desc'));
   const querySnapshot = await getDocs(qry);
+  if (querySnapshot.empty){return null}
   return await Promise.all(querySnapshot.docs.map(async (doc) => {
     const data = doc.data() as Project;
-    const tasks = date ? await getTasksByDate(doc.id, date) : await getTasks(doc.id);
+    const tasks = await getTasks(doc.id, date);
     return { ...data, id: doc.id, tasks };
   })) as MyProjects;
 }
-
-export async function getProjectNames() {
-  const projectsSnapshot = await getDocs(projectsRef);
-  if (projectsSnapshot.empty) { return null; }
-  return projectsSnapshot.docs.map((doc) => {
-    const data = doc.data() as Project;
-    return { ...data, id: doc.id };
-  }) as Project[]
-}
-
 
 export async function addTask(task: Record<string, FormDataEntryValue>): Promise<void> {
   try {
@@ -169,37 +150,22 @@ export async function addTask(task: Record<string, FormDataEntryValue>): Promise
   }
 }
 
-async function getTasks(id: string) {
-  const q = query(tasksRef, where('projectId', '==', id), orderBy('priority', 'desc'), orderBy('dueDate', 'asc'));
+async function getTasks(id: string, date = '') {
+  const dateFmt = moment(date).format('YYYY-MM-DD');
 
-  const taskSnapshot = await getDocs(q);
+  const qry = date ? query(tasksRef, where('projectId', '==', id), where('dueDate', '==', dateFmt), orderBy('dueDate', 'asc')) : query(tasksRef, where('projectId', '==', id), orderBy('priority', 'desc'), orderBy('dueDate', 'asc'));
 
+  const taskSnapshot = await getDocs(qry);
   if (taskSnapshot.empty) { return []; }
-  
+
   return taskSnapshot.docs.map((doc) => {
     const taskData = doc.data() as MyTask;
     return { ...taskData, id: doc.id };
   }) as MyTask[];
 }
 
-async function getTasksByDate(id: string, date: string) {
-  const q = query(tasksRef, where('projectId', '==', id), orderBy('priority', 'desc'), orderBy('dueDate', 'asc'));
-
-  const taskSnapshot = await getDocs(q);
-
-  if (taskSnapshot.empty) { return []; }
-  
-  return taskSnapshot.docs.filter((doc) => {
-    const taskData = doc.data() as MyTask;
-    const fmt = moment(taskData.dueDate).format('YYYY-MM-DD');
-    return fmt === date && { ...taskData, id: doc.id };
-  }).map((doc) =>  ({ ...doc.data(), id: doc.id } as MyTask));
-
-}
-
-
 async function getCompletedTasks(id: string) {
-  const qry = query(tasksRef, where('projectId', '==', id), where('status', '==', 'completed'));
+  const qry = query(completedRef, where('projectId', '==', id));
   const taskSnap = await getDocs(qry);
   if (!taskSnap.empty) {
     return taskSnap.docs.map((doc) => {
@@ -211,7 +177,16 @@ async function getCompletedTasks(id: string) {
   }
 }
 
+export async function deleteTask(id: string) {
+  try {
+    const docRef = doc(db, 'tasks', id);
+    await deleteDoc(docRef);
+    console.log('deleted doc with id:', id);
 
+  } catch (e) {
+    console.error('err=> ', e);
+  }
+}
 
 async function checkOverDueTasks() {
   const qry = query(tasksRef, where('dueDate', '<', dateFormatted));
@@ -235,19 +210,20 @@ async function updateOverDueTask(id: string, status: string) {
 }
 
 
-export async function completeTask(params: CompleteTaskParams) {
+export async function addCompletedTask(params: CompleteTaskParams) {
   try {
     const docRef = doc(db, 'tasks', params.taskId);
     const taskSnap = await getDoc(docRef);
     const data = taskSnap.data() as MyTask;
 
-    await setDoc(docRef, {
+    await addDoc(completedRef, {
       projectId: data.projectId,
       title: data.title,
       status: 'completed',
       completedAt: currentDate,
       createdAt: data.createdAt
     });
+    await deleteDoc(docRef);
   } catch (e) {
     console.error('error => ', e)
   }
@@ -263,14 +239,17 @@ export function getProject() {
       const docRef = doc(db, 'projects', id);
       const projectSnap = await getDoc(docRef);
       if (!projectSnap.exists()) { return null; }
-      const completedTask = await getCompletedTasks(id);
       const data = projectSnap.data() as Project;
-      const tasks = date? await getTasksByDate(id, date) : await getTasks(id);
+      const tasks = await getTasks(id, date);
+      let project = { ...data, id: projectSnap.id, tasks } as MyProject;
 
-      if (completedTask){
-        return { ...data, id: projectSnap.id, tasks: [...tasks, ...completedTask] } as MyProject;
+      if (!date) {
+        const completedTask = await getCompletedTasks(id);
+        if(completedTask){
+          project = { ...project, tasks: [...tasks, ...completedTask] } as MyProject;
+        }
       }
-      return { ...data, id: projectSnap.id, tasks} as MyProject
+      return project;
     }
   };
 }

@@ -1,17 +1,18 @@
-import {JSX, useCallback, useEffect, useRef} from "react";
-import {ActionFunctionArgs, Form, Navigation, redirect, useNavigation, useSearchParams} from "react-router-dom";
-import {addProject} from "../api";
-import {IoClose} from "react-icons/io5";
+import { JSX, useCallback, useEffect, useRef, useState } from "react";
+import { ActionFunctionArgs, Navigation, redirect, useFetcher, useNavigation } from "react-router-dom";
+import { addProject } from "../api";
+import { colors } from "../utils";
 
 
 // eslint-disable-next-line react-refresh/only-export-components
-export async function projectAction({request}: ActionFunctionArgs): Promise<Response | undefined> {
+export async function projectAction({ request }: ActionFunctionArgs): Promise<Response | undefined> {
     try {
         const formData: FormData = await request.formData();
-        const projectName: FormDataEntryValue | null = formData.get('projectName');
+        const projectName = formData.get('projectName') as string;
+        const payload = Object.fromEntries(formData)
         if (projectName) {
-            const projectID = await addProject(projectName);
-            let newStr = projectName as string;
+            const projectID = await addProject(payload);
+            let newStr = projectName ;
             newStr = newStr.charAt(0).toUpperCase() + newStr.slice(1);
 
             if (projectID) {
@@ -24,62 +25,54 @@ export async function projectAction({request}: ActionFunctionArgs): Promise<Resp
     }
 }
 
-export default function Modal(props: { closeModal: () => void; }): JSX.Element {
+
+export default function Modal(): JSX.Element {
+    const fetcher = useFetcher();
+
+    const [color, setColor] = useState(colors[0]);
+    const [toggle, setToggle] = useState(false);
+
     const navigation: Navigation = useNavigation();
-    const [searchParams, setSearchParams] = useSearchParams();
-    const submitted = searchParams.get('submitted');
-    const mountedRef = useRef<HTMLDivElement>(null)
-
-    const displayModal = useCallback(()=> {
-        return setTimeout(() => {
-            if (mountedRef.current) {
-                mountedRef.current.classList.add('mounted');
-            }
-        }, 10);
-    }, []);
-
-    const closeModalOnSubmit = useCallback((submit: string | null)=> {
-        if (submit) {
-            props.closeModal();
-            setSearchParams((prev) => {
-                prev.delete('submitted');
-                return prev;
-            });
-        }
-    }, [props, setSearchParams]);
-    
+    const status = navigation.state;
+    const inputRef = useRef<HTMLInputElement | null>(null);
     useEffect(() => {
-        const timer  = displayModal();
-        closeModalOnSubmit(submitted);
-        return ()=>{
-            clearTimeout(timer);
+        if (status === 'loading') {
+            if (inputRef.current) {
+                inputRef.current.value = '';
+            }
         }
-    }, [closeModalOnSubmit, displayModal, submitted]);
+    }, [status, toggle])
+    const handleClick = useCallback((e: React.MouseEvent) => {
+        const { dataset } = e.target as HTMLLIElement;
+        setColor(dataset.color ?? '');
+        setToggle(!toggle);
+    }, [toggle])
     
-    
-    const handleClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-        const {id} = e.target as HTMLDivElement;
-        if (id === 'modal-container') {
-            props.closeModal();
-        }
-
-    }, [props])
-
     return (
-        <div id="modal-container" ref={mountedRef} className="modal-wrapper" onClick={handleClick}>
+        <>
+            <div className="modal-container">
+                <button type="button" className="dropdown" onClick={()=>{setToggle(!toggle)}}
+                    style={{color: color}}       >
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0.997817" y="0.997817" width="22.0044" height="22.0044" rx="4.98909"
+                            stroke="currentColor"
+                            strokeWidth="1.99563" />
+                    </svg>
 
-            <div className="modal">
-                <button type="button" className="close-btn" onClick={props.closeModal}><IoClose/></button>
-                <Form id="modal-form" action="/" method="post" className="form form-projects">
-                    <label htmlFor="projectName"> Project Name </label>
-                    <div className="input-container">
-                        <input type="text" name="projectName" id="projectName" placeholder="Write a new project..."
-                               maxLength={30} minLength={3} required/>
-                        <button type="submit" disabled={navigation.state === 'submitting'}> Add</button>
-                    </div>
-                </Form>
-
+                </button>
+                <ul className={`colors-list ${toggle ? 'open': ''}`}>{colors.map(color => <li key={color} className="color-item"
+                    style={{ backgroundColor: color }}
+                    onClick={handleClick}
+                    data-color={color}></li>)}</ul>
+                <fetcher.Form method="post" action="/">
+                    <label htmlFor="projectName">projectName</label>
+                    <input ref={inputRef} type="text" name="projectName" id="projectName" placeholder="Project name..."
+                        maxLength={25} minLength={3} required disabled={status === 'loading'} />
+                    <input type="hidden" name="avatarColor" value={color} />
+                </fetcher.Form>
             </div>
-        </div>
+
+        </>
     )
 }

@@ -16,10 +16,11 @@ export async function introLoader() {
 export async function startPageAction({request}: ActionFunctionArgs): Promise<Response | undefined> {
     try {
         const formData: FormData = await request.formData();
-        const projectName: FormDataEntryValue | null = formData.get('projectName');
+        const projectName = formData.get('projectName') as string;
+
         if (projectName) {
-            const projectId = await addProject(projectName);
-            let newStr = projectName as string;
+            const projectId = await addProject({ projectName, avatarColor: "#0C359E"});
+            let newStr = projectName;
             newStr = newStr.charAt(0).toUpperCase() + newStr.slice(1);
             console.log(projectId);
             return redirect(`..?message=${newStr} project added successfully to your projects`);

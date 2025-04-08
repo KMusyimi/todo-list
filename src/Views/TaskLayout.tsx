@@ -1,13 +1,13 @@
 /* eslint-disable react-refresh/only-export-components */
 import { JSX, useCallback, useEffect, useState } from "react";
-import { FaPlus } from "react-icons/fa6";
 import { Link, LoaderFunctionArgs, Outlet, useLoaderData, useSearchParams } from "react-router-dom";
-import { getProjectNames, getProjects } from "../api.ts";
+import { getProjects } from "../api.ts";
 import Calendar from "../components/Calendar.tsx";
 import Modal from "../components/Modal.tsx";
 import Nav from "../components/Nav.tsx";
 import SuccessMsg from "../components/SuccessMsg.tsx";
 import { checkUserProjects } from "../utils.ts";
+import TaskForm from "../components/TaskForm.tsx";
 
 
 export async function projectsLoader({ request }: LoaderFunctionArgs) {
@@ -15,22 +15,16 @@ export async function projectsLoader({ request }: LoaderFunctionArgs) {
     const date = param.get('date');
     const userProjects = await checkUserProjects();
     userProjects.hasProjects();
-    
-    return { projects: getProjects(date ?? ''), projectNames: await getProjectNames() }
+
+    return { projects: getProjects(date ?? '') }
 }
 
 
 export default function TaskLayout(): JSX.Element {
-    const [displayModal, setDisplayModal] = useState(false);
     const [toggleMenu, setToggleMenu] = useState(false);
-    const { projects, projectNames } = useLoaderData<typeof projectsLoader>();
-
+    const { projects } = useLoaderData<typeof projectsLoader>();
     const [searchParams, setSearchParams] = useSearchParams();
     const successMsg = searchParams.get('message');
-
-    const closeModal = useCallback(() => {
-        if (displayModal) { setDisplayModal(!displayModal); }
-    }, [displayModal])
 
 
     const displaySuccessMsg = useCallback(() => {
@@ -45,11 +39,19 @@ export default function TaskLayout(): JSX.Element {
     }, [setSearchParams, successMsg]);
 
     useEffect(() => {
+        const formContainer = document.getElementById('task-container');
+        if (toggleMenu) {
+            if (formContainer) {
+                formContainer.classList.add('hide');
+            }
+        }else{
+            formContainer?.classList.remove('hide');
+        }
         const timer = displaySuccessMsg();
         return () => {
             clearTimeout(timer);
         }
-    }, [displaySuccessMsg]);
+    }, [displaySuccessMsg, toggleMenu]);
 
 
     return (<>
@@ -69,30 +71,20 @@ export default function TaskLayout(): JSX.Element {
             </button>
             <div className="menu-container">
                 <div className="link--wrapper">
-                    <Link to='/projects'>My Projects</Link>
+                    <Link to='/projects'>Projects</Link>
                 </div>
 
-                <Nav projectNames={projectNames} />
-                <button
-                    id={'add-project'}
-                    className={'add-btn'}
-                    type={'button'}
-                    onClick={() => {
-                        setDisplayModal(true)
-                    }}><FaPlus />Create new project
-                </button>
-
+                <Nav projectPromise={projects} />
+                <Modal />
             </div>
         </div>
         <main className={'main'}>
             <section className={'task-section'}>
-
                 <Calendar />
                 {successMsg && <SuccessMsg successMsg={successMsg} />}
                 <Outlet context={{ projects }} />
             </section>
-
+            <TaskForm projectPromise={projects} />
         </main>
-        {displayModal && <Modal closeModal={closeModal} />}
     </>)
 }
