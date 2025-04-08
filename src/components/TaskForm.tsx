@@ -103,10 +103,8 @@ export default function TaskForm({ projectPromise}:ProjectPromise): JSX.Element 
                             id={'dueTime'}
                             name={'dueTime'}
                             className={'form-input'}
-                            min={moment().format('HH:mm')}
                             required />
-                            </div>
-                    
+                    </div>
                 </div>
                 
 

@@ -35,18 +35,20 @@ export default function Modal(): JSX.Element {
     const navigation: Navigation = useNavigation();
     const status = navigation.state;
     const inputRef = useRef<HTMLInputElement | null>(null);
+    
     useEffect(() => {
         if (status === 'loading') {
             if (inputRef.current) {
                 inputRef.current.value = '';
+                setToggle(false)
             }
         }
-    }, [status, toggle])
+    }, [status]);
+
     const handleClick = useCallback((e: React.MouseEvent) => {
         const { dataset } = e.target as HTMLLIElement;
         setColor(dataset.color ?? '');
-        setToggle(!toggle);
-    }, [toggle])
+    }, []);
     
     return (
         <>

@@ -26,6 +26,8 @@ export default function Intro({ recommendations }: {
       </header>
 
       <Form method="post">
+  <input type="hidden" name = "avatarColor" value = { '#102E50'} />
+
         <fieldset>
           <legend>recommended</legend>
           <div id="label-container" className="label-wrapper">

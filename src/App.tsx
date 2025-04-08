@@ -4,7 +4,7 @@ import {projectAction} from './components/Modal';
 import {addLoader, taskFormAction} from './components/TaskForm.tsx';
 import {fetcherAction} from './components/TasksWrapper.tsx';
 import AllTasks from "./Views/AllTasks.tsx";
-import StartPage, {introLoader, startPageAction} from './Views/StartPage';
+import StartPage, {introLoader} from './Views/StartPage';
 import Task, {taskLoader} from './Views/Task.tsx';
 import TaskLayout, {projectsLoader} from "./Views/TaskLayout.tsx";
 
@@ -14,7 +14,7 @@ import TaskLayout, {projectsLoader} from "./Views/TaskLayout.tsx";
 // edit or update /todos/:id
 const router = createBrowserRouter(createRoutesFromElements(
     <Route path={ "/"} action = { projectAction } >
-    <Route index element = {<StartPage />} loader = { introLoader } action = { startPageAction } />
+    <Route index element = {<StartPage />} loader = { introLoader } action = { projectAction } />
         <Route path={ 'projects' } element = {<TaskLayout />} loader = { projectsLoader } >
             <Route index element = {<AllTasks />}/>
             <Route path = ':todoId' element = {<> </>} action={fetcherAction}/>

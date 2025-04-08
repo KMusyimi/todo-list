@@ -196,7 +196,7 @@
   z-index: 45;
   padding: 2em 2.285em;
   width: 100dvw;
-  transition: left 600ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: left 400ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .menu-mobile--open>div {
@@ -320,7 +320,6 @@
   grid-template-rows: repeat(2, 1fr);
   gap: .85em;
   margin: auto;
-  transition: height 400ms cubic-bezier(0.39, 0.575, 0.565, 1) , width 400ms cubic-bezier(0.785, 0.135, 0.15, 0.86) 300ms, bottom 300ms linear ;
   
 }
 
@@ -333,6 +332,7 @@
   bottom: -6.85em;
   border-radius: .65em;
   box-shadow: 0px 4px 10px #d1d1d1;
+  transition: height 250ms cubic-bezier(0.39, 0.575, 0.565, 1) , width 400ms cubic-bezier(0.785, 0.135, 0.15, 0.86) 150ms, bottom 300ms linear ;
 }
 .menu div>.modal-container .colors-list>li{
   opacity: 0;
@@ -347,7 +347,7 @@
   height: 15px;
   border-radius: .25em;
   box-shadow: 0px 0px 1px #222222;
-  transition: opacity 400ms cubic-bezier(0.39, 0.575, 0.565, 1) 600ms,
+  transition: opacity 200ms cubic-bezier(0.39, 0.575, 0.565, 1) 400ms,
       visibility 0ms ;
 }
 .menu div>.modal-container form{
@@ -379,7 +379,7 @@
   flex-direction: column;
   background-color: #F9F5F4;
   min-height: 100dvh;
-  width: 100%;
+  width: 100dvw;
   overflow: hidden;
 }
 
@@ -778,6 +778,8 @@
 .main .form-ovly {
   --mah-delay: 600ms;
   position: fixed;
+  top: 0;
+  left: 0;
   height: 100dvh;
   width: 100dvw;
   background-color: rgba(249, 245, 244, 1);
@@ -801,11 +803,12 @@
   --trs-delay: 600ms;
   background-color: inherit;
   position: fixed;
+  bottom: 0;
   display: grid;
-  place-items: center;
   width: 100%;
-  height: 100dvh;
-  padding: 0.755em 1.5em;
+  height: fit-content;
+  padding: 2.5em 1.5em 0.755em 1.5em;
+  margin-bottom: 1.5em;
   z-index: 200;
   transform: translate3d(0, 0, 0);
   opacity: 1;
@@ -814,8 +817,8 @@
 }
 
 .main .form-container:has(> .task-form.collapse) {
-  bottom: 0;
   background-color: rgba(249, 245, 244, .25);
+  margin: 0 auto;
   backdrop-filter: blur(9px);
   height: fit-content;
 }
@@ -832,9 +835,10 @@
   background-color: inherit;
   max-height: 600px;
   width: 100%;
+  margin: 0 auto;
   border-radius: 0;
-  transition: max-height 600ms linear var(--mah-delay, 0ms),
-    width 600ms cubic-bezier(1, -0.51, 0, 1.16) var(--wdh-delay, 0ms);
+  transition: max-height 300ms linear var(--mah-delay, 0ms),
+    width 300ms cubic-bezier(1, -0.51, 0, 1.16) var(--wdh-delay, 0ms);
 }
 
 .main .task-form>div:not(:first-of-type),

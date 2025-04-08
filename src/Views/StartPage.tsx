@@ -1,6 +1,6 @@
 import {JSX} from "react";
-import {addProject, getRecommendations} from "../api";
-import {ActionFunctionArgs, redirect, useLoaderData} from "react-router-dom";
+import {getRecommendations} from "../api";
+import {useLoaderData} from "react-router-dom";
 import Intro from "../components/Intro";
 import {checkUserProjects} from "../utils.ts";
 
@@ -10,26 +10,6 @@ export async function introLoader() {
     const userProjects = await checkUserProjects();
     userProjects.hasNoProjects();
     return {recommendations: await getRecommendations()};
-}
-
-// eslint-disable-next-line react-refresh/only-export-components
-export async function startPageAction({request}: ActionFunctionArgs): Promise<Response | undefined> {
-    try {
-        const formData: FormData = await request.formData();
-        const projectName = formData.get('projectName') as string;
-
-        if (projectName) {
-            const projectId = await addProject({ projectName, avatarColor: "#0C359E"});
-            let newStr = projectName;
-            newStr = newStr.charAt(0).toUpperCase() + newStr.slice(1);
-            console.log(projectId);
-            return redirect(`..?message=${newStr} project added successfully to your projects`);
-
-        }
-
-    } catch (e) {
-        console.error(e);
-    }
 }
 
 export default function StartPage(): JSX.Element {
