@@ -56,10 +56,10 @@ export default function Modal(): JSX.Element {
                 <button type="button" className="dropdown" onClick={()=>{setToggle(!toggle)}}
                     style={{color: color}}       >
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
+                        >
                         <rect x="0.997817" y="0.997817" width="22.0044" height="22.0044" rx="4.98909"
                             stroke="currentColor"
-                            strokeWidth="1.99563" />
+                            strokeWidth="2" />
                     </svg>
 
                 </button>

@@ -129,7 +129,7 @@
 .menu-mobile .menu-btn {
   display: flex;
   position: absolute;
-  top: 1.5em;
+  top: 1em;
   left: 1.5em;
   z-index: 99;
   background-color: transparent;
@@ -139,8 +139,9 @@
   margin-bottom: 1em;
   transition: left 400ms cubic-bezier(0.4, 0, 0.2, 1) var(--left-delay, 0ms);
 }
+
 .menu-mobile--open .menu-btn {
-  --left-delay: 150ms;
+  --left-delay: 100ms;
   left: 85%;
 }
 
@@ -187,14 +188,14 @@
 }
 
 .menu-mobile>div {
-  position: absolute;
+  position: fixed;
   height: 100dvh;
   background-color: #F3EFEE;
   top: 0;
   left: -100%;
   overflow: hidden;
   z-index: 45;
-  padding: 2em 2.285em;
+  padding: 1.5em 2.285em;
   width: 100dvw;
   transition: left 400ms cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -205,7 +206,6 @@
 
 .menu>div .link--wrapper {
   text-align: center;
-  padding-block-start: 2em;
   margin-bottom: .85em;
 }
 
@@ -215,97 +215,121 @@
 }
 
 .menu>div nav {
-  padding: .25em;
+  padding-block-start: 3em;
   margin-bottom: 1.65em;
 }
-.menu>div nav ul{
+
+.menu>div nav ul {
   width: min(100%, 450px);
   margin: auto;
 }
+
 .menu>div nav ul li {
-  background-color: var(--link-active, transparent);
-  border-radius: 0.606em;
-  padding: 0 1em;
-  
-  margin-bottom: .5em;
-  transition: background-color 200ms linear;
-}
-
-.menu>div nav ul li:has(> .active) {
-  --link-active: #F3EFEE;
-  box-shadow: 0px 4px 10px #d1d1d1;
-}
-
-.menu>div nav ul li a {
   display: flex;
   align-items: center;
-  gap: 1em;
-  width: 100%;
-  padding-block: 1em;
-  text-transform: capitalize;
-  font-weight: 600;
-  padding-inline-start: .35em;
+  justify-content: space-between;
+  gap: .855em;
+  padding-inline-end: 1.115em;
+  margin-bottom: .65em;
+}
+.menu>div nav ul li >a svg {
+  width: 19px;
+  height: 19px;
+}
+.menu>div nav ul li:has(> a.active) {
+  --link-active: #F3EFEE;
+  background-color: var(--link-active, transparent);
+  box-shadow: 0px 4px 10px #d1d1d1;
+  transition: background-color 200ms linear;
+  border-radius: 0.606em;
 }
 
-.menu>div nav ul li a .count::before {
+.menu>div nav ul li .count {
+  display: block;
+  position: relative;
+  font-size: .88rem;
+  height: 23px;
+  width: 23px;
+  text-align: center;
+  color: #5d6063;
+}
+
+.menu>div nav ul li .count::before {
   content: '';
   position: absolute;
   top: 0;
-  left: -.34rem;
-  background-color: #e2e2e2;
-  height: 23px;
-  width: 23px;
+  left: 0;
+  background-color: #d7d5d5;
+  height: inherit;
+  width: inherit;
   z-index: -1;
   border-radius: .34em;
   box-shadow: 0px 4px 10px #d1d1d1;
 }
 
-.menu>div nav ul li a .count {
-  position: relative;
-  font-size: .88rem;
-  margin-left: auto;
-  color: #9b9a9a;
-}
 
-.menu>div nav ul li a.active .count {
+.menu>div nav ul li.active .count {
   color: #3d3d3d;
 }
+
+.menu>div nav ul li a {
+  display: flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: .855em;
+  width: calc(100% - 23px);
+  height: inherit;
+  color: #121212;
+  text-transform: capitalize;
+  padding: 1em 1.125em;
+  font-weight: 600;
+  border-radius: 0.606em 0 0  0.606em;
+}
+
 
 .menu div>.modal-container {
   position: relative;
   left: 0;
-  background-color: transparent;
   display: grid;
   align-items: center;
   width: min(100%, 450px);
   margin: auto;
   justify-content: space-between;
   column-gap: .855em;
-  grid-template-columns: minmax(70px, 1fr) minmax(150px,3fr);
+  grid-template-columns: 73px minmax(150px, 3fr);
   grid-template-rows: 1fr;
   padding-inline-end: .2em;
   box-shadow: 0px 4px 10px #d1d1d1;
+  border: 1px solid #d4d4d4;
   border-radius: .85em;
 }
-.menu div>.modal-container > button{
+.menu div>.modal-container:has(:focus) {
+  outline: 1px solid #8E7DBE;
+  box-shadow: 0px 0px 14px #d1d1d1;
+  
+}
+.menu div>.modal-container>button {
   display: flex;
   align-items: center;
   gap: .45em;
   justify-content: space-between;
   width: min(100%, 75px);
   background-color: #cbccc8;
-  padding: .955em;
+  padding: .955em 1.115em;
   border-radius: 1em;
 }
-.menu div>.modal-container>button::after{
+
+.menu div>.modal-container>button::after {
   content: '▼';
   color: #121212;
   background-blend-mode: darken;
 }
-.menu div>.modal-container>button > svg{
+
+.menu div>.modal-container>button>svg {
   height: 20px;
   width: 20px;
 }
+
 .menu div>.modal-container .colors-list {
   display: block;
   position: absolute;
@@ -320,7 +344,7 @@
   grid-template-rows: repeat(2, 1fr);
   gap: .85em;
   margin: auto;
-  
+
 }
 
 .menu div>.modal-container .colors-list.open {
@@ -331,13 +355,16 @@
   padding: 1em;
   bottom: -6.85em;
   border-radius: .65em;
+  border: 1px solid #d4d4d4;
   box-shadow: 0px 4px 10px #d1d1d1;
-  transition: height 250ms cubic-bezier(0.39, 0.575, 0.565, 1) , width 400ms cubic-bezier(0.785, 0.135, 0.15, 0.86) 150ms, bottom 300ms linear ;
+  transition: height 250ms cubic-bezier(0.39, 0.575, 0.565, 1) 90ms, width 400ms cubic-bezier(0.785, 0.135, 0.15, 0.86) 150ms, bottom 300ms linear;
 }
-.menu div>.modal-container .colors-list>li{
+
+.menu div>.modal-container .colors-list>li {
   opacity: 0;
   visibility: hidden;
 }
+
 .menu div>.modal-container .colors-list.open>li {
   opacity: 1;
   visibility: visible;
@@ -348,28 +375,35 @@
   border-radius: .25em;
   box-shadow: 0px 0px 1px #222222;
   transition: opacity 200ms cubic-bezier(0.39, 0.575, 0.565, 1) 400ms,
-      visibility 0ms ;
+    visibility 0ms;
 }
-.menu div>.modal-container form{
+
+.menu div>.modal-container form {
   width: 100%;
 }
+
 .menu div>.modal-container form label {
   display: block;
   visibility: hidden;
   height: 0;
 }
-.menu div>.modal-container form input{
+
+.menu div>.modal-container form input {
   width: inherit;
   font-size: 1rem;
   border: none;
-  padding: .65em 1em;
+  padding: .65em 1em .65em .15em;
   background-color: #F3EFEE;
   color: #121212;
-  border-radius:0 .85em .85em 0;
+  border-radius: 0 .85em .85em 0;
 }
-.menu div>.modal-container form input::placeholder{
+.menu div>.modal-container form input:focus{
+  outline: transparent;
+}
+.menu div>.modal-container form input::placeholder {
   font-size: .887rem;
 }
+
 /* Main styles */
 .main {
   position: relative;
@@ -647,11 +681,11 @@
 }
 
 .main>.task-section>section .task-card .task-wrapper label::before {
-  --_checkbox-url: url(assets/checkbox.svg);
+  --_square-url: url(assets/square.svg);
   display: inline-block;
   content: '';
   cursor: pointer;
-  background-image: var(--_checkbox-url);
+  background-image: var(--_square-url);
   background-size: contain;
   width: 20px;
   height: 20px;
@@ -659,16 +693,17 @@
 }
 
 .main>.task-section>section .task-card .task-wrapper label.priority-medium::before {
-  --_checkbox-url: url(assets/checkbox-orange.svg);
+  --_square-url: url(assets/square-orange.svg);
 }
 
 .main>.task-section>section .task-card .task-wrapper label.priority-high::before {
-  --_checkbox-url: url(assets/checkbox-red.svg);
+  fill: greenyellow;
+  --_square-url: url(assets/square-red.svg);
 }
 
 .main>.task-section>section .task-card .task-wrapper label:has(:checked):before,
 .main>.task-section>section .task-card .task-wrapper label:has(:disabled):before {
-  --_checkbox-url: url(assets/checked.svg);
+  --_square-url: url(assets/checked.svg);
 }
 
 .main>.task-section>section .task-card .task-wrapper input {
@@ -820,6 +855,7 @@
   background-color: rgba(249, 245, 244, .25);
   margin: 0 auto;
   backdrop-filter: blur(9px);
+  padding-block-start: 0em;
   height: fit-content;
 }
 

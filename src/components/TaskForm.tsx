@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import moment from "moment";
-import { JSX, Suspense, use, useEffect, useRef, useState} from "react";
+import { JSX, Suspense, use, useCallback, useEffect, useRef, useState} from "react";
 import { ActionFunctionArgs, Form, redirect, useNavigation, useSearchParams } from "react-router-dom";
 import { addTask, MyProjects } from "../api";
 import RectSolidSvg from "./Svg";
@@ -59,14 +59,20 @@ export default function TaskForm({ projectPromise}:ProjectPromise): JSX.Element 
         }
     },[toggle]);
 
-    
+    const handleClick = useCallback((e: React.MouseEvent<HTMLDivElement>)=> {
+        e.preventDefault();
+        const {id} = e.currentTarget;
+        if (id === 'input-wrapper'){
+            setToggle(true)
+        }
+    },[]);   
 
     return (
         <>
         <div className="form-ovly"></div>
             <div id={'task-container'} className={"form-container"}>
             <Form ref={formRef} action={"/projects/add"} className={toggle?'task-form': 'task-form collapse'} replace={true} method="post" >
-                    <div className="input-container" onClick={() => {setToggle(true)}}>
+                    <div id="input-wrapper" className="input-container" onClick={handleClick}>
                     {toggle && <RectSolidSvg/>}
                     <label htmlFor={'title'}> Title </label>
                     <input type={'text'}

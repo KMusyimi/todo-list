@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { JSX, useCallback, useEffect, useState } from "react";
-import { Link, LoaderFunctionArgs, Outlet, useLoaderData, useSearchParams } from "react-router-dom";
+import { LoaderFunctionArgs, Outlet, useLoaderData, useSearchParams } from "react-router-dom";
 import { getProjects } from "../api.ts";
 import Calendar from "../components/Calendar.tsx";
 import Modal from "../components/Modal.tsx";
@@ -70,10 +70,6 @@ export default function TaskLayout(): JSX.Element {
                 </svg>
             </button>
             <div className="menu-container">
-                <div className="link--wrapper">
-                    <Link to='/projects'>Projects</Link>
-                </div>
-
                 <Nav projectPromise={projects} />
                 <Modal />
             </div>
@@ -84,6 +80,7 @@ export default function TaskLayout(): JSX.Element {
                 {successMsg && <SuccessMsg successMsg={successMsg} />}
                 <Outlet context={{ projects }} />
             </section>
+            {/* TODO: HIDE form on scroll down and make it visible on scroll up */}
             <TaskForm projectPromise={projects} />
         </main>
     </>)
