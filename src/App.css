@@ -238,7 +238,7 @@
 }
 .menu>div nav ul li:has(> a.active) {
   --link-active: #F3EFEE;
-  background-color: var(--link-active, transparent);
+  background-color: #F7F7F7;
   box-shadow: 0px 4px 10px #d1d1d1;
   transition: background-color 200ms linear;
   border-radius: 0.606em;
@@ -853,7 +853,7 @@
 
 .main .form-container:has(> .task-form.collapse) {
   background-color: rgba(249, 245, 244, .25);
-  margin: 0 auto;
+  margin: 0 auto .35em;
   backdrop-filter: blur(9px);
   padding-block-start: 0em;
   height: fit-content;
@@ -948,10 +948,6 @@
   border-radius: 0;
   grid-column: 2 / 3;
   grid-row: 1 / 1;
-}
-
-.main .task-form>div.input-container input:not(:placeholder-shown) {
-  outline: 1px solid transparent;
 }
 
 .main .task-form>div.input-container select {
@@ -1106,9 +1102,14 @@
   border-radius: 1.6em;
   transition: border-radius 600ms linear;
 }
+.main .task-form.collapse .input-container {
+  display: block;
+  text-align: left;
+  padding: .885em 1.185em;
+  margin-right: auto;
+}
 
-
-.main .task-form.collapse .input-container input {
+/* .main .task-form.collapse .input-container input {
   align-self: self-start;
   padding-inline: .85em;
   width: 100%;
@@ -1116,7 +1117,7 @@
 
 .main .task-form.collapse .input-container input:focus {
   outline: none;
-}
+} */
 
 .main .task-form.collapse>div:not(:first-of-type),
 .main .task-form.collapse>textarea {
