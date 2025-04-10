@@ -16,7 +16,7 @@ function Render({ projects }: NavProps) {
         
         const style = {
             backgroundColor: rgba,
-            backgroundImage: `linear-gradient(90deg, ${rgba} 0%,  rgba(218, 218, 218, .65) 65%,rgba(218, 218, 218, 1) 100%)`,
+            backgroundImage: `linear-gradient(90deg, ${rgba} 0%,${rgba} 45%,  rgba(218, 218, 218, .45) 80%,rgba(218, 218, 218, 1) 100%)`,
             transition: 'background-color 200ms linear'
         } as CSSProperties;
 
@@ -40,7 +40,7 @@ export default function Nav({ projectPromise }: { projectPromise: Promise<MyProj
     const style = {
         backgroundColor: hexToRGB('#328E6E', 0.05),
         width: '100%',
-        backgroundImage: `linear-gradient(90deg, ${hexToRGB('#328E6E', 0.05)} 0%,rgba(218, 218, 218, .65) 65%,rgba(218, 218, 218, 1) 100%)`
+        backgroundImage: `linear-gradient(90deg, ${hexToRGB('#328E6E', 0.15)} 0%,${hexToRGB('#328E6E', 0.15)} 45%,rgba(218, 218, 218, .45) 80%,rgba(218, 218, 218, 1) 100%)`
     } as CSSProperties
 
 
