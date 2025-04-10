@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import moment from "moment";
 import {JSX, Suspense, use, useCallback, useEffect, useRef, useState} from "react";
-import {ActionFunctionArgs, Form, redirect, useNavigation, useSearchParams} from "react-router-dom";
+import {ActionFunctionArgs, Form, redirect, useNavigation} from "react-router-dom";
 import {addTask, MyProjects} from "../api";
 import RectSolidSvg from "./Svg";
 
@@ -38,7 +38,8 @@ function ProjectsList({projectPromise}: ProjectPromise) {
                     projectStr = project.projectName.charAt(0).toLocaleUpperCase() + project.projectName.slice(1);
 
                 }
-                return (<option key={project?.id} value={project?.id}>{projectStr}</option>)
+                return (<option key={project?.id} value={project?.id}>
+                    {projectStr}</option>)
             })}
         </Suspense>)
 }
@@ -50,17 +51,21 @@ export default function TaskForm({projectPromise}: ProjectPromise): JSX.Element 
     const inputRef = useRef<HTMLInputElement| null>(null)
 
     const status = navigation.state;
-    const [searchParams] = useSearchParams();
-    const paramDate = searchParams.get('date');
 
     useEffect(() => {
+        if (status === 'submitting'){
+            formRef.current?.reset();
+            setTimeout(() => {
+                setToggle(false);
+            }, 100);
+        }
         if (toggle) {
             document.body.style.position = 'fixed';
         } else {
             formRef.current?.reset();
             document.body.style.position = '';
         }
-    }, [toggle]);
+    }, [toggle, status]);
 
     const handleClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
@@ -102,7 +107,6 @@ export default function TaskForm({projectPromise}: ProjectPromise): JSX.Element 
                                        placeholder={'Write a new task'}
                                        required/>
 
-
                                 <label htmlFor="projects">category</label>
                                 <select className="bg-grey" name="projectId" id="projects" required>
                                     <option value="" hidden>No list</option>
@@ -120,7 +124,7 @@ export default function TaskForm({projectPromise}: ProjectPromise): JSX.Element 
                                    id={'dueDate'}
                                    name={'dueDate'}
                                    className={'form-input'}
-                                   min={moment(paramDate ?? Date.now()).format('YYYY-MM-DD')}
+                                   min={moment().format('YYYY-MM-DD')}
                                    required/>
 
                         </div>
@@ -133,7 +137,6 @@ export default function TaskForm({projectPromise}: ProjectPromise): JSX.Element 
                                    required/>
                         </div>
                     </div>
-
 
                     <div className="bg-grey">
                         <fieldset>

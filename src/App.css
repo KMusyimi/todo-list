@@ -20,6 +20,11 @@
   position: fixed;
 }
 
+.project-icon {
+  width: 15px;
+  height: 15px;
+}
+
 .intro-container {
   position: relative;
   display: flex;
@@ -228,30 +233,41 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: .855em;
-  padding-inline-end: 1.115em;
+  gap: 1em;
+  padding-inline-end: 1em;
   margin-bottom: .65em;
 }
-.menu>div nav ul li >a svg {
-  width: 19px;
-  height: 19px;
-}
+
 .menu>div nav ul li:has(> a.active) {
-  --link-active: #F3EFEE;
-  background-color: #F7F7F7;
+  background-color: rgba(218, 218, 218, 1);
   box-shadow: 0px 4px 10px #d1d1d1;
-  transition: background-color 200ms linear;
-  border-radius: 0.606em;
+  border-radius: 1em;
+}
+
+.menu>div nav ul li a {
+  display: flex;
+  align-items: center;
+  gap: inherit;
+  width: calc(100% - 23px);
+  height: inherit;
+  color: #121212;
+  text-transform: capitalize;
+  font-weight: 600;
+  padding: 1.185em 1.655em;
+  padding-inline-end: 0;
+  border-radius: 1em 0 0 1em;
 }
 
 .menu>div nav ul li .count {
   display: block;
   position: relative;
-  font-size: .88rem;
+  font-weight: 600;
+  font-size: .911rem;
+  padding-top: .1em;
   height: 23px;
   width: 23px;
   text-align: center;
-  color: #5d6063;
+  color: #908b8b;
 }
 
 .menu>div nav ul li .count::before {
@@ -268,22 +284,8 @@
 }
 
 
-.menu>div nav ul li.active .count {
-  color: #3d3d3d;
-}
-
-.menu>div nav ul li a {
-  display: flex;
-  align-items: center;
-  align-self: flex-start;
-  gap: .855em;
-  width: calc(100% - 23px);
-  height: inherit;
-  color: #121212;
-  text-transform: capitalize;
-  padding: 1em 1.125em;
-  font-weight: 600;
-  border-radius: 0.606em 0 0  0.606em;
+.menu>div nav ul li:has(> a.active) .count {
+  color: #5d6063;
 }
 
 
@@ -296,38 +298,36 @@
   margin: auto;
   justify-content: space-between;
   column-gap: .855em;
-  grid-template-columns: 73px minmax(150px, 3fr);
+  grid-template-columns: 85px minmax(150px, 3fr);
   grid-template-rows: 1fr;
   padding-inline-end: .2em;
   box-shadow: 0px 4px 10px #d1d1d1;
   border: 1px solid #d4d4d4;
   border-radius: .85em;
 }
+
 .menu div>.modal-container:has(:focus) {
-  outline: 1px solid #8E7DBE;
+  outline: 4px solid #8E7DBE;
   box-shadow: 0px 0px 14px #d1d1d1;
-  
+  transition: all 200ms linear;
 }
+
 .menu div>.modal-container>button {
   display: flex;
   align-items: center;
   gap: .45em;
   justify-content: space-between;
-  width: min(100%, 75px);
-  background-color: #cbccc8;
-  padding: .955em 1.115em;
+  width: min(100%, 85px);
+  background-color: rgba(218, 218, 218, 1);
+  padding: 1.125em 1em 1.125em 1.655em;
   border-radius: 1em;
 }
 
 .menu div>.modal-container>button::after {
   content: '▼';
+  align-self: start;
   color: #121212;
   background-blend-mode: darken;
-}
-
-.menu div>.modal-container>button>svg {
-  height: 20px;
-  width: 20px;
 }
 
 .menu div>.modal-container .colors-list {
@@ -357,7 +357,9 @@
   border-radius: .65em;
   border: 1px solid #d4d4d4;
   box-shadow: 0px 4px 10px #d1d1d1;
-  transition: height 250ms cubic-bezier(0.39, 0.575, 0.565, 1) 90ms, width 400ms cubic-bezier(0.785, 0.135, 0.15, 0.86) 150ms, bottom 300ms linear;
+  transition: height 250ms cubic-bezier(0.39, 0.575, 0.565, 1) 90ms,
+    bottom 400ms cubic-bezier(0.4, 0, 0.2, 1),
+    width 400ms linear(0 0%, 0 1.8%, 0.01 3.6%, 0.03 6.35%, 0.07 9.1%, 0.13 11.4%, 0.19 13.4%, 0.27 15%, 0.34 16.1%, 0.54 18.35%, 0.66 20.6%, 0.72 22.4%, 0.77 24.6%, 0.81 27.3%, 0.85 30.4%, 0.88 35.1%, 0.92 40.6%, 0.94 47.2%, 0.96 55%, 0.98 64%, 0.99 74.4%, 1 86.4%, 1 100%) 300ms;
 }
 
 .menu div>.modal-container .colors-list>li {
@@ -392,14 +394,16 @@
   width: inherit;
   font-size: 1rem;
   border: none;
-  padding: .65em 1em .65em .15em;
+  padding: .85em 1em .85em .15em;
   background-color: #F3EFEE;
   color: #121212;
   border-radius: 0 .85em .85em 0;
 }
-.menu div>.modal-container form input:focus{
+
+.menu div>.modal-container form input:focus {
   outline: transparent;
 }
+
 .menu div>.modal-container form input::placeholder {
   font-size: .887rem;
 }
@@ -414,7 +418,6 @@
   background-color: #F9F5F4;
   min-height: 100dvh;
   width: 100dvw;
-  overflow: hidden;
 }
 
 .main>.task-section {
@@ -525,7 +528,7 @@
 .main>.task-section>section.tasks {
   max-height: 40px;
   overflow: hidden;
-  margin-bottom: 2.494em;
+  margin-bottom: 1.5em;
   transition: max-height 550ms cubic-bezier(0.65, -0.12, 0.08, 1.1);
 }
 
@@ -631,8 +634,8 @@
 }
 
 .main>.task-section>section .task-card {
-  margin-bottom: 1em;
-  max-height: 45px;
+  margin-bottom: 1.25em;
+  max-height: 25px;
   transition: max-height .55s cubic-bezier(0.65, -0.12, 0.08, 1.1);
 }
 
@@ -646,9 +649,6 @@
   max-height: 350px;
 }
 
-.main>.task-section>section.tasks.project .task-card:last-of-type {
-  margin-bottom: 2.5em;
-}
 
 .main>.task-section>section .task-wrapper .title::first-letter,
 .main>.task-section>section .info-section .notes::first-letter,
@@ -732,20 +732,19 @@
   color: #B5B5BA;
 }
 
-
-.main>.task-section>section .task-card .task-wrapper>div {
-  font-size: 1.55rem;
+.main>.task-section>section .task-card .task-wrapper button {
   display: flex;
-  gap: 0.544em;
+  align-items: center;
+  justify-content: center;
   justify-self: right;
+  height: 23px;
+  width: 18px;
+  border-radius: .45em;
 }
 
-.main>.task-section>section .task-card .task-wrapper>div button {
-  font-size: inherit;
-}
-
-.main>.task-section>section .task-card .task-wrapper>div button svg {
-  color: #222222;
+.main>.task-section>section .task-card .task-wrapper button:focus {
+  background-color: #ebebeb;
+  transition: all 200ms linear ;
 }
 
 .main>.task-section>section .task-card>.info-container {
@@ -836,14 +835,11 @@
 
 .main .form-container {
   --trs-delay: 600ms;
-  background-color: inherit;
   position: fixed;
   bottom: 0;
-  display: grid;
   width: 100%;
-  height: fit-content;
-  padding: 2.5em 1.5em 0.755em 1.5em;
-  margin-bottom: 1.5em;
+  padding: 2.5em 1em 0.755em 1em;
+  margin-bottom: 2em;
   z-index: 200;
   transform: translate3d(0, 0, 0);
   opacity: 1;
@@ -852,8 +848,9 @@
 }
 
 .main .form-container:has(> .task-form.collapse) {
-  background-color: rgba(249, 245, 244, .25);
-  margin: 0 auto .35em;
+  background-color: rgba(249, 245, 244, .65);
+  margin: 0 auto;
+  background-color: rgba(249, 245, 244, .6);
   backdrop-filter: blur(9px);
   padding-block-start: 0em;
   height: fit-content;
@@ -924,7 +921,7 @@
   display: grid;
   grid-template-columns: 21px 3fr 1fr;
   grid-template-rows: 1fr;
-  column-gap: .85em;
+  column-gap: .655em;
   width: 100%;
   padding-block: .35em;
   align-items: center;
@@ -950,14 +947,18 @@
   grid-row: 1 / 1;
 }
 
+.main .task-form>div.input-container input:focus-visible {
+  outline: transparent;
+}
+
 .main .task-form>div.input-container select {
-  position: static;
+  background-color: #ebebeb;
   font-size: .855rem;
   font-weight: 500;
   border: none;
   grid-column: 3 / 4;
   grid-row: 1 / 1;
-  box-shadow: 0px 4px 10px #d1d1d1;
+  box-shadow: 0px 4px 15px #d1d1d1;
 }
 
 .main .task-form>div.input-container option::first-letter {
@@ -1025,7 +1026,6 @@
   padding: .5em 1.5em;
   box-shadow: 0px 4px 10px #d4d4d4;
   border-radius: .85em;
-  transition: background-color 200ms linear;
 
 }
 
@@ -1068,7 +1068,7 @@
 .main .task-form .btn-container button {
   font-size: 1.125em;
   font-weight: 500;
-  width: min(100%, 175px);
+  width: min(100%, 225px);
   padding: .64em 1.167em;
   border-radius: .65em;
 }
@@ -1081,7 +1081,7 @@
 }
 
 .main .task-form .btn-container button[type='submit'] {
-  background-color: #e5e0e0;
+  background-color: #ebebeb;
   color: #222222;
 }
 
@@ -1089,6 +1089,7 @@
   --wdh-delay: var(--trs-delay);
   --mah-delay: 0ms;
   display: flex;
+  background-color: transparent;
   flex-direction: column;
   align-items: center;
   max-height: 65px;
@@ -1096,28 +1097,13 @@
 }
 
 .main .task-form.collapse .input-container {
-  position: relative;
-  display: block;
-  width: 100%;
-  border-radius: 1.6em;
-  transition: border-radius 600ms linear;
-}
-.main .task-form.collapse .input-container {
   display: block;
   text-align: left;
-  padding: .885em 1.185em;
-  margin-right: auto;
-}
-
-/* .main .task-form.collapse .input-container input {
-  align-self: self-start;
-  padding-inline: .85em;
   width: 100%;
+  border-radius: 1.6em;
+  padding: .855em 1.385em;
 }
 
-.main .task-form.collapse .input-container input:focus {
-  outline: none;
-} */
 
 .main .task-form.collapse>div:not(:first-of-type),
 .main .task-form.collapse>textarea {

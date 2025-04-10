@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { JSX, useCallback, useEffect, useState } from "react";
+import { JSX, useCallback, useEffect, useRef, useState } from "react";
 import { LoaderFunctionArgs, Outlet, useLoaderData, useSearchParams } from "react-router-dom";
 import { getProjects } from "../api.ts";
 import Calendar from "../components/Calendar.tsx";
@@ -25,6 +25,7 @@ export default function TaskLayout(): JSX.Element {
     const { projects } = useLoaderData<typeof projectsLoader>();
     const [searchParams, setSearchParams] = useSearchParams();
     const successMsg = searchParams.get('message');
+    const formContainerRef = useRef<HTMLElement | null>(null);
 
 
     const displaySuccessMsg = useCallback(() => {
@@ -38,20 +39,37 @@ export default function TaskLayout(): JSX.Element {
         }
     }, [setSearchParams, successMsg]);
 
-    useEffect(() => {
-        const formContainer = document.getElementById('task-container');
-        if (toggleMenu) {
-            if (formContainer) {
-                formContainer.classList.add('hide');
+    const handleScroll = useCallback(() => {
+        if (formContainerRef.current) {
+            if (document.body.scrollTop > 70 || document.documentElement.scrollTop > 70) {
+                formContainerRef.current.classList.add('hide');
+            } else {
+                formContainerRef.current.classList.remove('hide');
             }
-        }else{
-            formContainer?.classList.remove('hide');
+
         }
+    }, [])
+
+    useEffect(() => {
         const timer = displaySuccessMsg();
+        formContainerRef.current = document.getElementById('task-container');
+        
+
+        window.addEventListener('scroll', handleScroll);
+
+        if (toggleMenu) {
+            if (formContainerRef.current) {
+                formContainerRef.current.classList.add('hide');
+            }
+        } else {
+            formContainerRef.current?.classList.remove('hide');
+        }
+
         return () => {
             clearTimeout(timer);
+            removeEventListener('scroll', handleScroll);
         }
-    }, [displaySuccessMsg, toggleMenu]);
+    }, [displaySuccessMsg, handleScroll, toggleMenu]);
 
 
     return (<>
@@ -80,7 +98,6 @@ export default function TaskLayout(): JSX.Element {
                 {successMsg && <SuccessMsg successMsg={successMsg} />}
                 <Outlet context={{ projects }} />
             </section>
-            {/* TODO: HIDE form on scroll down and make it visible on scroll up */}
             <TaskForm projectPromise={projects} />
         </main>
     </>)

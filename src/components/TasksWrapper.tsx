@@ -1,14 +1,12 @@
 import moment from "moment";
 import { FormEvent, JSX, ReactNode, useCallback, useEffect, useState } from "react";
 import { IoTimeOutline } from "react-icons/io5";
-import { MdDeleteOutline, MdOutlineEditNote } from "react-icons/md";
 import { ActionFunctionArgs, useFetcher, useSearchParams } from "react-router-dom";
 import { addCompletedTask, CompleteTaskParams, MyTask } from "../api";
 import dropDownIcon from '../assets/arrow-down.svg';
 import calendarIcon from '../assets/calendar.svg';
 import folderIcon from '../assets/projects.svg';
 import { DescriptionSvg, NotesSvg } from "./Svg";
-
 
 
 interface TaskWrapperProps {
@@ -121,10 +119,9 @@ function TasksWrapper({ project }: TaskWrapperProps): JSX.Element {
                                             <IoTimeOutline /> {task.dueTime}
                                         </span>}
                                     </section>
-                                    <div className="btn-container">
-                                        {task.status !== 'completed' && <button type="button"> <MdOutlineEditNote /></button>}
-                                        <button type="button"><MdDeleteOutline style={{ fill:'rgba(249, 56, 39, .8)' }} /></button>
-                                    </div>
+                                    <button type="button">
+    <svg enableBackground="new 0 0 32 32" viewBox = "0 0 32 32" > <path d="M13,16c0,1.654,1.346,3,3,3s3-1.346,3-3s-1.346-3-3-3S13,14.346,13,16z" id = "XMLID_294_" /> <path d="M13,26c0,1.654,1.346,3,3,3s3-1.346,3-3s-1.346-3-3-3S13,24.346,13,26z" id = "XMLID_295_" /> <path d="M13,6c0,1.654,1.346,3,3,3s3-1.346,3-3s-1.346-3-3-3S13,4.346,13,6z" id = "XMLID_297_" /> </svg>
+                                    </button>
                                 </div>
 
 
@@ -135,7 +132,7 @@ function TasksWrapper({ project }: TaskWrapperProps): JSX.Element {
                                         <DescriptionSvg />
                                         <p className="description"> {task.description} </p>
                                     </section>
-                                    {task.notes && <section className="info-section">
+                                    {task.notes && <section className="indfo-section">
                                         <NotesSvg />
                                         < p className="notes"> {task.notes} </p>
                                     </section>
@@ -144,7 +141,6 @@ function TasksWrapper({ project }: TaskWrapperProps): JSX.Element {
                                 }
 
                             </div>
-
                         )
                     }) : <p className="empty-task" > Currently no {projectName?.toLocaleLowerCase()} tasks.</p>
                 }

@@ -5,7 +5,7 @@ type Days = string[];
 
 export const daysInWeekArr: Days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 
-export const colors = ['#FF4848', '#5D50C6', '#F85E9F', '#F02A71', '#EBC7E8', '#BFACE0', '#5D1451', '#14868C', '#94CECA', '#AACB73', '#CDE990', '#FFE26F', '#FBFF5F', '#D1FFA2', '#00CF95', '#0098EF']
+export const colors = ['#FF4848', '#5D50C6', '#F85E9F', '#F02A71', '#EBC7E8', '#BFACE0', '#5D1451', '#14868C', '#94CECA', '#AACB73', '#CDE990', '#FFE26F', '#FFE700', '#1DCD9F', '#00CF95', '#0098EF']
 
 export function hexToRGB(hex: string, alpha: number) {
   const r = parseInt(hex.slice(1, 3), 16),

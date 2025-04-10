@@ -39,7 +39,7 @@ export interface Recommendations {
 export interface Project {
   id: string;
   projectName: string;
-  avatarColor: string;
+  iconColor: string;
   updatedAt?: Date | null;
   createdAt: Date;
 }
@@ -47,7 +47,7 @@ export interface Project {
 export type MyProject = {
   id: string;
   projectName: string;
-  avatarColor: string;
+  iconColor: string;
   tasks: MyTask[]
   updatedAt?: Date | null;
   createdAt: Date;
@@ -125,7 +125,7 @@ export async function isProjectsEmpty(): Promise<boolean> {
 export async function getProjects(date: string) {
   const qry = query(projectsRef, orderBy('createdAt', 'desc'));
   const querySnapshot = await getDocs(qry);
-  if (querySnapshot.empty){return null}
+  if (querySnapshot.empty) { return null }
   return await Promise.all(querySnapshot.docs.map(async (doc) => {
     const data = doc.data() as Project;
     const tasks = await getTasks(doc.id, date);
@@ -245,7 +245,7 @@ export function getProject() {
 
       if (!date) {
         const completedTask = await getCompletedTasks(id);
-        if(completedTask){
+        if (completedTask) {
           project = { ...project, tasks: [...tasks, ...completedTask] } as MyProject;
         }
       }

@@ -2,6 +2,7 @@ import { JSX, useCallback, useEffect, useRef, useState } from "react";
 import { ActionFunctionArgs, Navigation, redirect, useFetcher, useNavigation } from "react-router-dom";
 import { addProject } from "../api";
 import { colors } from "../utils";
+import { ProjectIcon } from "./Svg";
 
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -53,15 +54,8 @@ export default function Modal(): JSX.Element {
     return (
         <>
             <div className="modal-container">
-                <button type="button" className="dropdown" onClick={()=>{setToggle(!toggle)}}
-                    style={{color: color}}       >
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        >
-                        <rect x="0.997817" y="0.997817" width="22.0044" height="22.0044" rx="4.98909"
-                            stroke="currentColor"
-                            strokeWidth="2" />
-                    </svg>
-
+                <button type="button" className="dropdown" onClick={()=>{setToggle(!toggle)}}>
+                    <ProjectIcon color={color}/>
                 </button>
                 <ul className={`colors-list ${toggle ? 'open': ''}`}>{colors.map(color => <li key={color} className="color-item"
                     style={{ backgroundColor: color }}
@@ -71,7 +65,7 @@ export default function Modal(): JSX.Element {
                     <label htmlFor="projectName">projectName</label>
                     <input ref={inputRef} type="text" name="projectName" id="projectName" placeholder="Project name..."
                         maxLength={25} minLength={3} required disabled={status === 'loading'} />
-                    <input type="hidden" name="avatarColor" value={color} />
+                    <input type="hidden" name="iconColor" value={color} />
                 </fetcher.Form>
             </div>
 
