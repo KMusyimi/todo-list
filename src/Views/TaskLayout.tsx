@@ -40,6 +40,7 @@ export default function TaskLayout(): JSX.Element {
     }, [setSearchParams, successMsg]);
 
     const handleScroll = useCallback(() => {
+    
         if (formContainerRef.current) {
             if (document.body.scrollTop > 70 || document.documentElement.scrollTop > 70) {
                 formContainerRef.current.classList.add('hide');
@@ -53,15 +54,16 @@ export default function TaskLayout(): JSX.Element {
     useEffect(() => {
         const timer = displaySuccessMsg();
         formContainerRef.current = document.getElementById('task-container');
-        
-
         window.addEventListener('scroll', handleScroll);
+    
 
         if (toggleMenu) {
+            document.body.style.position = 'fixed';
             if (formContainerRef.current) {
                 formContainerRef.current.classList.add('hide');
             }
         } else {
+            document.body.style.position = '';
             formContainerRef.current?.classList.remove('hide');
         }
 
