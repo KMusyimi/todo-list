@@ -122,6 +122,7 @@ export default function TaskForm({projectPromise}: ProjectPromise): JSX.Element 
                             <input type={'date'}
                                    id={'dueDate'}
                                    name={'dueDate'}
+                                   placeholder="MM/DD/YYY"
                                    className={'form-input'}
                                    min={moment().format('YYYY-MM-DD')}
                                    required/>
@@ -132,6 +133,7 @@ export default function TaskForm({projectPromise}: ProjectPromise): JSX.Element 
                             <input type={'time'}
                                    id={'dueTime'}
                                    name={'dueTime'}
+                                   placeholder="--:-- --"
                                    className={'form-input'}
                                    required/>
                         </div>

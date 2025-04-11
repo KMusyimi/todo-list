@@ -869,6 +869,9 @@
   transition: max-height 300ms linear var(--mah-delay, 0ms),
     width 300ms cubic-bezier(1, -0.51, 0, 1.16) var(--wdh-delay, 0ms);
 }
+.main .task-form .bg-grey {
+  background-color: #e9e9e9;
+}
 
 .main .task-form>div:not(:first-of-type),
 .main .task-form>textarea {
@@ -905,11 +908,23 @@
   border: 1px solid transparent;
   background-color: inherit;
 }
-
-.main .task-form .bg-grey {
-  background-color: #e9e9e9;
+input[type='date'],
+input[type='time'] {
+  text-align: right;
 }
 
+input[type="date"]:before,
+input[type="time"]:before {
+  color: lightgrey;
+  content: attr(placeholder) !important;
+  margin-right: 0.5em;
+}
+
+
+input[type="date"]:focus:before,
+input[type="time"]:focus:before {
+  content: '' !important;
+}
 .main .task-form>div:not(:last-of-type) {
   text-align: left;
   border-radius: 1em;
