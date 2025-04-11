@@ -1,7 +1,7 @@
 import {JSX} from "react";
 import {getRecommendations} from "../api";
 import {useLoaderData} from "react-router-dom";
-import Intro from "../components/Intro";
+import Intro from "../components/Start.tsx";
 import {checkUserProjects} from "../utils.ts";
 
 

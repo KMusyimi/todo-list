@@ -12,11 +12,11 @@ function Render({ projects }: NavProps) {
 
     return projects.map((project) => {
         const { id, projectName, iconColor, tasks } = project ?? {};
-        const rgba = hexToRGB(iconColor ?? '', 0.05)
+        const rgba = hexToRGB(iconColor ?? '', 0.15)
         
         const style = {
-            backgroundColor: rgba,
-            backgroundImage: `linear-gradient(90deg, ${rgba} 0%,${rgba} 45%,  rgba(218, 218, 218, .45) 80%,rgba(218, 218, 218, 1) 100%)`,
+            backgroundColor: hexToRGB(iconColor ?? '', 0.1),
+            backgroundImage: `linear-gradient(90deg, ${rgba} 0%,${hexToRGB(iconColor ?? '', 0.05) } 25%,  rgba(218, 218, 218, 1) 75%)`,
             transition: 'background-color 200ms linear'
         } as CSSProperties;
 
@@ -38,9 +38,9 @@ export default function Nav({ projectPromise }: { projectPromise: Promise<MyProj
     const projects = use(projectPromise);
 
     const style = {
-        backgroundColor: hexToRGB('#328E6E', 0.05),
+        backgroundColor: hexToRGB('#328E6E', 0.1),
         width: '100%',
-        backgroundImage: `linear-gradient(90deg, ${hexToRGB('#328E6E', 0.15)} 0%,${hexToRGB('#328E6E', 0.15)} 45%,rgba(218, 218, 218, .45) 80%,rgba(218, 218, 218, 1) 100%)`
+        backgroundImage: `linear-gradient(90deg, ${hexToRGB('#328E6E', 0.15)} 0%,${hexToRGB('#328E6E', 0.05)} 25%,rgba(218, 218, 218, 1) 75%)`
     } as CSSProperties
 
 

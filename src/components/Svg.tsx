@@ -20,6 +20,6 @@ export function ProjectIcon({ color }: { color: string }) {
     <svg className="project-icon" viewBox = "0 0 24 24" fill = "none" >
         <rect x="0.997817" y = "0.997817" width = "22.0044" height = "22.0044" rx = "4.98909"
             stroke = { color }
-            strokeWidth = "3.833" />
+            strokeWidth = "3" />
         </svg>)
 }

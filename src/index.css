@@ -31,12 +31,11 @@ body{
 }
 
 img {
-  display: block;
+  object-fit: fill;
   max-width: 100%;
 }
 
 a {
-  display: block;
   color: inherit;
   text-decoration: inherit;
   transition: color .25s ease-in-out;
@@ -53,9 +52,19 @@ input,
 button,
 textarea,
 label,
+select,
 input::placeholder {
   font-family: inherit;
 }
+a,
+input,
+textarea,
+label,
+select,
+img{
+  display: block;
+}
+
 button{
   background-color: transparent;
   border-color: transparent;

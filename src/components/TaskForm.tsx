@@ -48,12 +48,12 @@ export default function TaskForm({projectPromise}: ProjectPromise): JSX.Element 
     const [toggle, setToggle] = useState(false);
     const formRef = useRef<HTMLFormElement>(null)
     const navigation = useNavigation();
-    const inputRef = useRef<HTMLInputElement| null>(null)
+    const inputRef = useRef<HTMLInputElement | null>(null)
 
     const status = navigation.state;
 
     useEffect(() => {
-        if (status === 'submitting'){
+        if (status === 'submitting') {
             formRef.current?.reset();
             setTimeout(() => {
                 setToggle(false);
@@ -76,15 +76,14 @@ export default function TaskForm({projectPromise}: ProjectPromise): JSX.Element 
     }, []);
 
 
-    const handleTransitionEnd = useCallback((e:React.TransitionEvent<HTMLFormElement>)=>{
+    const handleTransitionEnd = useCallback((e: React.TransitionEvent<HTMLFormElement>) => {
         e.preventDefault();
         setTimeout(() => {
-            if (inputRef.current){
+            if (inputRef.current) {
                 inputRef.current.focus();
             }
-            }, 800);
+        }, 800);
     }, []);
-
 
 
     return (
@@ -98,14 +97,14 @@ export default function TaskForm({projectPromise}: ProjectPromise): JSX.Element 
                             <>
                                 <RectSolidSvg/>
                                 <label htmlFor={'title'}> Title </label>
-                                <input 
+                                <input
                                     ref={inputRef}
                                     type={'text'}
-                                       id={'title'}
-                                       name={'title'}
-                                       className={'form-input'}
-                                       placeholder={'Write a new task'}
-                                       required/>
+                                    id={'title'}
+                                    name={'title'}
+                                    className={'form-input'}
+                                    placeholder={'Write a new task'}
+                                    required/>
 
                                 <label htmlFor="projects">category</label>
                                 <select className="bg-grey" name="projectId" id="projects" required>
@@ -113,7 +112,7 @@ export default function TaskForm({projectPromise}: ProjectPromise): JSX.Element 
                                     <ProjectsList projectPromise={projectPromise}/>
                                 </select>
 
-                            </>: <span>Write a new task</span>}
+                            </> : <span>Write a new task</span>}
 
                     </div>
 
@@ -142,29 +141,15 @@ export default function TaskForm({projectPromise}: ProjectPromise): JSX.Element 
                         <fieldset>
                             <legend>Priority</legend>
                             <div className="radio-wrapper">
-
-                                <div className={'radio-container'}>
-                                    <label tabIndex={0} className="label-radio" htmlFor={'high'}> High
-                                        <input id={'high'} type={'radio'} name={'priority'} value={3}
-                                               style={{height: '25px', width: '25px', verticalAlign: 'middle'}
-                                               } required/>
-
+                                <label className="label-radio" htmlFor={'high'}> High
+                                    <input id={'high'} type={'radio'} name={'priority'} value={3} required/>
+                                </label>
+                                <label className="label-radio" htmlFor={'medium'}> Medium
+                                    <input id={'medium'} type={'radio'} name={'priority'} value={2}/>
+                                </label>
+                                <label className="label-radio" htmlFor={'low'}> Low
+                                    <input id={'low'} type={'radio'} name={'priority'} value={1}/>
                                     </label>
-                                </div>
-                                <div className={'radio-container'}>
-                                    <label tabIndex={0} className="label-radio" htmlFor={'medium'}> Medium
-
-                                        <input id={'medium'} type={'radio'} name={'priority'} value={2}
-                                               style={{height: '25px', width: '25px', verticalAlign: 'middle'}}/>
-                                    </label>
-                                </div>
-                                <div className={'radio-container'}>
-                                    <label tabIndex={0} className="label-radio" htmlFor={'low'}> Low
-                                        <input id={'low'} type={'radio'} name={'priority'} value={1}
-                                               style={{height: '25px', width: '25px', verticalAlign: 'middle'}}/>
-
-                                    </label>
-                                </div>
                             </div>
                         </fieldset>
 
@@ -190,7 +175,8 @@ export default function TaskForm({projectPromise}: ProjectPromise): JSX.Element 
                             setToggle(false)
                         }}>close
                         </button>
-                        <button type="submit" className="add-btn" disabled={status === 'submitting'}> Add task</button>
+                        <button type="submit" className="add-btn"
+                                disabled={status === 'submitting'}> {status === 'submitting' ? 'Submitting..' : 'Add'}</button>
                     </div>
                 </Form>
 
