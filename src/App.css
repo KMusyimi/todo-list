@@ -908,23 +908,7 @@
   border: 1px solid transparent;
   background-color: inherit;
 }
-input[type='date'],
-input[type='time'] {
-  text-align: right;
-}
 
-input[type="date"]:before,
-input[type="time"]:before {
-  color: lightgrey;
-  content: attr(placeholder) !important;
-  margin-right: 0.5em;
-}
-
-
-input[type="date"]:focus:before,
-input[type="time"]:focus:before {
-  content: '' !important;
-}
 .main .task-form>div:not(:last-of-type) {
   text-align: left;
   border-radius: 1em;
@@ -1006,12 +990,6 @@ input[type="time"]:focus:before {
   width: min(100%, 150px);
 }
 
-
-/* 
-.main .task-form .duedate-container>div input::-webkit-calendar-picker-indicator {
-  color: #5d6063;
-  color-scheme: light;
-} */
 
 .main .task-form fieldset legend {
   padding-inline-start: .5em;
