@@ -849,7 +849,8 @@
 }
 
 .main .form-container:has(> .task-form.collapse) {
-  margin: 0 0 .35em 0;
+  bottom: .5em;
+  margin: 0;
   padding-block-start: 0em;
 }
 
@@ -860,6 +861,7 @@
 }
 
 .main .task-form {
+  color-scheme: light;
   --mah-delay: var(--trs-delay);
   max-height: 600px;
   width: 100%;
