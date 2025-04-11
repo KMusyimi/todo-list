@@ -722,6 +722,7 @@
 .main>.task-section>section .task-card .task-wrapper .title {
   white-space: nowrap;
   text-overflow: ellipsis;
+  color: #413F3F;
   overflow: hidden;
   font-size: 1.053rem;
   font-weight: 500;
@@ -990,11 +991,11 @@
 .main .task-form .duedate-container>div input {
   width: fit-content;
 }
-
+/* 
 .main .task-form .duedate-container>div input::-webkit-calendar-picker-indicator {
   color: #5d6063;
   color-scheme: light;
-}
+} */
 
 .main .task-form fieldset legend {
   padding-inline-start: .5em;
