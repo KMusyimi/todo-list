@@ -17,7 +17,7 @@ export async function projectAction({ request }: ActionFunctionArgs): Promise<Re
             newStr = newStr.charAt(0).toUpperCase() + newStr.slice(1);
 
             if (projectID) {
-                return redirect(`projects/${projectID}/todo?message=${newStr} project added successfully to your projects&&submitted=true`);
+                return redirect(`projects/${projectID}/todo?message=${newStr} project added successfully to your projects`);
             }
         }
 

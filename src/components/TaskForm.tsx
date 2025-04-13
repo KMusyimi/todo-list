@@ -15,7 +15,7 @@ export async function taskFormAction({request}: ActionFunctionArgs) {
         const data = Object.fromEntries(formData);
         const projectId = formData.get('projectId') as string;
         await addTask(data);
-        return redirect(`../${projectId}/todo?submitted=true`);
+        return redirect(`../${projectId}/todo`);
 
     } catch (e) {
         console.error(e)
@@ -116,7 +116,7 @@ export default function TaskForm({projectPromise}: ProjectPromise): JSX.Element 
 
                     </div>
 
-                    <div className="duedate-container bg-grey">
+                    <div className="dueDate-container bg-grey">
                         <div>
                             <label htmlFor="dueDate">due date</label>
                             <input type={'date'}

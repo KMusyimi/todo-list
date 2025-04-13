@@ -210,7 +210,7 @@ async function updateOverDueTask(id: string, status: string) {
 }
 
 
-export async function addCompletedTask(params: CompleteTaskParams) {
+export async function completeTask(params: CompleteTaskParams) {
   try {
     const docRef = doc(db, 'tasks', params.taskId);
     const taskSnap = await getDoc(docRef);
