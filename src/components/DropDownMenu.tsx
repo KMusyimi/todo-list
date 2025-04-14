@@ -1,6 +1,7 @@
 import {JSX, ReactNode} from "react";
 
 interface DropDownProps  {
+  ref: React.RefObject<HTMLDivElement | null>;
   children?: ReactNode;
   className?: string;
   id?: string;

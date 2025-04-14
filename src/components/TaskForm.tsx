@@ -5,7 +5,7 @@ import {ActionFunctionArgs, Form, redirect, useNavigation} from "react-router-do
 import {addTask, MyProjects} from "../api";
 import RectSolidSvg from "./Svg";
 
-interface ProjectPromise {
+interface FormProps {
     projectPromise: Promise<MyProjects | null>
 }
 
@@ -27,7 +27,7 @@ export async function addLoader() {
     return redirect('/projects');
 }
 
-function ProjectsList({projectPromise}: ProjectPromise) {
+function ProjectsList({projectPromise}: FormProps) {
     const projects = use(projectPromise);
 
     return (
@@ -44,7 +44,7 @@ function ProjectsList({projectPromise}: ProjectPromise) {
         </Suspense>)
 }
 
-export default function TaskForm({projectPromise}: ProjectPromise): JSX.Element {
+export default function TaskForm({ projectPromise}: FormProps): JSX.Element {
     const [toggle, setToggle] = useState(false);
     const formRef = useRef<HTMLFormElement>(null)
     const navigation = useNavigation();
@@ -53,17 +53,23 @@ export default function TaskForm({projectPromise}: ProjectPromise): JSX.Element 
     const status = navigation.state;
 
     useEffect(() => {
+        let timer: string | number | NodeJS.Timeout | undefined;
+        
         if (status === 'submitting') {
             formRef.current?.reset();
-            setTimeout(() => {
+            timer = setTimeout(() => {
                 setToggle(false);
-            }, 100);
+            }, 300);
         }
         if (toggle) {
-            document.body.style.position = 'fixed';
+            document.body.style.overflow = 'hidden';
         } else {
             formRef.current?.reset();
-            document.body.style.position = '';
+            document.body.style.overflow = '';
+        }
+        
+        return ()=>{
+            clearTimeout(timer);
         }
     }, [toggle, status]);
 
@@ -74,7 +80,7 @@ export default function TaskForm({projectPromise}: ProjectPromise): JSX.Element 
             setToggle(true)
         }
     }, []);
-
+    
 
     const handleTransitionEnd = useCallback((e: React.TransitionEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -88,10 +94,9 @@ export default function TaskForm({projectPromise}: ProjectPromise): JSX.Element 
 
     return (
         <>
-            <div className="form-ovly"></div>
-            <div id={'task-container'} className={"form-container"}>
-                <Form ref={formRef} action={"/projects/add"} className={toggle ? 'task-form' : 'task-form collapse'}
-                      replace={true} method="post" onTransitionEnd={handleTransitionEnd}>
+            <div className={'form-container'}>
+                <Form ref={formRef} action={"add"} className={toggle ? 'task-form' : 'task-form collapse'}
+                      replace={true} method="post" onTransitionEnd={handleTransitionEnd} >
                     <div id="input-wrapper" className="input-container" onClick={handleClick}>
                         {toggle ?
                             <>
@@ -155,7 +160,6 @@ export default function TaskForm({projectPromise}: ProjectPromise): JSX.Element 
                             </div>
                         </fieldset>
 
-
                     </div>
 
                     <label htmlFor={'description'}> Description </label>
@@ -181,7 +185,6 @@ export default function TaskForm({projectPromise}: ProjectPromise): JSX.Element 
                                 disabled={status === 'submitting'}> {status === 'submitting' ? 'Submitting..' : 'Add'}</button>
                     </div>
                 </Form>
-
             </div>
         </>
     )

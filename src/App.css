@@ -1,13 +1,3 @@
-#root::before {
-    display: block;
-    content: '';
-    background-image: url(assets/top-image.svg);
-    background-size: cover;
-    background-repeat: no-repeat;
-    width: 100%;
-    height: 14px;
-}
-
 #root {
     position: relative;
     max-width: 1280px;
@@ -19,16 +9,38 @@
 #root:has(.menu-mobile--open) .task-section {
     position: fixed;
 }
-#root:has(.dropdown-task.open) .ovly {
-    background-color: rgba(0, 0, 0, 0.35);
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 210;
+#root:has(.menu-mobile--open) .form-container {
+    opacity: 0;
+    visibility: hidden;
+}
+
+#root:has(.dropdown-task.open) .ovly,
+#root:has(.task-form:not(.collapse)) .ovly {
     height: 100%;
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
     width: 100%;
     transition: background-color 100ms linear;
 }
+
+#root:has(.dropdown-task.open) .ovly {
+    background-color: rgba(0, 0, 0, 0.25);
+    z-index: 200;
+}
+
+#root:has(.task-form:not(.collapse)) .ovly {
+    background-color: rgba(249, 245, 244, 1);
+    z-index: 100;
+}
+
+.ovly {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 0%;
+    width: 0%;
+}
+
 .project-icon {
     width: 15px;
     height: 15px;
@@ -57,20 +69,20 @@
     background-repeat: no-repeat;
 }
 
-.intro-container > header {
+.intro-container>header {
     padding: 6em;
     padding-inline: .5em;
 }
 
-.intro-container > header h1 {
+.intro-container>header h1 {
     font-size: 2.25rem;
 }
 
-.intro-container > form {
+.intro-container>form {
     margin-right: -1.5em;
 }
 
-.intro-container > form fieldset {
+.intro-container>form fieldset {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     border: transparent;
@@ -78,7 +90,7 @@
     margin-bottom: 2.125em;
 }
 
-.intro-container > form legend {
+.intro-container>form legend {
     color: var(--brown-color);
     font-size: .75rem;
     font-weight: 600;
@@ -88,7 +100,7 @@
     padding-inline: 1.35em;
 }
 
-.intro-container > form .label-wrapper {
+.intro-container>form .label-wrapper {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(auto-fit, minmax(30px, 1fr));
@@ -99,7 +111,7 @@
     text-overflow: ellipsis;
 }
 
-.intro-container > form label {
+.intro-container>form label {
     background-color: #F3EFEE;
     font-size: 1.06rem;
     padding: 0.706em 1.176em;
@@ -112,17 +124,17 @@
 
 }
 
-.intro-container > form label:has(> input[type=radio]:checked) {
+.intro-container>form label:has(> input[type=radio]:checked) {
     border-color: rgb(84, 58, 20);
     background-color: #ede2d5;
 }
 
-.intro-container > form input[type=radio] {
+.intro-container>form input[type=radio] {
     appearance: none;
     -webkit-appearance: none;
 }
 
-.intro-container > form button {
+.intro-container>form button {
     border: transparent;
     background-color: #393433;
     font-size: 1.125rem;
@@ -139,7 +151,7 @@
 .menu-mobile .menu-btn {
     display: flex;
     position: absolute;
-    top: 1em;
+    top: 1.5em;
     left: 1.5em;
     z-index: 99;
     background-color: transparent;
@@ -155,13 +167,12 @@
     left: 85%;
 }
 
-
 .line {
     fill: none;
     stroke: #121212;
     stroke-width: 6;
     transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1),
-    stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1);
+        stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .line1 {
@@ -197,8 +208,8 @@
     stroke-width: 6;
 }
 
-.menu-mobile > div {
-    position: fixed;
+.menu-mobile>div {
+    position: absolute;
     height: 100dvh;
     background-color: #F3EFEE;
     top: 0;
@@ -210,54 +221,54 @@
     transition: left 400ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.menu-mobile--open > div {
+.menu-mobile--open>div {
     left: 0;
 }
 
-.menu > div .link--wrapper {
+.menu>div .link--wrapper {
     text-align: center;
     margin-bottom: .85em;
 }
 
-.menu > div .link--wrapper a {
+.menu>div .link--wrapper a {
     font-size: 2em;
     font-weight: bold;
 }
 
-.menu > div nav {
+.menu>div nav {
     padding-block-start: 3em;
     margin-bottom: 1.25em;
 }
 
-.menu > div nav ul {
+.menu>div nav ul {
     width: min(100%, 450px);
     margin: auto;
 }
 
-.menu > div nav ul li {
+.menu>div nav ul li {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: .65em;
 }
 
-.menu > div nav ul li:first-of-type {
+.menu>div nav ul li:first-of-type {
     width: 100%;
 }
 
-.menu > div nav ul li:not(:first-of-type) {
+.menu>div nav ul li:not(:first-of-type) {
     gap: 1em;
     padding-inline-end: 1em;
 
 }
 
-.menu > div nav ul li:has(> a.active) {
+.menu>div nav ul li:has(> a.active) {
     background-color: rgba(218, 218, 218, 1);
     box-shadow: 0 4px 10px #d1d1d1;
     border-radius: 1em;
 }
 
-.menu > div nav ul li a {
+.menu>div nav ul li a {
     display: flex;
     align-items: center;
     gap: 1em;
@@ -265,16 +276,16 @@
     color: #121212;
     text-transform: capitalize;
     font-weight: 600;
-    padding: 1.185em 1.6em;
+    padding: 1em 1.6em;
     padding-inline-end: 0;
     border-radius: 1em 0 0 1em;
 }
 
-.menu > div nav ul li:first-of-type a {
+.menu>div nav ul li:first-of-type a {
     border-radius: 1em;
 }
 
-.menu > div nav ul li .count {
+.menu>div nav ul li .count {
     display: block;
     position: relative;
     font-weight: 600;
@@ -286,7 +297,7 @@
     color: #908b8b;
 }
 
-.menu > div nav ul li .count::before {
+.menu>div nav ul li .count::before {
     content: '';
     position: absolute;
     top: 0;
@@ -299,11 +310,11 @@
     box-shadow: 0 4px 10px #d1d1d1;
 }
 
-.menu > div nav ul li:has(> a.active) .count {
+.menu>div nav ul li:has(> a.active) .count {
     color: #5d6063;
 }
 
-.menu div > .modal-container {
+.menu div>.modal-container {
     position: relative;
     left: 0;
     display: grid;
@@ -320,13 +331,13 @@
     border-radius: .85em;
 }
 
-.menu div > .modal-container:has(:focus) {
+.menu div>.modal-container:has(:focus) {
     outline: 4px solid #8E7DBE;
     box-shadow: 0 0 14px #d1d1d1;
     transition: all 200ms linear;
 }
 
-.menu div > .modal-container > button {
+.menu div>.modal-container>button {
     display: flex;
     align-items: center;
     gap: .45em;
@@ -337,14 +348,14 @@
     border-radius: 1em;
 }
 
-.menu div > .modal-container > button::after {
+.menu div>.modal-container>button::after {
     content: '▼';
     align-self: start;
     color: #121212;
     background-blend-mode: darken;
 }
 
-.menu div > .modal-container .colors-list {
+.menu div>.modal-container .colors-list {
     position: absolute;
     bottom: 0;
     width: 0;
@@ -357,7 +368,7 @@
 
 }
 
-.menu div > .modal-container .colors-list.open {
+.menu div>.modal-container .colors-list.open {
     display: grid;
     align-items: center;
     justify-content: center;
@@ -371,16 +382,16 @@
     border: 1px solid #d4d4d4;
     box-shadow: 0 4px 10px #d1d1d1;
     transition: height 250ms cubic-bezier(0.39, 0.575, 0.565, 1) 90ms,
-    bottom 400ms cubic-bezier(0.4, 0, 0.2, 1),
-    width 400ms linear(0 0%, 0 1.8%, 0.01 3.6%, 0.03 6.35%, 0.07 9.1%, 0.13 11.4%, 0.19 13.4%, 0.27 15%, 0.34 16.1%, 0.54 18.35%, 0.66 20.6%, 0.72 22.4%, 0.77 24.6%, 0.81 27.3%, 0.85 30.4%, 0.88 35.1%, 0.92 40.6%, 0.94 47.2%, 0.96 55%, 0.98 64%, 0.99 74.4%, 1 86.4%, 1 100%) 300ms;
+        bottom 400ms cubic-bezier(0.4, 0, 0.2, 1),
+        width 400ms linear(0 0%, 0 1.8%, 0.01 3.6%, 0.03 6.35%, 0.07 9.1%, 0.13 11.4%, 0.19 13.4%, 0.27 15%, 0.34 16.1%, 0.54 18.35%, 0.66 20.6%, 0.72 22.4%, 0.77 24.6%, 0.81 27.3%, 0.85 30.4%, 0.88 35.1%, 0.92 40.6%, 0.94 47.2%, 0.96 55%, 0.98 64%, 0.99 74.4%, 1 86.4%, 1 100%) 300ms;
 }
 
-.menu div > .modal-container .colors-list > li {
+.menu div>.modal-container .colors-list>li {
     opacity: 0;
     visibility: hidden;
 }
 
-.menu div > .modal-container .colors-list.open > li {
+.menu div>.modal-container .colors-list.open>li {
     opacity: 1;
     visibility: visible;
     justify-self: center;
@@ -390,20 +401,20 @@
     border-radius: .25em;
     box-shadow: 0 0 1px #222222;
     transition: opacity 200ms cubic-bezier(0.39, 0.575, 0.565, 1) 400ms,
-    visibility 0ms;
+        visibility 0ms;
 }
 
-.menu div > .modal-container form {
+.menu div>.modal-container form {
     width: 100%;
 }
 
-.menu div > .modal-container form label {
+.menu div>.modal-container form label {
     display: block;
     visibility: hidden;
     height: 0;
 }
 
-.menu div > .modal-container form input {
+.menu div>.modal-container form input {
     width: inherit;
     font-size: 1rem;
     border: none;
@@ -413,50 +424,38 @@
     border-radius: 0 .85em .85em 0;
 }
 
-.menu div > .modal-container form input:focus {
+.menu div>.modal-container form input:focus {
     outline: transparent;
 }
 
-.menu div > .modal-container form input::placeholder {
+.menu div>.modal-container form input::placeholder {
     font-size: .887rem;
 }
 
 /* Main styles */
 .main {
     position: relative;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-direction: column;
     background-color: #F9F5F4;
+    text-align: left;
+    padding: 3.5em 1.5em 1em;
     min-height: 100dvh;
     width: 100dvw;
     transition: top 300ms linear;
 }
 
-.main > .task-section {
-    position: relative;
-    width: 100%;
-    text-align: left;
-    padding: 3.5em 1.5em 1em;
-    margin-bottom: .438em;
-}
-/* .main > .task-section:has(.dropdown-task.open){
-    height: 100dvh;
-} */
-.main > .task-section > header {
-    margin-top: 1em;
-    margin-bottom: 1.5em;
+.main .task-container>header {
+    margin-top: .55em;
+    margin-bottom: 2em;
     transition: margin-bottom 0ms ease-in-out;
 }
 
-.main > .task-section > header:has(+.btn-container) {
+.main .task-container>header:has(>.btn-container) {
     transition-duration: 100ms;
     --_m-delay: 0ms;
     margin-bottom: .265em;
 }
 
-.main > .task-section > header h1 {
+.main .task-container>header h1 {
     display: inline-flex;
     align-items: center;
     font-size: 1.915rem;
@@ -464,7 +463,7 @@
     text-align: left;
 }
 
-.main > .task-section .clear-btn {
+.main .task-container .clear-btn {
     position: relative;
     display: flex;
     align-items: center;
@@ -475,12 +474,12 @@
     text-transform: capitalize;
 }
 
-.main > .task-section .clear-btn > svg {
+.main .task-container .clear-btn>svg {
     margin: 0;
     padding: 0;
 }
 
-.main > .task-section .clear-btn::after {
+.main .task-container .clear-btn::after {
     content: '';
     position: absolute;
     left: 0;
@@ -490,13 +489,13 @@
     background-color: #222222;
 }
 
-.main > .task-section .calendar,
-.main > .task-section .calendar > button {
+.main .task-container .calendar,
+.main .task-container .calendar>button {
     display: flex;
     justify-content: space-between;
 }
 
-.main > .task-section .calendar {
+.main .task-container .calendar {
     gap: .75em;
     overflow-x: scroll;
     margin-bottom: 2em;
@@ -504,7 +503,7 @@
     margin-right: -1.5em;
 }
 
-.main > .task-section .calendar > button {
+.main .task-container .calendar>button {
     display: flex;
     flex-direction: column;
     place-items: center;
@@ -521,41 +520,52 @@
     opacity: .5;
 }
 
-.main > .task-section .calendar > button:last-of-type {
+.main .task-container .calendar>button>* {
+    font-weight: 600;
+}
+
+.main .task-container .calendar>button:last-of-type {
     margin-right: 1.65em;
 }
 
-.main > .task-section .calendar > button.today {
+.main .task-container .calendar>button.today {
     background-color: #E6D9CB;
-    opacity: .8;
+    opacity: 1;
     border-color: transparent;
 }
 
-.main > .task-section .calendar > button .day {
+.main .task-container>.task-section {
+    position: relative;
+    width: 100%;
+    max-height: 450px;
+    overflow: auto;
+    padding-right: .25em;
+    margin-bottom: .438em;
+}
+
+.main .task-container>.task-section .calendar>button .day {
     font-weight: 600;
     font-size: 0.75rem;
 }
 
-.main > .task-section .calendar > button .date {
+.main .task-container>.task-section .calendar>button .date {
     font-weight: bold;
     font-size: 1.063rem;
 }
 
-.main > .task-section > section.tasks {
-    max-height: 40px;
+.main .task-container>.task-section>.tasks {
+    max-height: 30px;
     overflow: hidden;
-    margin-bottom: 1.5em;
+    margin-bottom: 2.494em;
     transition: max-height 550ms cubic-bezier(0.65, -0.12, 0.08, 1.1);
 }
-.main>.task-section>section.tasks:last-of-type{
-    margin-bottom: 3.85em;
-}
-.main > .task-section > section.tasks.expand {
+
+.main .task-container>.task-section>.tasks.expand {
     height: fit-content;
     max-height: 1000px;
 }
 
-.main > .task-section > section.tasks header {
+.main .task-container>.task-section>.tasks header {
     display: grid;
     grid-template-columns: 25px 2fr;
     cursor: pointer;
@@ -564,61 +574,77 @@
     padding-block-start: 0.187em;
 }
 
-.main > .task-section > section.tasks header .folder-icon {
+.main .task-container>.task-section>.tasks header .folder-icon {
     align-self: self-start;
     padding: .312em 0.187em;
 }
 
-.main > .task-section > section.tasks header .heading-container {
+.main .task-container>.task-section>.tasks header .heading-container {
     display: flex;
     align-items: center;
-    gap: 0.869em;
-    margin-bottom: .81em;
-
+    gap: 0.769em;
 }
 
-.main > .task-section > section.tasks header .heading-container > .project-name {
+.main .task-container>.task-section>.tasks header,
+.main .task-container>.task-section>.tasks header .folder-icon,
+.main .task-container>.task-section>.tasks header .heading-container {
+    transition: margin-bottom 300ms linear;
+}
+
+.main .task-container>.task-section>.tasks.expand header {
+    margin-bottom: 0.87em;
+}
+
+.main .task-container>.task-section>.tasks.expand header .folder-icon {
+    margin-bottom: 0.748em;
+}
+
+.main .task-container>.task-section>.tasks.expand header .heading-container {
+    margin-bottom: .81em;
+}
+
+.main .task-container>.task-section>.tasks header .heading-container>.project-name {
     text-transform: capitalize;
     font-weight: bold;
     font-size: .936rem;
     text-wrap: nowrap;
     color: #413F3F;
-
 }
 
-.main > .task-section > section.tasks header .heading-container > .line {
+.main .task-container>.task-section>.tasks header .heading-container>.line {
     display: block;
     background-color: #BCBCC3;
-    width: 100%;
+    width: calc(100% - (15px + 13px));
     height: 1px;
 }
 
-.main > .task-section > section.tasks header .heading-container > div {
+.main .task-container>.task-section>.tasks header .heading-container>div {
     display: grid;
     grid-template-columns: repeat(2, minmax(20px, 1fr));
     align-items: center;
-    gap: 0.375em;
-    margin-right: .55em;
+    gap: 0.175em;
+    margin-right: .15em;
 }
 
-.main > .task-section > section.tasks.expand header .heading-container > div {
+.main .task-container>.task-section>.tasks.expand header .heading-container>div {
     display: block;
     margin-right: 0;
+    width: 25px;
 }
 
-.main > .task-section > section.tasks header .heading-container > div .dropdown-icon {
+.main .task-container>.task-section>.tasks header .heading-container>div .dropdown-icon {
     rotate: 0deg;
     width: 12px;
     height: 15px;
-    transition: rotate 550ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
-    margin-right: 0.375em;
+    margin: auto;
+    transition: rotate 250ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
 }
 
-.main > .task-section > section.tasks.expand header .heading-container > div .dropdown-icon {
+.main .task-container>.task-section>.tasks.expand header .heading-container>div .dropdown-icon {
     rotate: 180deg;
 }
 
-.main > .task-section > section.tasks header .heading-container > div .count {
+.main .task-container>.task-section>.tasks header .heading-container>div .count {
     position: relative;
     display: flex;
     place-items: center;
@@ -631,7 +657,7 @@
     z-index: 1;
 }
 
-.main > .task-section > section.tasks header .heading-container > div .count::before {
+.main .task-container>.task-section>.tasks header .heading-container>div .count::before {
     content: '';
     display: block;
     position: absolute;
@@ -642,37 +668,40 @@
     z-index: -1;
 }
 
-.main > .task-section > section .empty-task {
+.main .task-container>.task-section>.tasks .empty-task {
     text-align: center;
     font-weight: 600;
     padding: 1.85em 0;
 }
 
-.main > .task-section > section .task-card {
+.main .task-container>.task-section>.tasks .task-card {
+    display: none;
+}
+
+.main .task-container>.task-section>.tasks.expand .task-card {
+    display: block;
     margin-bottom: 1.25em;
-    max-height: 25px;
-    transition: max-height .55s cubic-bezier(0.65, -0.12, 0.08, 1.1), margin-bottom 300ms linear;
+    overflow: hidden;
+    max-height: 30px;
+    transition: max-height .45s cubic-bezier(0.65, -0.12, 0.08, 1.1), margin-bottom 150ms linear;
 }
 
-.main > .task-section > section .task-card:first-of-type {
-    margin-top: .86em;
-}
-
-.main > .task-section > section .task-card.expand {
+.main .task-container>.task-section>.tasks.expand .task-card.expand {
     height: fit-content;
     max-height: 250px;
 }
-.main > .task-section > section .task-card.expand:last-of-type {
-     margin-bottom: 0;
+
+.main .task-container>.task-section>.tasks .task-card.expand:last-of-type {
+    margin-bottom: 0;
 }
 
-.main > .task-section > section .task-wrapper .title::first-letter,
-.main > .task-section > section .info-section .notes::first-letter,
-.main > .task-section > section .info-section .description::first-letter {
+.main .task-container>.task-section>.tasks .task-wrapper .title::first-letter,
+.main .task-container>.task-section>.tasks .info-section .notes::first-letter,
+.main .task-container>.task-section>.tasks .info-section .description::first-letter {
     text-transform: capitalize;
 }
 
-.main > .task-section > section .task-card .task-wrapper {
+.main .task-container>.task-section>.tasks .task-card .task-wrapper {
     position: relative;
     display: grid;
     grid-template-columns: 25px minmax(145px, 3fr) 25px;
@@ -682,22 +711,22 @@
     font-size: inherit;
 }
 
-.main > .task-section > section .task-card .task-wrapper > * {
+.main .task-container>.task-section>.tasks .task-card .task-wrapper>* {
     align-self: start;
 }
 
-.main > .task-section > section .task-card .task-wrapper label {
+.main .task-container>.task-section>.tasks .task-card .task-wrapper label {
     display: block;
     height: 28px;
     width: 25px;
     padding: 0.249em 0;
 }
 
-.main > .task-section > section .task-card .task-wrapper label:disabled {
+.main .task-container>.task-section>.tasks .task-card .task-wrapper label:disabled {
     pointer-events: none;
 }
 
-.main > .task-section > section .task-card .task-wrapper label::before {
+.main .task-container>.task-section>.tasks .task-card .task-wrapper label::before {
     --_square-url: url(assets/square.svg);
     content: '';
     display: inline-block;
@@ -709,48 +738,48 @@
     background-size: 20px;
 }
 
-.main > .task-section > section .task-card .task-wrapper label.priority-medium::before {
+.main .task-container>.task-section>.tasks .task-card .task-wrapper label.priority-medium::before {
     --_square-url: url(assets/square-orange.svg);
 }
 
-.main > .task-section > section .task-card .task-wrapper label.priority-high::before {
+.main .task-container>.task-section>.tasks .task-card .task-wrapper label.priority-high::before {
     fill: greenyellow;
     --_square-url: url(assets/square-red.svg);
 }
 
-.main > .task-section > section .task-card .task-wrapper label:has(:checked):before,
-.main > .task-section > section .task-card .task-wrapper label:has(:disabled):before {
+.main .task-container>.task-section>.tasks .task-card .task-wrapper label:has(:checked):before,
+.main .task-container>.task-section>.tasks .task-card .task-wrapper label:has(:disabled):before {
     --_square-url: url(assets/checked.svg);
 }
 
-.main > .task-section > section .task-card .task-wrapper input {
+.main .task-container>.task-section>.tasks .task-card .task-wrapper input {
     appearance: none;
     -webkit-appearance: none;
 }
 
-.main > .task-section > section .task-card .task-wrapper .task-info {
+.main .task-container>.task-section>.tasks .task-card .task-wrapper .task-info {
     cursor: pointer;
 }
 
-.main > .task-section > section .task-card .task-wrapper .task-info:has(.strike) {
+.main .task-container>.task-section>.tasks .task-card .task-wrapper .task-info:has(.strike) {
     pointer-events: none;
 }
 
-.main > .task-section > section .task-card .task-wrapper .title {
+.main .task-container>.task-section>.tasks .task-card .task-wrapper .title {
     white-space: nowrap;
     text-overflow: ellipsis;
     color: #413F3F;
     overflow: hidden;
     font-size: 1.053rem;
-    font-weight: 500;
+    font-weight: 400;
     transition: margin 450ms cubic-bezier(0.86, 0, 0.07, 1);
 }
 
-.main > .task-section > section .task-card .task-wrapper .title .strike {
+.main .task-container>.task-section>.tasks .task-card .task-wrapper .title .strike {
     color: #B5B5BA;
 }
 
-.main > .task-section > section .task-card .task-wrapper > button {
+.main .task-container>.task-section>.tasks .task-card .task-wrapper>button {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -761,21 +790,21 @@
     padding: .155em;
 }
 
-.main > .task-section > section .task-card .task-wrapper button:focus {
+.main .task-container>.task-section>.tasks .task-card .task-wrapper button:focus {
     background-color: #ebebeb;
     border-radius: .55em;
     transition: all 200ms linear;
 }
 
-.main > .task-section > section .task-card > .info-container {
+.main .task-container>.task-section>.tasks .task-card>.info-container {
     padding: .75em 2.188em;
     visibility: hidden;
     opacity: 0;
     transition: visibility 0ms var(--_visibility-delay, 300ms),
-    opacity 450ms linear(0 0%, 0.35 63.31%, 1 100%) var(--_op-delay, 0ms);
+        opacity 450ms linear(0 0%, 0.35 63.31%, 1 100%) var(--_op-delay, 0ms);
 }
 
-.main > .task-section > section .task-card.expand > .info-container {
+.main .task-container>.task-section>.tasks .task-card.expand>.info-container {
     --_visibility-delay: 0ms;
     --_op-delay: 75ms;
     visibility: visible;
@@ -783,7 +812,7 @@
     height: fit-content;
 }
 
-.main > .task-section > section .task-card .info-container .due-date {
+.main .task-container>.task-section>.tasks .task-card .info-container .due-date {
     display: inline-flex;
     align-items: center;
     gap: .35em;
@@ -791,12 +820,12 @@
     font-weight: bold;
 }
 
-.main > .task-section .info-container > .info-section:first-of-type {
+.main .task-container>.task-section .info-container>.info-section:first-of-type {
     margin-top: .75em;
     margin-bottom: .15em;
 }
 
-.main > .task-section .info-container > .info-section {
+.main .task-container>.task-section .info-container>.info-section {
     display: grid;
     grid-template-columns: 27px 1fr;
     gap: .35em;
@@ -804,20 +833,19 @@
     padding-inline: .65em;
 }
 
-.main > .task-section .info-container > .info-section svg {
+.main .task-container>.task-section .info-container>.info-section svg {
     display: block;
     align-self: flex-start;
     margin-top: .1em;
     color: #222222;
 }
 
-.main > .task-section .info-container > .info-section p {
+.main .task-container>.task-section .info-container>.info-section p {
     padding-left: .55em;
     margin-bottom: 0;
 }
 
-
-.main > .task-section .add-task-btn {
+.main .task-container>.task-section .add-task-btn {
     display: flex;
     align-items: center;
     gap: .844em;
@@ -825,38 +853,37 @@
     color: #121212;
 }
 
-
-
-.main > .dropdown-task {
+.main>.dropdown-task {
     position: absolute;
     background-color: #F4F4F4;
-    bottom: -3em;
+    bottom: -100%;
     left: calc((100dvw - var(--_dp-width)) / 2);
     width: 0;
     height: 0;
     z-index: 250;
     overflow: hidden;
     border-radius: .75em;
-    transition: bottom 200ms linear;
+    transition: bottom 350ms ease-in-out;
 }
 
-.main > .dropdown-task.open {
+.main>.dropdown-task.open {
     --_dp-width: calc(100dvw - 2em);
     bottom: 1em;
     width: var(--_dp-width);
     height: fit-content;
-    padding: .65em;
+    padding: .885em;
 
 }
-.main > .dropdown-task button {
+
+.main>.dropdown-task button {
     visibility: hidden;
 }
 
-.main > .dropdown-task.open button {
+.main>.dropdown-task.open button {
     display: flex;
     justify-content: start;
     align-items: center;
-    padding: .25em .55em;
+    padding-block: .35em;
     text-transform: capitalize;
     gap: 1.155em;
     font-size: 1.115rem;
@@ -865,86 +892,58 @@
     width: 100%;
     visibility: visible;
 }
-.main > .dropdown-task.open button:focus{
+
+.main>.dropdown-task.open button:focus {
     background-color: #e9e9e9;
     border-radius: .25em;
 }
-.main > .dropdown-task.open button:first-of-type {
-    margin-bottom: .55em;
+
+.main>.dropdown-task.open button:first-of-type {
+    margin-bottom: .85em;
 }
 
-.main > .dropdown-task button svg {
+.main>.dropdown-task button svg {
     stroke-width: 2.85;
-}
-
-/* From https://css.glass */
-.main .form-ovly {
-    --mah-delay: 600ms;
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100dvh;
-    width: 100dvw;
-    background-color: rgba(249, 245, 244, 1);
-    backdrop-filter: blur(9px);
-    -webkit-backdrop-filter: blur(9px);
-    z-index: 100;
-    transition: max-height 600ms linear var(--mah-delay, 0ms),
-    background-color 100ms linear var(--bgc-delay, 0ms);
-}
-
-.main .form-ovly:has(+ .form-container .task-form.collapse) {
-    --bgc-delay: 600ms;
-    position: static;
-    height: 0;
-    width: 0;
-    background-color: transparent;
 }
 
 .main .form-container {
     --trs-delay: 600ms;
     position: fixed;
-    bottom: 2em;
+    bottom: 1.5em;
+    padding: 1em 1.5em;
+    left: 0;
     width: 100%;
-    padding: 2.5em 1em 0.755em 1em;
-    overflow: hidden;
-    z-index: 200;
-    transform: translate3d(0, 0, 0);
-    opacity: 1;
-    transition: opacity 150ms linear var(--hide-delay, 250ms), transform 300ms cubic-bezier(0.175, 0.885, 0.32, 1.275) var(--hide-delay, 250ms);
-
+    z-index: 150;
+    transition: bottom 350ms ease-in-out;
 }
 
 .main .form-container:has(> .task-form.collapse) {
     bottom: 0;
-    margin: 0;
-    padding-block-start: .5em;
+    overflow: hidden;
 }
 
 .main .form-container.hide {
-    --hide-delay: 0ms;
+    bottom: 0;
     opacity: 0;
-    height: 0;
-    max-height: 0;
     visibility: hidden;
+    transition: visibility 0ms 100ms, opacity 250ms linear;
 }
 
 .main .task-form {
-    color-scheme: light;
     --mah-delay: var(--trs-delay);
     max-height: 600px;
     width: 100%;
     margin: 0 auto;
     transition: max-height 300ms linear var(--mah-delay, 0ms),
-    width 300ms cubic-bezier(1, -0.51, 0, 1.16) var(--wdh-delay, 0ms);
+        width 300ms cubic-bezier(1, -0.51, 0, 1.16) var(--wdh-delay, 0ms);
 }
 
 .main .task-form .bg-grey {
     background-color: #e9e9e9;
 }
 
-.main .task-form > div:not(:first-of-type),
-.main .task-form > textarea {
+.main .task-form>div:not(:first-of-type),
+.main .task-form>textarea {
     opacity: 1;
     visibility: visible;
     transition: opacity 200ms linear var(--trs-delay, 0ms), visibility 0ms;
@@ -967,10 +966,9 @@
 .main .task-form textarea,
 .main .task-form input:not([type='radio']) {
     padding-inline: 1.115em;
-
 }
 
-.main .task-form > label {
+.main .task-form>label {
     visibility: hidden;
     height: 0;
 }
@@ -981,7 +979,7 @@
     background-color: inherit;
 }
 
-.main .task-form > div:not(:last-of-type) {
+.main .task-form>div:not(:last-of-type) {
     text-align: left;
     border-radius: 1em;
     padding: .65em .6em;
@@ -989,7 +987,7 @@
     box-shadow: 0 4px 10px #d1d1d1;
 }
 
-.main .task-form > div.input-container {
+.main .task-form>div.input-container {
     display: grid;
     grid-template-columns: 21px 3fr 1fr;
     grid-template-rows: 1fr;
@@ -1001,18 +999,18 @@
     transition: border-radius 600ms linear 200ms;
 }
 
-.main .task-form > div.input-container label {
+.main .task-form>div.input-container label {
     visibility: hidden;
     height: 0;
     width: 0;
 }
 
-.main .task-form > div.input-container svg {
+.main .task-form>div.input-container svg {
     grid-column: 1 / 2;
     grid-row: 1 / 1;
 }
 
-.main .task-form > div.input-container input {
+.main .task-form>div.input-container input {
     padding: 0;
     height: 45px;
     padding-inline: 0;
@@ -1021,11 +1019,11 @@
     grid-row: 1 / 1;
 }
 
-.main .task-form > div.input-container input:focus-visible {
+.main .task-form>div.input-container input:focus-visible {
     outline: transparent;
 }
 
-.main .task-form > div.input-container select {
+.main .task-form>div.input-container select {
     background-color: #ebebeb;
     font-size: .915rem;
     padding: .65em .85em;
@@ -1036,11 +1034,11 @@
     box-shadow: 0 4px 15px #d1d1d1;
 }
 
-.main .task-form > div.input-container option::first-letter {
+.main .task-form>div.input-container option::first-letter {
     text-transform: uppercase;
 }
 
-.main .task-form .dueDate-container > div {
+.main .task-form .dueDate-container>div {
     text-transform: capitalize;
     display: flex;
     justify-content: space-between;
@@ -1048,15 +1046,15 @@
     gap: 1em;
 }
 
-.main .task-form .dueDate-container > div:first-of-type {
+.main .task-form .dueDate-container>div:first-of-type {
     margin-bottom: .765em;
 }
 
-.main .task-form .dueDate-container > div label {
+.main .task-form .dueDate-container>div label {
     padding-inline-start: .5em;
 }
 
-.main .task-form .dueDate-container > div input {
+.main .task-form .dueDate-container>div input {
     padding-block: .685em;
     font-size: .923rem;
     background-color: #F9F5F4;
@@ -1064,7 +1062,7 @@
     width: min(100%, 185px);
 }
 
-.main .task-form .dueDate-container > div input::placeholder {
+.main .task-form .dueDate-container>div input::placeholder {
     color: #908b8b;
 }
 
@@ -1073,7 +1071,7 @@
     margin-bottom: .725em;
 }
 
-.main .task-form fieldset > div {
+.main .task-form fieldset>div {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     gap: .65em;
@@ -1081,7 +1079,7 @@
     justify-content: space-between;
 }
 
-.main .task-form fieldset > div label {
+.main .task-form fieldset>div label {
     background-color: #F3EFEE;
 
     text-align: center;
@@ -1090,27 +1088,26 @@
     border-radius: .65em;
 }
 
-.main .task-form fieldset > div label:has(:checked) {
+.main .task-form fieldset>div label:has(:checked) {
     background-color: #b8b8b8;
 }
 
-.main .task-form fieldset > div label:has(:focus) {
+.main .task-form fieldset>div label:has(:focus) {
     outline: 2px solid #121212;
 }
 
-.main .task-form fieldset > div input {
+.main .task-form fieldset>div input {
     appearance: none;
     -webkit-appearance: none;
 }
 
 .main .task-form textarea {
-    background-color: rgba(236, 220, 191, .2);
+    background-color: rgba(236, 220, 191, .35);
     height: 175px;
     border: 1px solid transparent;
     padding-block: 1.15em;
     box-shadow: 0 4px 10px #d4d4d4;
     margin-bottom: 1.5em;
-    border-bottom: 6px solid rgb(236, 220, 191);
 }
 
 .main .task-form textarea::placeholder {
@@ -1163,8 +1160,8 @@
 }
 
 
-.main .task-form.collapse > div:not(:first-of-type),
-.main .task-form.collapse > textarea {
+.main .task-form.collapse>div:not(:first-of-type),
+.main .task-form.collapse>textarea {
     opacity: 0;
     visibility: hidden;
 }

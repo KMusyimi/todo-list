@@ -13,10 +13,10 @@ function Render({ projects }: NavProps) {
     return projects.map((project) => {
         const { id, projectName, iconColor, tasks } = project ?? {};
         const rgba = hexToRGB(iconColor ?? '', 0.15)
-        
+
         const style = {
             backgroundColor: hexToRGB(iconColor ?? '', 0.1),
-            backgroundImage: `linear-gradient(90deg, ${rgba} 0%,${hexToRGB(iconColor ?? '', 0.05) } 25%,  rgba(218, 218, 218, 1) 75%)`,
+            backgroundImage: `linear-gradient(90deg, ${rgba} 0%,${hexToRGB(iconColor ?? '', 0.05)} 25%,  rgba(218, 218, 218, 1) 75%)`,
             transition: 'background-color 200ms linear'
         } as CSSProperties;
 
@@ -24,7 +24,7 @@ function Render({ projects }: NavProps) {
             <li key={id}>
                 {project && <NavLink to={`${id ? id.toString() : ''}/todo`}
                     style={({ isActive }) => isActive ? style : {}}>
-                    <ProjectIcon color={iconColor ?? ''}/>
+                    <ProjectIcon color={iconColor ?? ''} />
                     {projectName}
                 </NavLink>}
                 <span className="count">{tasks?.length}</span>
@@ -51,7 +51,7 @@ export default function Nav({ projectPromise }: { projectPromise: Promise<MyProj
                     <NavLink to='.'
                         style={({ isActive }) => isActive ? style : {}}
                         end>
-                        <ProjectIcon color="#328E6E"/>
+                        <ProjectIcon color="#328E6E" />
                         All projects</NavLink>
                 </li>
                 {projects && <Render projects={projects} />}
