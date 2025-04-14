@@ -537,7 +537,7 @@
 .main .task-container>.task-section {
     position: relative;
     width: 100%;
-    max-height: 450px;
+    max-height: calc(100dvh - 290px);
     overflow: auto;
     padding-right: .25em;
     margin-bottom: .438em;
@@ -908,6 +908,9 @@
 
 .main .form-container {
     --trs-delay: 600ms;
+    background-color: rgba(249, 245, 244, .35);
+    backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
     position: fixed;
     bottom: 1.5em;
     padding: 1em 1.5em;
