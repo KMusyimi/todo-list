@@ -1,8 +1,9 @@
-import { CSSProperties, JSX, use } from "react";
+import { CSSProperties, JSX} from "react";
 import { NavLink } from "react-router-dom";
 import { MyProjects } from "../api";
 import { hexToRGB } from "../utils";
 import { ProjectIcon } from "./Svg";
+
 interface NavProps {
     projects: MyProjects
 };
@@ -33,9 +34,7 @@ function Render({ projects }: NavProps) {
 }
 
 
-export default function Nav({ projectPromise }: { projectPromise: Promise<MyProjects | null> }): JSX.Element {
-
-    const projects = use(projectPromise);
+export default function Nav({ projects }: { projects:MyProjects | null }): JSX.Element {
 
     const style = {
         backgroundColor: hexToRGB('#328E6E', 0.1),

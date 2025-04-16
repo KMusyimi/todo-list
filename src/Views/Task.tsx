@@ -8,7 +8,7 @@ export async function taskLoader({params, request}: LoaderFunctionArgs) {
     const param = new URL(request.url).searchParams;
     const date = param.get('date');
     const myProject = getProject();
-    return {project: myProject.project(params.id, date ?? '')}
+    return {project: myProject.project(params.id, date ?? '')};
 }
 
 

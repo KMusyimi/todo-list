@@ -17,14 +17,14 @@
 #root:has(.dropdown-task.open) .ovly,
 #root:has(.task-form:not(.collapse)) .ovly {
     height: 100%;
-    backdrop-filter: blur(3px);
-    -webkit-backdrop-filter: blur(3px);
+    /* backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px); */
     width: 100%;
     transition: background-color 100ms linear;
 }
 
 #root:has(.dropdown-task.open) .ovly {
-    background-color: rgba(0, 0, 0, 0.25);
+    background-color: rgba(0, 0, 0, 0.5);
     z-index: 200;
 }
 
@@ -64,7 +64,7 @@
     width: 100%;
     top: 0;
     left: 0;
-    background-image: url(assets/intro.png);
+    background-image: url(assets/intro.webp);
     background-size: contain;
     background-repeat: no-repeat;
 }
@@ -534,30 +534,28 @@
     border-color: transparent;
 }
 
-.main .task-container>.task-section {
-    position: relative;
-    width: 100%;
-    max-height: calc(100dvh - 290px);
-    overflow: auto;
-    padding-right: .25em;
-    margin-bottom: .438em;
-}
-
-.main .task-container>.task-section .calendar>button .day {
+.main .task-container .calendar>button .day {
     font-weight: 600;
     font-size: 0.75rem;
 }
 
-.main .task-container>.task-section .calendar>button .date {
+.main .task-container .calendar>button .date {
     font-weight: bold;
     font-size: 1.063rem;
+}
+.main .task-container>.task-section {
+    position: relative;
+    width: 100%;
+    max-height: calc(100dvh - 330px);
+    overflow: auto;
+    padding-right: .25em;
 }
 
 .main .task-container>.task-section>.tasks {
     max-height: 30px;
     overflow: hidden;
     margin-bottom: 2.494em;
-    transition: max-height 550ms cubic-bezier(0.65, -0.12, 0.08, 1.1);
+    transition:max-height 550ms cubic-bezier(0.45, 0.05, 0.55, 0.95);
 }
 
 .main .task-container>.task-section>.tasks.expand {
@@ -668,16 +666,17 @@
     z-index: -1;
 }
 
-.main .task-container>.task-section>.tasks .empty-task {
-    text-align: center;
-    font-weight: 600;
-    padding: 1.85em 0;
-}
-
+.main .task-container>.task-section>.tasks .empty-task,
 .main .task-container>.task-section>.tasks .task-card {
     display: none;
 }
 
+.main .task-container>.task-section>.tasks.expand .empty-task {
+    display: block;
+    text-align: center;
+    font-weight: 600;
+    padding: 1.85em 0;
+}
 .main .task-container>.task-section>.tasks.expand .task-card {
     display: block;
     margin-bottom: 1.25em;
@@ -862,16 +861,16 @@
     height: 0;
     z-index: 250;
     overflow: hidden;
-    border-radius: .75em;
+    border-radius: .5em;
     transition: bottom 350ms ease-in-out;
 }
 
 .main>.dropdown-task.open {
-    --_dp-width: calc(100dvw - 2em);
-    bottom: 1em;
+    --_dp-width: calc(100dvw - .85em);
+    bottom: .35em;
     width: var(--_dp-width);
     height: fit-content;
-    padding: .885em;
+    padding: .885em 1.115em;
 
 }
 
@@ -903,6 +902,7 @@
 }
 
 .main>.dropdown-task button svg {
+    color: #5d6063;
     stroke-width: 2.85;
 }
 
@@ -923,6 +923,7 @@
 .main .form-container:has(> .task-form.collapse) {
     bottom: 0;
     overflow: hidden;
+    padding-block-start: .35em;
 }
 
 .main .form-container.hide {
@@ -1016,7 +1017,8 @@
 .main .task-form>div.input-container input {
     padding: 0;
     height: 45px;
-    padding-inline: 0;
+    padding:.5em  0;
+    
     border-radius: 0;
     grid-column: 2 / 3;
     grid-row: 1 / 1;
@@ -1084,8 +1086,9 @@
 
 .main .task-form fieldset>div label {
     background-color: #F3EFEE;
-
+    position: relative;
     text-align: center;
+    height: fit-content;
     padding: .5em 1em;
     box-shadow: 0 4px 10px #d4d4d4;
     border-radius: .65em;
@@ -1100,6 +1103,12 @@
 }
 
 .main .task-form fieldset>div input {
+    display: block;
+    position: absolute;  
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
     appearance: none;
     -webkit-appearance: none;
 }

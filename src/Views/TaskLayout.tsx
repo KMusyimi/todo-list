@@ -1,37 +1,69 @@
 /* eslint-disable react-refresh/only-export-components */
-import { JSX, use, useCallback, useEffect, useRef, useState } from "react";
-import { LoaderFunctionArgs, Outlet, useLoaderData, useSearchParams } from "react-router-dom";
-import { getProjects } from "../api.ts";
+import { FormEvent, JSX, ReactNode, use, useCallback, useEffect, useRef, useState } from "react";
+import { LuPencil } from "react-icons/lu";
+import { PiTrashSimpleBold } from "react-icons/pi";
+import { LoaderFunctionArgs, Outlet, useFetcher, useLoaderData, useSearchParams } from "react-router-dom";
+import { getProjects} from "../api.ts";
 import Calendar from "../components/Calendar.tsx";
+import DropdownMenu from "../components/DropDownMenu.tsx";
 import Modal from "../components/Modal.tsx";
 import Nav from "../components/Nav.tsx";
 import SuccessMsg from "../components/SuccessMsg.tsx";
-import { checkUserProjects } from "../utils.ts";
 import TaskForm from "../components/TaskForm.tsx";
-import DropdownMenu from "../components/DropDownMenu.tsx";
-import { LuPencil } from "react-icons/lu";
-import { PiTrashSimpleBold } from "react-icons/pi";
+import { checkUserProjects } from "../utils.ts";
 
 
-export async function projectsLoader({ request}: LoaderFunctionArgs) {
+export type FormIntent = {
+    projectId: string;
+    taskId: string;
+    action: string;
+} | null;
+
+interface FetcherProps {
+    taskId: string;
+    intent?: string;
+    children: ReactNode;
+}
+
+export async function projectsLoader({ request }: LoaderFunctionArgs) {
     const param = new URL(request.url).searchParams;
     const date = param.get('date');
     const userProjects = await checkUserProjects();
     userProjects.hasProjects();
-    
-    return { projects: getProjects(date ?? '') }
+    return { projects: getProjects(date ?? '') };
 }
+
+export function FetcherCell({ taskId, children, intent }: FetcherProps) {
+    const fetcher = useFetcher();
+
+    const handleInput = useCallback((e: FormEvent<HTMLFormElement>) => {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        fetcher.submit(e.currentTarget);
+    }, [fetcher])
+
+    return (
+        <fetcher.Form method="post" onInput={handleInput} action="./:todoId">
+            <input type="hidden" name="taskId" value={taskId} />
+            <input type="hidden" name="intent" value={intent} />
+            {children}
+        </fetcher.Form>)
+}
+
 
 
 export default function TaskLayout(): JSX.Element {
     const [toggleMenu, setToggleMenu] = useState(false);
-    const { projects} = useLoaderData<typeof projectsLoader>();
+    const [toggleForm, setToggleForm] = useState(false);
+    const [formIntent, setFormIntent]= useState<FormIntent>(null);
+
+    const { projects } = useLoaderData<typeof projectsLoader>();
     const loadedProjects = use(projects);
+
     const [searchParams, setSearchParams] = useSearchParams();
 
     const dropdownRef = useRef<HTMLDivElement | null>(null)
     const successMsg = searchParams.get('message');
-    const [project, setProject] = useState({});
+
 
     const displaySuccessMsg = useCallback(() => {
         if (successMsg) {
@@ -44,13 +76,14 @@ export default function TaskLayout(): JSX.Element {
         }
     }, [setSearchParams, successMsg]);
 
-
+    
     useEffect(() => {
         const timer = displaySuccessMsg();
+       
         return () => {
             clearTimeout(timer);
         }
-    }, [displaySuccessMsg]);
+    }, [displaySuccessMsg, toggleForm]);
 
     const handleDropDown = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
@@ -70,24 +103,28 @@ export default function TaskLayout(): JSX.Element {
         }
     }, []);
 
-    const handleEditBtn = useCallback(()=> {
-        let task;
-        if (dropdownRef.current){
-            const { projectId, taskId } = dropdownRef.current.dataset;
-            if (loadedProjects){
-                const loadedProjectsCopy = [...loadedProjects]
-                for (const project of loadedProjectsCopy) {
-                    if(project?.id === projectId){
-                        const tasks = project?.tasks.filter(task => task.id === taskId);
-                        task = {...project, tasks}
-                    }
-                }
+    const handleEditBtn = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        if (dropdownRef.current) {
+            const { projectId, taskId, status } = dropdownRef.current.dataset;
+            if (status !== 'completed'){
+                setFormIntent({taskId, projectId, action: 'edit'} as FormIntent);
+                setToggleForm(!toggleForm);
+                dropdownRef.current.removeAttribute('data-task-id');
+                dropdownRef.current.removeAttribute('data-project-id');
+                dropdownRef.current.removeAttribute('data-status');
+                dropdownRef.current.classList.toggle('open');
             }
-        setProject(task ?? {});
         }
-    }, [loadedProjects]);
-
-    console.log(project);
+    }, [toggleForm]);
+    const handleDeleteBtn = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        if (dropdownRef.current) {
+            const {taskId} = dropdownRef.current.dataset;
+            setFormIntent({taskId, projectId: '', action: 'delete'} as FormIntent);
+        }
+    }, []);
+    
     return (<>
         <div className={`menu menu-mobile ${toggleMenu ? 'menu-mobile--open' : ''}`}>
             <button type="button" className={`menu-btn ${toggleMenu ? 'expand' : ''} `}
@@ -104,7 +141,7 @@ export default function TaskLayout(): JSX.Element {
                 </svg>
             </button>
             <div className="menu-container">
-                <Nav projectPromise={projects} />
+                <Nav projects={loadedProjects} />
                 <Modal />
             </div>
         </div>
@@ -118,12 +155,14 @@ export default function TaskLayout(): JSX.Element {
                 </section>
             </div>
 
-            <TaskForm projectPromise={projects} />
+            <TaskForm setToggleForm={setToggleForm} toggleForm={toggleForm} 
+            projects={loadedProjects} intent={formIntent} setFormIntent={setFormIntent}/>
 
             <DropdownMenu ref={dropdownRef} id={'dropdown-menu'} className={'dropdown-task'}>
-                <button type={'button'} onClick={handleEditBtn}><LuPencil /><span>edit</span></button>
-                <button type={'button'}><PiTrashSimpleBold /><span>delete</span></button>
+                 <button id={'edit-btn'} type={'button'} onClick={handleEditBtn}><LuPencil /><span>edit</span></button>
+                <button type={'button'} onClick={handleDeleteBtn}><PiTrashSimpleBold /><span>delete</span></button>
             </DropdownMenu>
+
         </main>
         <div className={'ovly'} onClick={handleDropDown}></div>
     </>)

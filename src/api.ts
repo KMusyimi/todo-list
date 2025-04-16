@@ -9,6 +9,7 @@ import {
   getFirestore,
   orderBy,
   query,
+  setDoc,
   updateDoc,
   where
 } from "firebase/firestore";
@@ -41,7 +42,7 @@ export interface Project {
   projectName: string;
   iconColor: string;
   updatedAt?: Date | null;
-  createdAt: Date;
+  createdAt: Date| '';
 }
 
 export type MyProject = {
@@ -50,28 +51,30 @@ export type MyProject = {
   iconColor: string;
   tasks: MyTask[]
   updatedAt?: Date | null;
-  createdAt: Date;
+  createdAt: Date | '';
 } | null;
 
 export type MyProjects = MyProject[];
-export interface MyTask {
+
+export type MyTask = {
   projectId: string;
   id: string;
   title: string;
   status: 'active' | 'overdue' | 'completed';
   dueDate: string;
   dueTime: string;
-  priority: number;
+  priority: number | string;
   description: string;
   notes: string;
   updatedAt?: Date | null;
   completedAt?: Date | null;
-  createdAt: Date;
-}
+  createdAt: Date | '';
+} | null;
 
 
 
 export type CompleteTaskParams = Record<string, string>;
+export type UpdateTaskParams = Record<string, string>;
 
 // Initialize Firebase
 const app: FirebaseApp = initializeApp(firebaseConfig);
@@ -133,7 +136,31 @@ export async function getProjects(date: string) {
   })) as MyProjects;
 }
 
-export async function addTask(task: Record<string, FormDataEntryValue>): Promise<void> {
+export function getProject() {
+  return {
+    project: async (id: string | undefined, date: string) => {
+      if (!id) { return null; }
+
+      const docRef = doc(db, 'projects', id);
+      const projectSnap = await getDoc(docRef);
+      if (!projectSnap.exists()) { return null; }
+      const data = projectSnap.data() as Project;
+      const tasks = await getTasks(id, date);
+      let project = { ...data, id: projectSnap.id, tasks } as MyProject;
+
+      if (!date) {
+        const completedTask = await getCompletedTasks(id);
+        if (completedTask) {
+          project = { ...project, tasks: [...tasks, ...completedTask] } as MyProject;
+        }
+      }
+      return project;
+    }
+  };
+}
+
+
+export async function addTask(task: UpdateTaskParams): Promise<void> {
   try {
     const dueDate = task.dueDate as unknown as Date;
     const docRef = await addDoc(tasksRef, {
@@ -195,10 +222,12 @@ async function checkOverDueTasks() {
   if (!taskSnapshot.empty) {
     return await Promise.all(taskSnapshot.docs.map(async (doc) => {
       const taskData = doc.data() as MyTask;
-      taskData.status = 'overdue';
-      const status = taskData.status;
-      await updateOverDueTask(doc.id, status);
-    }))
+      if (taskData){
+        taskData.status = 'overdue';
+        const status = taskData.status;
+        await updateOverDueTask(doc.id, status);
+      }
+    }));
   }
 }
 
@@ -209,21 +238,34 @@ async function updateOverDueTask(id: string, status: string) {
   });
 }
 
+export async function updateTask(task:UpdateTaskParams) {
+  try{
+    const docRef = doc(db, 'tasks', task.id);
+    await setDoc(docRef, {
+      ...task,
+      updatedAt: dateFormatted
+    });
+  }catch (e){
+    console.error(e);
+  }
+  
+}
 
 export async function completeTask(params: CompleteTaskParams) {
   try {
     const docRef = doc(db, 'tasks', params.taskId);
     const taskSnap = await getDoc(docRef);
     const data = taskSnap.data() as MyTask;
-
-    await addDoc(completedRef, {
-      projectId: data.projectId,
-      title: data.title,
-      status: 'completed',
-      completedAt: currentDate,
-      createdAt: data.createdAt
-    });
-    await deleteDoc(docRef);
+    if (data){
+      await addDoc(completedRef, {
+        projectId: data.projectId,
+        title: data.title,
+        status: 'completed',
+        completedAt: currentDate,
+        createdAt: data.createdAt
+      });
+      await deleteDoc(docRef);
+    }
   } catch (e) {
     console.error('error => ', e)
   }
@@ -231,26 +273,4 @@ export async function completeTask(params: CompleteTaskParams) {
 
 
 
-export function getProject() {
-  return {
-    project: async (id: string | undefined, date: string) => {
-      if (!id) { return null; }
-
-      const docRef = doc(db, 'projects', id);
-      const projectSnap = await getDoc(docRef);
-      if (!projectSnap.exists()) { return null; }
-      const data = projectSnap.data() as Project;
-      const tasks = await getTasks(id, date);
-      let project = { ...data, id: projectSnap.id, tasks } as MyProject;
-
-      if (!date) {
-        const completedTask = await getCompletedTasks(id);
-        if (completedTask) {
-          project = { ...project, tasks: [...tasks, ...completedTask] } as MyProject;
-        }
-      }
-      return project;
-    }
-  };
-}
 

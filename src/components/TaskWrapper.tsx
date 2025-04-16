@@ -2,35 +2,16 @@ import { HiDotsVertical } from "react-icons/hi";
 import { IoTimeOutline } from "react-icons/io5";
 import { MyTask } from "../api.ts";
 import * as React from "react";
-import { FormEvent, ReactNode, useCallback } from "react";
-import { useFetcher, useSearchParams } from "react-router-dom";
+import { useCallback } from "react";
+import { useSearchParams } from "react-router-dom";
+import { FetcherCell } from "../Views/TaskLayout.tsx";
 
 interface TaskProps {
     id: string;
     task: MyTask;
 }
 
-interface FetcherProps {
-    taskId: string;
-    intent?: string;
-    children: ReactNode;
-}
 
-function FetcherCell({ taskId, children, intent }: FetcherProps) {
-    const fetcher = useFetcher();
-
-    const handleInput = useCallback((e: FormEvent<HTMLFormElement>) => {
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        fetcher.submit(e.currentTarget);
-    }, [fetcher])
-
-    return (
-        <fetcher.Form method="post" onInput={handleInput} action="./:todoId">
-            <input type="hidden" name="taskId" value={taskId} />
-            <input type="hidden" name="intent" value={intent} />
-            {children}
-        </fetcher.Form>)
-}
 
 
 export default function TaskWrapper({ id, task }: TaskProps) {
@@ -47,31 +28,42 @@ export default function TaskWrapper({ id, task }: TaskProps) {
     }, []);
 
 
-    const getPriority = useCallback((priority: number) => {
-        return `priority-${priority === 3 ? 'high' : (priority === 2) ? 'medium' : 'low'}`;
+    const getPriority = useCallback((priority: number | string) => {
+        return `priority-${priority == 3 ? 'high' : (priority == 2) ? 'medium' : 'low'}`;
     }, []);
 
     const handleChange = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         
-        const {taskId, projectId} = e.currentTarget.dataset;
+        const {taskId, projectId, status} = e.currentTarget.dataset;
         const dropdownMenu = document.getElementById(`dropdown-menu`);
+        const editBtn = document.getElementById(`edit-btn`) as HTMLButtonElement;
         const y = JSON.stringify(e.currentTarget.getBoundingClientRect().top + window.scrollY);
         
+        if(status === 'completed'){
+            editBtn.disabled  = true;
+            editBtn.style.color  = '#b3b3b3';
+            editBtn.style.cursor  = 'disabled';
+        }else{
+            editBtn.disabled = false;
+            editBtn.style.color  = '';
+            editBtn.style.cursor  = '';
+            
+        }
         document.body.style.overflow = 'hidden';
         sessionStorage.setItem('scrollY', y)
         window.scroll(0, Number(y));
-
         if (dropdownMenu) {
             dropdownMenu.setAttribute('data-task-id', taskId ?? '');
             dropdownMenu.setAttribute('data-project-id', projectId ?? '');
+            dropdownMenu.setAttribute('data-status', status ?? '');
             dropdownMenu.classList.add('open');
         }
     }, []);
 
     return (
         <>
-            <div className="task-wrapper">
+            {task && <div className="task-wrapper">
                 {/* TODO: change into inputs and useFetcher */}
 
                 <FetcherCell taskId={task.id} intent="status">
@@ -93,10 +85,10 @@ export default function TaskWrapper({ id, task }: TaskProps) {
                     {filterDate && <span className="due-time"><IoTimeOutline /> {task.dueTime}</span>}
                 </section>
 
-                <button id={`btn-${id}`} type="button" onClick={handleChange} data-task-id={task.id} data-project-id={id}>
+                <button id={`btn-${id}`} type="button" onClick={handleChange} data-task-id={task.id} data-project-id={id} data-status={task.status}>
                     <HiDotsVertical />
                 </button>
-            </div>
+            </div>}
         </>
 
     )

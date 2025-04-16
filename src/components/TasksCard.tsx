@@ -28,6 +28,7 @@ export async function fetcherAction({request}: ActionFunctionArgs) {
     if (payload.intent === 'status') {
         await completeTask(payload);
     }
+    console.log(payload)
 }
 
 
@@ -53,25 +54,27 @@ function TasksCard({project}: TaskCardProps): JSX.Element {
                 </header>
                 {
                     (tasks && tasks.length > 0) ? tasks.map((task) => {
-                        return (
-                            <div id={`task-${task.id}`} key={`list-${task.id}`} className={`task-card`}>
-                                <TaskWrapper task={task} id={id ?? ''}/>
-
-                                <div className="info-container">
-                                    <DueDate date={task.dueDate + 'T' + task.dueTime}/>
-
-                                    <section className="info-section">
-                                        <DescriptionSvg/>
-                                        <p className="description"> {task.description} </p>
-                                    </section>
-                                    {task.notes && <section className="info-section">
-                                        <NotesSvg/>
-                                        <p className="notes"> {task.notes} </p>
-                                    </section>
-                                    }
+                        if(task){
+                            return (
+                                <div id={`task-${task.id}`} key={`list-${task.id}`} className={`task-card`}>
+                                    <TaskWrapper task={task} id={id ?? ''}/>
+    
+                                    <div className="info-container">
+                                        <DueDate date={task.dueDate + 'T' + task.dueTime}/>
+    
+                                        <section className="info-section">
+                                            <DescriptionSvg/>
+                                            <p className="description"> {task.description} </p>
+                                        </section>
+                                        {task.notes && <section className="info-section">
+                                            <NotesSvg/>
+                                            <p className="notes"> {task.notes} </p>
+                                        </section>
+                                        }
+                                    </div>
                                 </div>
-                            </div>
-                        )
+                            )
+                        }
                     }) : <p className="empty-task"> Currently no {projectName?.toLocaleLowerCase()} tasks.</p>
                 }
             </section>
