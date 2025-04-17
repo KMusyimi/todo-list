@@ -87,8 +87,8 @@ export default function TaskLayout(): JSX.Element {
     }, [displaySuccessMsg, toggleForm]);
 
 
-    const closeDropDownMenu = (dataset: DOMStringMap, dropdown: HTMLDivElement) => {
-        Object.keys(dataset).forEach((item) => {
+    const closeDropDownMenu = (dropdown: HTMLDivElement) => {
+        Object.keys(dropdown.dataset).forEach((item) => {
             if (item.match(/[A-Z][a-z]+/g)) {
                 item = item.split(/(?=[A-Z])/).join('-');
             }
@@ -103,7 +103,7 @@ export default function TaskLayout(): JSX.Element {
         if (dropdownMenu) {
             if (dropdownMenu.classList.contains('open')) {
                 document.body.style.overflow = "";
-                closeDropDownMenu(dropdownMenu.dataset, dropdownMenu);
+                closeDropDownMenu(dropdownMenu);
             }
         }
     }, []);
@@ -115,7 +115,7 @@ export default function TaskLayout(): JSX.Element {
             if (status !== 'completed') {
                 setFormIntent({ taskId, projectId, action: 'edit' } as FormIntent);
                 setToggleForm(!toggleForm);
-                closeDropDownMenu(dropdownRef.current.dataset, dropdownRef.current);
+                closeDropDownMenu(dropdownRef.current);
             }
         }
     }, [toggleForm]);
@@ -124,6 +124,7 @@ export default function TaskLayout(): JSX.Element {
         if (dropdownRef.current) {
             const { taskId } = dropdownRef.current.dataset;
             setFormIntent({ taskId });
+            closeDropDownMenu(dropdownRef.current);
         }
     }
 
