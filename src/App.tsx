@@ -14,13 +14,13 @@ import TaskLayout, {projectsLoader} from "./Views/TaskLayout.tsx";
 // edit or update /todos/:id
 const router = createBrowserRouter(createRoutesFromElements(
     <Route path={"/"} action={projectAction}>
-        <Route index element={< StartPage/>} loader={introLoader} action={projectAction}/>
-        <Route path={'projects'} element={< TaskLayout/>} loader={projectsLoader}>
-            <Route index element={< AllTasks/>}/>
-            <Route path=':todoId' element={<> </>} action={fetcherAction}/>
-            <Route path='add' element={<> </>} loader={addLoader} action={taskFormAction}/>
-            <Route path=':id/todo' element={< Task/>} loader={taskLoader}/>
-            <Route path=':id/todo/:todoId' element={<> </>} action={fetcherAction}/>
+        <Route index element={<StartPage/>} loader={introLoader} action={projectAction}/>
+        <Route path={'projects'} element={<TaskLayout/>} loader={projectsLoader}>
+            <Route index element={<AllTasks/>}/>
+            <Route path=':todoId' element={<></>} action={fetcherAction}/>
+            <Route path='add' element={<></>} loader={addLoader} action={taskFormAction}/>
+            <Route path=':id/todo' element={<Task/>} loader={taskLoader}/>
+            <Route path=':id/todo/:todoId' element={<></>} action={fetcherAction}/>
         </Route>
     </Route>));
 

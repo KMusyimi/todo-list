@@ -1,9 +1,8 @@
 /* eslint-disable react-refresh/only-export-components */
 import { FormEvent, JSX, ReactNode, use, useCallback, useEffect, useRef, useState } from "react";
 import { LuPencil } from "react-icons/lu";
-import { PiTrashSimpleBold } from "react-icons/pi";
 import { LoaderFunctionArgs, Outlet, useFetcher, useLoaderData, useSearchParams } from "react-router-dom";
-import { getProjects} from "../api.ts";
+import {getCompletedTasks, getProjects } from "../api.ts";
 import Calendar from "../components/Calendar.tsx";
 import DropdownMenu from "../components/DropDownMenu.tsx";
 import Modal from "../components/Modal.tsx";
@@ -11,18 +10,20 @@ import Nav from "../components/Nav.tsx";
 import SuccessMsg from "../components/SuccessMsg.tsx";
 import TaskForm from "../components/TaskForm.tsx";
 import { checkUserProjects } from "../utils.ts";
+import { AiOutlineDelete } from "react-icons/ai";
 
 
 export type FormIntent = {
-    projectId: string;
-    taskId: string;
-    action: string;
+    projectId?: string;
+    taskId?: string;
+    action?: string;
 } | null;
 
 interface FetcherProps {
     taskId: string;
     intent?: string;
     children: ReactNode;
+    id?: string;
 }
 
 export async function projectsLoader({ request }: LoaderFunctionArgs) {
@@ -30,20 +31,21 @@ export async function projectsLoader({ request }: LoaderFunctionArgs) {
     const date = param.get('date');
     const userProjects = await checkUserProjects();
     userProjects.hasProjects();
-    return { projects: getProjects(date ?? '') };
+    return { projects: getProjects(date ?? '') ,completed : await getCompletedTasks()};
 }
 
-export function FetcherCell({ taskId, children, intent }: FetcherProps) {
+export function FetcherCell({ taskId, children, intent, ...rest }: FetcherProps) {
     const fetcher = useFetcher();
 
     const handleInput = useCallback((e: FormEvent<HTMLFormElement>) => {
+        console.log(e.currentTarget);
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
         fetcher.submit(e.currentTarget);
     }, [fetcher])
 
     return (
-        <fetcher.Form method="post" onInput={handleInput} action="./:todoId">
-            <input type="hidden" name="taskId" value={taskId} />
+        <fetcher.Form {...rest} method="post" onInput={handleInput} action="./:todoId">
+            <input id="id-input" type="hidden" name="taskId" value={taskId} />
             <input type="hidden" name="intent" value={intent} />
             {children}
         </fetcher.Form>)
@@ -54,13 +56,13 @@ export function FetcherCell({ taskId, children, intent }: FetcherProps) {
 export default function TaskLayout(): JSX.Element {
     const [toggleMenu, setToggleMenu] = useState(false);
     const [toggleForm, setToggleForm] = useState(false);
-    const [formIntent, setFormIntent]= useState<FormIntent>(null);
-
-    const { projects } = useLoaderData<typeof projectsLoader>();
+    const [formIntent, setFormIntent] = useState<FormIntent>(null);
+    
+    const { projects, completed } = useLoaderData<typeof projectsLoader>();
     const loadedProjects = use(projects);
-
+    
     const [searchParams, setSearchParams] = useSearchParams();
-
+    
     const dropdownRef = useRef<HTMLDivElement | null>(null)
     const successMsg = searchParams.get('message');
 
@@ -76,29 +78,32 @@ export default function TaskLayout(): JSX.Element {
         }
     }, [setSearchParams, successMsg]);
 
-    
+
     useEffect(() => {
         const timer = displaySuccessMsg();
-       
         return () => {
             clearTimeout(timer);
         }
     }, [displaySuccessMsg, toggleForm]);
 
-    const handleDropDown = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+
+    const closeDropDownMenu = (dataset: DOMStringMap, dropdown: HTMLDivElement) => {
+        Object.keys(dataset).forEach((item) => {
+            if (item.match(/[A-Z][a-z]+/g)) {
+                item = item.split(/(?=[A-Z])/).join('-');
+            }
+            dropdown.removeAttribute(`data-${item.toLowerCase()}`);
+        });
+        dropdown.classList.remove('open');
+    }
+
+    const handleOverlay = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
         const dropdownMenu = dropdownRef.current;
         if (dropdownMenu) {
             if (dropdownMenu.classList.contains('open')) {
                 document.body.style.overflow = "";
-                const scrollY = sessionStorage.getItem("scrollY");
-                dropdownMenu.removeAttribute('data-task-id');
-                dropdownMenu.removeAttribute('data-project-id');
-
-                if (scrollY) {
-                    window.scroll(0, Number(scrollY));
-                }
-                dropdownMenu.classList.remove('open');
+                closeDropDownMenu(dropdownMenu.dataset, dropdownMenu);
             }
         }
     }, []);
@@ -107,24 +112,21 @@ export default function TaskLayout(): JSX.Element {
         e.preventDefault();
         if (dropdownRef.current) {
             const { projectId, taskId, status } = dropdownRef.current.dataset;
-            if (status !== 'completed'){
-                setFormIntent({taskId, projectId, action: 'edit'} as FormIntent);
+            if (status !== 'completed') {
+                setFormIntent({ taskId, projectId, action: 'edit' } as FormIntent);
                 setToggleForm(!toggleForm);
-                dropdownRef.current.removeAttribute('data-task-id');
-                dropdownRef.current.removeAttribute('data-project-id');
-                dropdownRef.current.removeAttribute('data-status');
-                dropdownRef.current.classList.toggle('open');
+                closeDropDownMenu(dropdownRef.current.dataset, dropdownRef.current);
             }
         }
     }, [toggleForm]);
-    const handleDeleteBtn = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
+
+    const handleClick = () => {
         if (dropdownRef.current) {
-            const {taskId} = dropdownRef.current.dataset;
-            setFormIntent({taskId, projectId: '', action: 'delete'} as FormIntent);
+            const { taskId } = dropdownRef.current.dataset;
+            setFormIntent({ taskId });
         }
-    }, []);
-    
+    }
+
     return (<>
         <div className={`menu menu-mobile ${toggleMenu ? 'menu-mobile--open' : ''}`}>
             <button type="button" className={`menu-btn ${toggleMenu ? 'expand' : ''} `}
@@ -141,7 +143,7 @@ export default function TaskLayout(): JSX.Element {
                 </svg>
             </button>
             <div className="menu-container">
-                <Nav projects={loadedProjects} />
+                <Nav projects={loadedProjects} completed={completed} />
                 <Modal />
             </div>
         </div>
@@ -155,15 +157,17 @@ export default function TaskLayout(): JSX.Element {
                 </section>
             </div>
 
-            <TaskForm setToggleForm={setToggleForm} toggleForm={toggleForm} 
-            projects={loadedProjects} intent={formIntent} setFormIntent={setFormIntent}/>
+            <TaskForm setToggleForm={setToggleForm} toggleForm={toggleForm}
+                projects={loadedProjects} intent={formIntent} setFormIntent={setFormIntent} />
 
             <DropdownMenu ref={dropdownRef} id={'dropdown-menu'} className={'dropdown-task'}>
-                 <button id={'edit-btn'} type={'button'} onClick={handleEditBtn}><LuPencil /><span>edit</span></button>
-                <button type={'button'} onClick={handleDeleteBtn}><PiTrashSimpleBold /><span>delete</span></button>
+                <button id={'edit-btn'} type={'button'} onClick={handleEditBtn}><LuPencil /><span>edit</span></button>
+                <FetcherCell id={'delete-form'} taskId={formIntent?.taskId ?? ''} intent="delete">
+                    <button id="delete-btn" type="submit" onClick={handleClick} ><AiOutlineDelete /><span>delete</span></button>
+                </FetcherCell>
             </DropdownMenu>
 
         </main>
-        <div className={'ovly'} onClick={handleDropDown}></div>
+        <div className={'ovly'} onClick={handleOverlay}></div>
     </>)
 }

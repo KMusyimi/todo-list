@@ -2,8 +2,6 @@ import {JSX, useCallback, useId, useState} from "react";
 import {daysInWeekArr} from "../utils.ts";
 import moment from "moment";
 import { useSearchParams } from "react-router-dom";
-import { BsDot } from "react-icons/bs";
-import { MdOutlineClear } from "react-icons/md";
 
 interface DateProps{
     filterChange: (key: string, value: string | null) => void
@@ -68,10 +66,10 @@ export default function Calendar(): JSX.Element {
     return (
     <>
         <header>
-            <h1>{ moment(filterDate?? Date.now()).calendar().split(' ')[0]}<BsDot />{headerDate}</h1>
+        <h1>{ moment(filterDate?? Date.now()).calendar().split(' ')[0]} · {headerDate}</h1>
         </header>
         {filterDate && <div className="btn-container">
-            <button type="button" className="clear-btn" onClick={()=> {handleFilterChange('date', null)}}> <MdOutlineClear /> clear filter</button>
+            <button type="button" className="clear-btn" onClick={()=> {handleFilterChange('date', null)}}> clear filter</button>
 
         </div>}
         <div className="calendar">

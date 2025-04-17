@@ -33,7 +33,7 @@ export async function taskFormAction({request}: ActionFunctionArgs) {
                 await updateTask(payload);
                 break;
             case 'add':
-            await addTask(payload);
+                await addTask(payload);
                 break;
             default:
                 // eslint-disable-next-line @typescript-eslint/only-throw-error
@@ -105,12 +105,12 @@ export default function TaskForm({toggleForm, setToggleForm, projects, intent, s
             let task;
             const {action, projectId, taskId} = intent;
             if (action === 'edit') {
-                const regxp = new RegExp(`^.*${taskId}.*$`);
+                const regxp = new RegExp(`^.*${taskId ?? ''}.*$`);
                 if (projects) {
                     const projectsCopy = [...projects]
                     for (const project of projectsCopy) {
                         if (project?.id === projectId) {
-                            const tasks = project.tasks.filter(task => regxp.test(task?.id?? ''));
+                            const tasks = project?.tasks.filter(task => regxp.test(task?.id?? ''));
                             task = {...project, tasks} as MyProject;
                         }
                     }
@@ -126,7 +126,7 @@ export default function TaskForm({toggleForm, setToggleForm, projects, intent, s
     }, [status, toggleForm, setToggleForm, intent, projects]);
     
     const closeForm = useCallback(()=>{
-        setFormState(task);
+        setFormState(prev => {prev = task; return prev});
         document.body.style.overflow = '';
         setFormIntent({} as FormIntent);
 
@@ -147,8 +147,8 @@ export default function TaskForm({toggleForm, setToggleForm, projects, intent, s
         }
     }, [setToggleForm]);
 
-    const handleOnInput = useCallback((e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const {name, value} = e.target as HTMLInputElement | HTMLTextAreaElement;        
+    const handleOnInput = useCallback((e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+        const {name, value} = e.target as HTMLInputElement | HTMLTextAreaElement;  
         setFormState((prev) => ({...prev, 
             tasks: [{ ...prev?.tasks[0], [name]: value}]} as unknown as MyProject));
     }, []);
@@ -159,7 +159,7 @@ export default function TaskForm({toggleForm, setToggleForm, projects, intent, s
             if (inputRef.current) {
                 inputRef.current.focus();
             }
-        }, 800);
+        }, 600);
     }, []);
 
     const handleCloseBtn = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
@@ -168,11 +168,8 @@ export default function TaskForm({toggleForm, setToggleForm, projects, intent, s
     }, [closeForm]);
 
     const handleSubmit = useCallback(()=>{
-        setTimeout(() => {
-            closeForm();
-        }, 400);
+        closeForm();
     }, [closeForm]);
-
     return (
         <>
             <div className={'form-container'}>
@@ -183,9 +180,12 @@ export default function TaskForm({toggleForm, setToggleForm, projects, intent, s
                     onSubmit={handleSubmit}
                     onTransitionEnd={handleTransitionEnd}>
                     <input type="hidden" name="intent" value={intent?.action ?? 'add'} />
-                    <input type="hidden" name="id" value={intent?.taskId ?? ''} />
+                    <input type="hidden" name="status" value={'active'} />
+                    {intent?.action === 'edit' && <input type="hidden" name="id" value={intent.taskId ?? ''} />}
+                    
                     <div id="input-wrapper" className="input-container" onClick={handleClick}>
                         {
+                           
                             toggleForm ?
                                 <>
                                     <RectSolidSvg/>
@@ -202,7 +202,7 @@ export default function TaskForm({toggleForm, setToggleForm, projects, intent, s
                                         required/>
 
                                     <label htmlFor="projects"> category </label>
-                                    <select className="bg-grey" name="projectId" id="projects" required>
+                                    <select className="bg-grey" name="projectId" id="projects" onInput={handleOnInput} required>
                                         {intent?.action === 'edit' ? <option value={formState?.id}> {formState?.projectName} </option> :
                                             <>
                                                 <option value="" hidden> No list</option>

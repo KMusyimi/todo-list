@@ -1,7 +1,7 @@
 import moment from "moment";
 import {JSX, useCallback, useEffect, useState} from "react";
 import {ActionFunctionArgs} from "react-router-dom";
-import {completeTask, CompleteTaskParams, MyTask} from "../api";
+import {completeTask, CompleteTaskParams, deleteTask, MyTask} from "../api";
 import dropDownIcon from '../assets/arrow-down.svg';
 import calendarIcon from '../assets/calendar.svg';
 import folderIcon from '../assets/projects.svg';
@@ -25,10 +25,17 @@ export async function fetcherAction({request}: ActionFunctionArgs) {
     Object.keys(data).forEach((item) => {
         payload[item] = data[item] as string;
     })
-    if (payload.intent === 'status') {
-        await completeTask(payload);
+    switch (payload.intent){
+        case 'status':
+            await completeTask(payload);
+            break;
+        case 'delete':
+            await deleteTask(payload.taskId);
+            break;
+        default:
+            // eslint-disable-next-line @typescript-eslint/only-throw-error
+            throw new Response("Bad Request", { status: 400 });
     }
-    console.log(payload)
 }
 
 

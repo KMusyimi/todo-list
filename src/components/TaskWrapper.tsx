@@ -12,8 +12,6 @@ interface TaskProps {
 }
 
 
-
-
 export default function TaskWrapper({ id, task }: TaskProps) {
     const [searchParams] = useSearchParams();
     const filterDate = searchParams.get('date');
@@ -34,31 +32,24 @@ export default function TaskWrapper({ id, task }: TaskProps) {
 
     const handleChange = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
+
+        const { dataset } = e.currentTarget;
+        const { status} = dataset;
+        const dropdownMenu = document.getElementById('dropdown-menu') as HTMLDivElement;
+        const editBtn = document.getElementById('edit-btn') as HTMLButtonElement;
         
-        const {taskId, projectId, status} = e.currentTarget.dataset;
-        const dropdownMenu = document.getElementById(`dropdown-menu`);
-        const editBtn = document.getElementById(`edit-btn`) as HTMLButtonElement;
-        const y = JSON.stringify(e.currentTarget.getBoundingClientRect().top + window.scrollY);
-        
-        if(status === 'completed'){
-            editBtn.disabled  = true;
-            editBtn.style.color  = '#b3b3b3';
-            editBtn.style.cursor  = 'disabled';
-        }else{
-            editBtn.disabled = false;
-            editBtn.style.color  = '';
-            editBtn.style.cursor  = '';
-            
-        }
         document.body.style.overflow = 'hidden';
-        sessionStorage.setItem('scrollY', y)
-        window.scroll(0, Number(y));
-        if (dropdownMenu) {
-            dropdownMenu.setAttribute('data-task-id', taskId ?? '');
-            dropdownMenu.setAttribute('data-project-id', projectId ?? '');
-            dropdownMenu.setAttribute('data-status', status ?? '');
-            dropdownMenu.classList.add('open');
-        }
+        editBtn.disabled = status === 'completed';
+
+        Object.keys(dataset).forEach((item) => {
+            const value = dataset[item];
+            if (item.match(/[A-Z][a-z]+/g)) {
+                item = item.split(/(?=[A-Z])/).join('-');
+            }
+            dropdownMenu.setAttribute(`data-${item.toLowerCase()}`, value ?? '');
+        });
+
+        dropdownMenu.classList.add('open');
     }, []);
 
     return (
