@@ -450,13 +450,6 @@
 .main .task-container>header {
     margin-top: .55em;
     margin-bottom: 2em;
-    transition: margin-bottom 0ms ease-in-out;
-}
-
-.main .task-container>header:has(>.btn-container) {
-    transition-duration: 100ms;
-    --_m-delay: 0ms;
-    margin-bottom: .265em;
 }
 
 .main .task-container>header h1 {
@@ -465,32 +458,6 @@
     font-size: 1.915rem;
     padding-inline: .444em;
     text-align: left;
-}
-
-.main .task-container .clear-btn {
-    position: relative;
-    display: flex;
-    align-items: center;
-    margin-left: auto;
-    font-size: 1rem;
-    color: #222222;
-    margin-bottom: .435em;
-    text-transform: capitalize;
-}
-
-.main .task-container .clear-btn>svg {
-    margin: 0;
-    padding: 0;
-}
-
-.main .task-container .clear-btn::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 1px;
-    height: 1px;
-    width: 100%;
-    background-color: #222222;
 }
 
 .main .task-container .calendar,
@@ -532,7 +499,7 @@
     margin-right: 1.65em;
 }
 
-.main .task-container .calendar>button.today {
+.main .task-container .calendar>button.selected {
     background-color: #E6D9CB;
     opacity: 1;
     border-color: transparent;
@@ -914,12 +881,9 @@
 
 .main .form-container {
     --trs-delay: 600ms;
-    background-color: rgba(249, 245, 244, .35);
-    backdrop-filter: blur(3px);
-    -webkit-backdrop-filter: blur(3px);
     position: fixed;
     bottom: 1.5em;
-    padding: 1em 1.5em;
+    padding: 1em .685em;
     left: 0;
     width: 100%;
     z-index: 150;
@@ -927,6 +891,9 @@
 }
 
 .main .form-container:has(> .task-form.collapse) {
+    background-color: rgba(249, 245, 244, .35);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
     bottom: 0;
     overflow: hidden;
     padding-block-start: .35em;

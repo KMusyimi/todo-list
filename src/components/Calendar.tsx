@@ -1,55 +1,54 @@
-import {JSX, useCallback, useId, useState} from "react";
-import {daysInWeekArr} from "../utils.ts";
+import { JSX, useCallback, useEffect, useId, useState } from "react";
 import moment from "moment";
 import { useSearchParams } from "react-router-dom";
 
-interface DateProps{
+interface DateProps {
+    dateParam: string | null;
     filterChange: (key: string, value: string | null) => void
 }
 
 
-function Dates({ filterChange }: DateProps) {
+function Dates({ filterChange, dateParam }: DateProps) {
+    const [moments,] = useState(() => moment());
 
-    const [currentDate,] = useState(() => new Date());
     const id = useId();
-    
-    const getDates = useCallback(()=>{
-        const startDay = currentDate.getDay();
-        const strDate = currentDate.toISOString().slice(0, 10);
-        const arrDays = [...daysInWeekArr.slice(startDay - 1), ...daysInWeekArr.slice(0, startDay - 1)];
-        return arrDays.map((daysStr, idx) => {
-            const date = new Date();
-            // d.getDate() - d.getDay() + idx, we take the current day (23), remove the day of week (0 for Sunday, 2 for Tuesday... Basically we calculate the last Sunday date) et add number of days to have every date in the week.
-            const day = date.setDate(date.getDate() - date.getDay() + (startDay - 1 + idx));
-            const formatDate: string = new Date(day).toISOString().slice(0, 10);
-            const dateWeek = formatDate.substring(formatDate.lastIndexOf('-') + 1);
 
-            const dateStr = moment().format('YYYY-MM-') + dateWeek;
+    const Dates = useCallback(() => {
+        const currentDate = moments.format("YYYY-MM-DD");
+        const currentDay = moments.weekday();
+        const prevDay = currentDay - 1;
 
+        return Array.from(Array(7)).map((_, idx) => {
+            const weekDay = moment().weekday(prevDay + idx);
+            const fmtDate = weekDay.format('YYYY-MM-DD');
+            const date = weekDay.format('DD');
+            const selected = !dateParam ? currentDate === fmtDate : (dateParam === fmtDate ? true : false);
             return (
-                <button className={strDate === formatDate ? 'date-btn today' : 'date-btn'
+                <button className={selected ? 'date-btn selected' : 'date-btn'
                 } key={`day-${id + idx.toString()}`}
                     type="button"
-                    onClick={() => { filterChange('date', dateStr) }}>
-                    <div className="day"> {daysStr.slice(0, 3)} </div>
-                    < div className="date"> {dateWeek} </div>
-                </button>)
+                    onClick={() => { filterChange('date', currentDate === fmtDate ? null : fmtDate) }}>
+                    <p className="day"> {moment(weekDay).format('ddd')} </p>
+                    <p className="date"> {date} </p>
+                </button>);
         })
-    }, [currentDate, filterChange, id])
+    }, [dateParam, filterChange, id, moments])
 
-   
-    return <>{getDates()}</>
+
+    return <Dates />
 
 }
 
 export default function Calendar(): JSX.Element {
+    const [moments, setMoments] = useState<moment.Moment | null>(null);
     const [searchParams, setSearchParams] = useSearchParams();
-    const filterDate = searchParams.get('date');
+    const dateParam = searchParams.get('date');
 
-    const headerDate = moment(filterDate ?? Date.now()).format('lll').split(' ').slice(0, 2).join(' ').replace(/,/g, '');
+    useEffect(() => {
+        setMoments(() => moment(dateParam ?? Date.now()));
+    }, [dateParam]);
 
-
-    const handleFilterChange = useCallback((key: string, value: string | null)=> {
+    const handleFilterChange = useCallback((key: string, value: string | null) => {
         setSearchParams(prevParams => {
             if (value === null) {
                 prevParams.delete(key);
@@ -61,19 +60,15 @@ export default function Calendar(): JSX.Element {
     }, [setSearchParams]);
 
 
-    
+
 
     return (
-    <>
-        <header>
-        <h1>{ moment(filterDate?? Date.now()).calendar().split(' ')[0]} · {headerDate}</h1>
-        </header>
-        {filterDate && <div className="btn-container">
-            <button type="button" className="clear-btn" onClick={()=> {handleFilterChange('date', null)}}> clear filter</button>
-
-        </div>}
-        <div className="calendar">
-            <Dates filterChange={handleFilterChange}/>
-        </div>
-    </>)
+        <>
+            <header>
+                <h1>{moments?.calendar().split(' ')[0]} · {moments?.format("ll").split(/,/g)[0]}</h1>
+            </header>
+            <div className="calendar">
+                <Dates filterChange={handleFilterChange} dateParam={dateParam} />
+            </div>
+        </>)
 }

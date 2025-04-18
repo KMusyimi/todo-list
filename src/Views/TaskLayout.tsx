@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { FormEvent, JSX, ReactNode, use, useCallback, useEffect, useRef, useState } from "react";
-import { LuPencil } from "react-icons/lu";
+import { LuPencil, LuTrash } from "react-icons/lu";
 import { LoaderFunctionArgs, Outlet, useFetcher, useLoaderData, useSearchParams } from "react-router-dom";
 import {getCompletedTasks, getProjects } from "../api.ts";
 import Calendar from "../components/Calendar.tsx";
@@ -10,7 +10,6 @@ import Nav from "../components/Nav.tsx";
 import SuccessMsg from "../components/SuccessMsg.tsx";
 import TaskForm from "../components/TaskForm.tsx";
 import { checkUserProjects } from "../utils.ts";
-import { AiOutlineDelete } from "react-icons/ai";
 
 
 export type FormIntent = {
@@ -164,7 +163,7 @@ export default function TaskLayout(): JSX.Element {
             <DropdownMenu ref={dropdownRef} id={'dropdown-menu'} className={'dropdown-task'}>
                 <button id={'edit-btn'} type={'button'} onClick={handleEditBtn}><LuPencil /><span>edit</span></button>
                 <FetcherCell id={'delete-form'} taskId={formIntent?.taskId ?? ''} intent="delete">
-                    <button id="delete-btn" type="submit" onClick={handleClick} ><AiOutlineDelete /><span>delete</span></button>
+                    <button id="delete-btn" type="submit" onClick={handleClick} ><LuTrash /><span>delete</span></button>
                 </FetcherCell>
             </DropdownMenu>
 

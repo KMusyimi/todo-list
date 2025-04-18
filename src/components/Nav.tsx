@@ -60,7 +60,7 @@ export default function Nav({ projects, completed }: NavProps): JSX.Element {
                 {projects && <Render projects={projects} />}
                 <li>
                     <NavLink to={'completed'}><FaCheck />{completed?.projectName}</NavLink>
-
+                    
                 </li>
             </ul>
         </nav>
