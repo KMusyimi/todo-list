@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { FormEvent, JSX, ReactNode, use, useCallback, useEffect, useRef, useState } from "react";
+import { FormEvent, JSX, ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { LuPencil, LuTrash } from "react-icons/lu";
 import { LoaderFunctionArgs, Outlet, useFetcher, useLoaderData, useSearchParams } from "react-router-dom";
 import { getCompletedTasks, getFilteredProjects, getProjects } from "../api.ts";
@@ -75,7 +75,6 @@ export default function TaskLayout(): JSX.Element {
     const [formIntent, setFormIntent] = useState<FormIntent>(null);
 
     const { filteredProjects, completed, projects } = useLoaderData<typeof projectsLoader>();
-    const loadedProjects = use(filteredProjects);
 
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -119,6 +118,7 @@ export default function TaskLayout(): JSX.Element {
         if (dropdownMenu) {
             if (dropdownMenu.classList.contains('open')) {
                 document.body.style.overflow = "";
+                document.body.style.position = "";
                 closeDropDownMenu(dropdownMenu);
             }
         }
@@ -130,6 +130,7 @@ export default function TaskLayout(): JSX.Element {
             const { projectId, taskId, status } = dropdownRef.current.dataset;
             if (status !== 'completed') {
                 setFormIntent({ taskId, projectId, action: 'edit' } as FormIntent);
+                document.body.style.position = 'fixed';
                 setToggleForm(!toggleForm);
                 closeDropDownMenu(dropdownRef.current);
             }
@@ -172,7 +173,7 @@ export default function TaskLayout(): JSX.Element {
             </div>
 
             <TaskForm setToggleForm={setToggleForm} toggleForm={toggleForm}
-                projects={loadedProjects} intent={formIntent} setFormIntent={setFormIntent} />
+                projects={projects} intent={formIntent} setFormIntent={setFormIntent} />
 
             <DropdownMenu ref={dropdownRef} id={'dropdown-menu'} className={'dropdown-task'}>
                 <button id={'edit-btn'} type={'button'} onClick={handleEditBtn}><LuPencil /><span>edit</span></button>

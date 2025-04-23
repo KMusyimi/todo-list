@@ -67,6 +67,7 @@ export default function TaskWrapper({ id, task }: TaskProps) {
         const editBtn = document.getElementById('edit-btn') as HTMLButtonElement;
 
         document.body.style.overflow = 'hidden';
+        document.body.style.position = 'fixed';
         editBtn.disabled = status === 'completed';
 
         Object.keys(dataset).forEach((item) => {

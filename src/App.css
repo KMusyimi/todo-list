@@ -585,7 +585,7 @@
     font-size: 0.899rem;
     font-weight: 600;
     color: #121212;
-    padding-top: .188em;
+    /* padding-top: .188em; */
     text-align: left;
     margin-right: auto;
     opacity: .5;

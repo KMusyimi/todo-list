@@ -127,6 +127,7 @@ export default function TaskForm({ toggleForm, setToggleForm, projects, intent, 
     const closeForm = useCallback(() => {
         setFormState(prev => { prev = task; return prev });
         document.body.style.overflow = '';
+        document.body.style.position = '';
         setFormIntent({} as FormIntent);
 
         setToggleForm(prev => {
@@ -142,6 +143,7 @@ export default function TaskForm({ toggleForm, setToggleForm, projects, intent, 
         const { id } = e.currentTarget;
         if (id === 'input-wrapper') {
             document.body.style.overflow = 'hidden';
+            document.body.style.position = 'fixed';
             setToggleForm(true);
         }
     }, [setToggleForm]);
