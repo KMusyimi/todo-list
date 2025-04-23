@@ -22,6 +22,9 @@ export default function AllTasks() {
         projectName: string;
         tasks: MyTask[];
     }[]) {
+        if (projects.length  === 0){
+            return <TasksCard project={{id: '',projectName: 'No Lists', tasks:[]}}/>
+        }
         return projects.map((project, idx) => {
             return <TasksCard key={ `task-${idStr + idx.toString()}` } project = { project } />
         })

@@ -1,10 +1,12 @@
-import { HiDotsVertical } from "react-icons/hi";
-import { IoTimeOutline } from "react-icons/io5";
-import { MyTask } from "../api.ts";
 import * as React from "react";
 import { useCallback } from "react";
-import { useSearchParams } from "react-router-dom";
-import { FetcherCell } from "../Views/TaskLayout.tsx";
+import { HiDotsVertical } from "react-icons/hi";
+import { Link, useLocation } from "react-router-dom";
+import { MyTask } from "../api.ts";
+import { FetcherCellOnInput } from "../Views/TaskLayout.tsx";
+import calendarIcon from '../assets/calendar.svg';
+import moment from "moment";
+
 
 interface TaskProps {
     id: string;
@@ -12,10 +14,36 @@ interface TaskProps {
 }
 
 
-export default function TaskWrapper({ id, task }: TaskProps) {
-    const [searchParams] = useSearchParams();
-    const filterDate = searchParams.get('date');
+function DueDate({ date }: { date: string | Date }) {
+    const [dueDate, setDueDate] = React.useState<string | null>(null);
 
+    const updateDueDate = useCallback((date: string | Date) => {
+        setDueDate(prev => {
+            prev = moment(new Date(date)).fromNow();
+            return prev;
+        })
+    }, [])
+
+    React.useEffect(() => {
+        updateDueDate(date);
+        const timer = setInterval(() => {
+            updateDueDate(date);
+        }, 1000 * 60);
+        return () => {
+            clearInterval(timer)
+        }
+    }, [date, updateDueDate]);
+
+    return (
+        <p className= "due-date" style = {{ color: "rgb(9, 185, 115)" }
+}>
+    <img src={ calendarIcon } alt = "a dark greenish calendar icon" /> Due { dueDate }
+</p>)
+}
+
+export default function TaskWrapper({ id, task }: TaskProps) {
+    const location = useLocation();
+    
     const handleTaskClick = useCallback((e: React.MouseEvent<HTMLElement>) => {
         const { dataset } = e.currentTarget;
         const { task } = dataset;
@@ -34,10 +62,10 @@ export default function TaskWrapper({ id, task }: TaskProps) {
         e.preventDefault();
 
         const { dataset } = e.currentTarget;
-        const { status} = dataset;
+        const { status } = dataset;
         const dropdownMenu = document.getElementById('dropdown-menu') as HTMLDivElement;
         const editBtn = document.getElementById('edit-btn') as HTMLButtonElement;
-        
+
         document.body.style.overflow = 'hidden';
         editBtn.disabled = status === 'completed';
 
@@ -57,7 +85,7 @@ export default function TaskWrapper({ id, task }: TaskProps) {
             {task && <div className="task-wrapper">
                 {/* TODO: change into inputs and useFetcher */}
 
-                <FetcherCell taskId={task.id} intent="status">
+                <FetcherCellOnInput taskId={task.id} intent="status">
                     <input type="hidden" name="projectId" value={id} />
                     <label className={getPriority(task.priority)} htmlFor={`c-${task.id}`}>
                         <input
@@ -68,17 +96,21 @@ export default function TaskWrapper({ id, task }: TaskProps) {
                             disabled={task.status === 'completed'}
                             value={'completed'} required />
                     </label>
-                </FetcherCell>
+                </FetcherCellOnInput>
 
-                <section className={`task-info`} onClick={handleTaskClick} data-task={task.id}>
-                    <h3 className="title"> {task.status !== 'completed' ? task.title :
-                        <s className="strike"> {task.title} </s>}</h3>
-                    {filterDate && <span className="due-time"><IoTimeOutline /> {task.dueTime}</span>}
+                <section className={`task-info`} onClick={handleTaskClick}>
+                    {task.status !== 'completed' ?
+                        <Link to={`/projects/${id}/todo/details/${task.id}`}
+                        state={{backTo: location.pathname, date: location.search}}
+                        className="title">{task.title}</Link> :
+                        <h3 className="title"> {task.title}</h3>
+                    }
                 </section>
 
                 <button id={`btn-${id}`} type="button" onClick={handleChange} data-task-id={task.id} data-project-id={id} data-status={task.status}>
                     <HiDotsVertical />
                 </button>
+                <DueDate date = { task.dueDate + 'T' + task.startTime } />
             </div>}
         </>
 

@@ -1,15 +1,15 @@
 /* eslint-disable react-refresh/only-export-components */
 import moment from "moment";
-import {JSX, Suspense, useCallback, useEffect, useRef, useState} from "react";
-import {ActionFunctionArgs, Form, redirect, useNavigation} from "react-router-dom";
-import {addTask, MyProject, MyProjects, updateTask, UpdateTaskParams} from "../api";
+import { JSX, Suspense, useCallback, useEffect, useRef, useState } from "react";
+import { ActionFunctionArgs, Form, redirect, useNavigation } from "react-router-dom";
+import { addTask, MyProject, MyProjects, updateTask, UpdateTaskParams } from "../api";
+import { FormIntent } from "../Views/TaskLayout";
 import RectSolidSvg from "./Svg";
-import {FormIntent} from "../Views/TaskLayout";
 
 interface FormProps {
     toggleForm?: boolean;
     setToggleForm: (value: React.SetStateAction<boolean>) => void;
-    projects?: MyProjects | null;
+    projects?: MyProjects | null | undefined;
     intent?: FormIntent;
     setFormIntent: (value: React.SetStateAction<FormIntent>) => void;
 }
@@ -19,7 +19,7 @@ interface SelectProps {
 }
 
 
-export async function taskFormAction({request}: ActionFunctionArgs) {
+export async function taskFormAction({ request }: ActionFunctionArgs) {
     try {
         const formData = await request.formData();
         const payload: UpdateTaskParams = {};
@@ -28,7 +28,7 @@ export async function taskFormAction({request}: ActionFunctionArgs) {
         Object.keys(data).forEach((item) => {
             payload[item] = data[item] as string;
         });
-        switch(payload.intent){
+        switch (payload.intent) {
             case 'edit':
                 await updateTask(payload);
                 break;
@@ -39,7 +39,7 @@ export async function taskFormAction({request}: ActionFunctionArgs) {
                 // eslint-disable-next-line @typescript-eslint/only-throw-error
                 throw new Response("Bad Request", { status: 400 });
         }
-        
+
         return redirect(`../${projectId}/todo`);
 
     } catch (e) {
@@ -52,7 +52,7 @@ export async function addLoader() {
     return redirect('/projects');
 }
 
-function ProjectsList({projects}: SelectProps) {
+function ProjectsList({ projects }: SelectProps) {
 
     return (
         <Suspense fallback={<h1> Loading...</h1>
@@ -69,7 +69,7 @@ function ProjectsList({projects}: SelectProps) {
         </Suspense>)
 }
 
-export default function TaskForm({toggleForm, setToggleForm, projects, intent, setFormIntent}: FormProps): JSX.Element {
+export default function TaskForm({ toggleForm, setToggleForm, projects, intent, setFormIntent }: FormProps): JSX.Element {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const task: MyProject = {
         id: "",
@@ -81,10 +81,9 @@ export default function TaskForm({toggleForm, setToggleForm, projects, intent, s
             title: '',
             status: 'active',
             dueDate: moment().format('YYYY-MM-DD'),
-            dueTime: '00:00:00',
+            startTime: '00:00:00',
             priority: '',
             description: '',
-            notes: '',
             createdAt: '',
         }],
         createdAt: ""
@@ -103,15 +102,15 @@ export default function TaskForm({toggleForm, setToggleForm, projects, intent, s
         let timer: string | number | NodeJS.Timeout | undefined;
         if (intent) {
             let task;
-            const {action, projectId, taskId} = intent;
+            const { action, projectId, taskId } = intent;
             if (action === 'edit') {
                 const regxp = new RegExp(`^.*${taskId ?? ''}.*$`);
                 if (projects) {
                     const projectsCopy = [...projects]
                     for (const project of projectsCopy) {
                         if (project?.id === projectId) {
-                            const tasks = project?.tasks.filter(task => regxp.test(task?.id?? ''));
-                            task = {...project, tasks} as MyProject;
+                            const tasks = project?.tasks.filter(task => regxp.test(task?.id ?? ''));
+                            task = { ...project, tasks } as MyProject;
                         }
                     }
                     if (task) {
@@ -124,9 +123,9 @@ export default function TaskForm({toggleForm, setToggleForm, projects, intent, s
             clearTimeout(timer);
         }
     }, [status, toggleForm, setToggleForm, intent, projects]);
-    
-    const closeForm = useCallback(()=>{
-        setFormState(prev => {prev = task; return prev});
+
+    const closeForm = useCallback(() => {
+        setFormState(prev => { prev = task; return prev });
         document.body.style.overflow = '';
         setFormIntent({} as FormIntent);
 
@@ -140,7 +139,7 @@ export default function TaskForm({toggleForm, setToggleForm, projects, intent, s
 
     const handleClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
-        const {id} = e.currentTarget;
+        const { id } = e.currentTarget;
         if (id === 'input-wrapper') {
             document.body.style.overflow = 'hidden';
             setToggleForm(true);
@@ -148,9 +147,11 @@ export default function TaskForm({toggleForm, setToggleForm, projects, intent, s
     }, [setToggleForm]);
 
     const handleOnInput = useCallback((e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        const {name, value} = e.target as HTMLInputElement | HTMLTextAreaElement;  
-        setFormState((prev) => ({...prev, 
-            tasks: [{ ...prev?.tasks[0], [name]: value}]} as unknown as MyProject));
+        const { name, value } = e.target as HTMLInputElement | HTMLTextAreaElement;
+        setFormState((prev) => ({
+            ...prev,
+            tasks: [{ ...prev?.tasks[0], [name]: value }]
+        } as unknown as MyProject));
     }, []);
 
     const handleTransitionEnd = useCallback((e: React.TransitionEvent<HTMLFormElement>) => {
@@ -167,28 +168,28 @@ export default function TaskForm({toggleForm, setToggleForm, projects, intent, s
         closeForm();
     }, [closeForm]);
 
-    const handleSubmit = useCallback(()=>{
+    const handleSubmit = useCallback(() => {
         closeForm();
     }, [closeForm]);
     return (
         <>
             <div className={'form-container'}>
-                <Form ref={formRef} 
-                    action={"add"} 
+                <Form ref={formRef}
+                    action={"add"}
                     className={toggleForm ? 'task-form' : 'task-form collapse'}
-                    method="post" 
+                    method="post"
                     onSubmit={handleSubmit}
                     onTransitionEnd={handleTransitionEnd}>
                     <input type="hidden" name="intent" value={intent?.action ?? 'add'} />
                     <input type="hidden" name="status" value={'active'} />
                     {intent?.action === 'edit' && <input type="hidden" name="id" value={intent.taskId ?? ''} />}
-                    
+
                     <div id="input-wrapper" className="input-container" onClick={handleClick}>
                         {
-                           
+
                             toggleForm ?
                                 <>
-                                    <RectSolidSvg/>
+                                    <RectSolidSvg />
                                     <label htmlFor={'title'}> Title </label>
                                     <input
                                         ref={inputRef}
@@ -199,14 +200,14 @@ export default function TaskForm({toggleForm, setToggleForm, projects, intent, s
                                         placeholder={'Write a new task'}
                                         value={formState?.tasks[0]?.title}
                                         onInput={handleOnInput}
-                                        required/>
+                                        required />
 
                                     <label htmlFor="projects"> category </label>
                                     <select className="bg-grey" name="projectId" id="projects" onInput={handleOnInput} required>
                                         {intent?.action === 'edit' ? <option value={formState?.id}> {formState?.projectName} </option> :
                                             <>
                                                 <option value="" hidden> No list</option>
-                                                <ProjectsList projects={projects}/>
+                                                <ProjectsList projects={projects} />
                                             </>
                                         }
                                     </select>
@@ -219,26 +220,26 @@ export default function TaskForm({toggleForm, setToggleForm, projects, intent, s
                         <div>
                             <label htmlFor="dueDate"> due date </label>
                             <input type={'date'}
-                                   id={'dueDate'}
-                                   name={'dueDate'}
-                                   placeholder="mm/dd/yyyy"
-                                   className={'form-input'}
-                                   min={moment().format('YYYY-MM-DD')}
-                                   value={formState?.tasks[0]?.dueDate}
-                                   onInput={handleOnInput}
-                                   required/>
+                                id={'dueDate'}
+                                name={'dueDate'}
+                                placeholder="mm/dd/yyyy"
+                                className={'form-input'}
+                                min={moment().format('YYYY-MM-DD')}
+                                value={formState?.tasks[0]?.dueDate}
+                                onInput={handleOnInput}
+                                required />
 
                         </div>
                         <div>
-                            <label htmlFor="dueTime"> due time </label>
+                            <label htmlFor="startTime"> start time </label>
                             <input type={'time'}
-                                   id={'dueTime'}
-                                   name={'dueTime'}
-                                   placeholder="--:-- --"
-                                   className={'form-input'}
-                                   value={formState?.tasks[0]?.dueTime}
-                                   onInput={handleOnInput}
-                                   required/>
+                                id={'startTime'}
+                                name={'startTime'}
+                                placeholder="--:-- --"
+                                className={'form-input'}
+                                value={formState?.tasks[0]?.startTime}
+                                onInput={handleOnInput}
+                                required />
                         </div>
                     </div>
 
@@ -248,22 +249,22 @@ export default function TaskForm({toggleForm, setToggleForm, projects, intent, s
                             <div className="radio-wrapper">
                                 <label className="label-radio" htmlFor={'high'}> High
                                     <input id={'high'} type={'radio'} name={'priority'}
-                                           checked={formState?.tasks[0]?.priority == '3'}
-                                           onChange={handleOnInput}
-                                           value={3} 
-                                           required/>
+                                        checked={formState?.tasks[0]?.priority == '3'}
+                                        onChange={handleOnInput}
+                                        value={3}
+                                        required />
                                 </label>
                                 <label className="label-radio" htmlFor={'medium'}> Medium
                                     <input id={'medium'} type={'radio'} name={'priority'}
-                                           checked={formState?.tasks[0]?.priority == '2'}
-                                           onChange={handleOnInput}
-                                           value={2}/>
+                                        checked={formState?.tasks[0]?.priority == '2'}
+                                        onChange={handleOnInput}
+                                        value={2} />
                                 </label>
                                 <label className="label-radio" htmlFor={'low'}> Low
                                     <input id={'low'} type={'radio'} name={'priority'}
-                                           checked={formState?.tasks[0]?.priority == '1'}
-                                           onChange={handleOnInput}
-                                           value={1}/>
+                                        checked={formState?.tasks[0]?.priority == '1'}
+                                        onChange={handleOnInput}
+                                        value={1} />
                                 </label>
                             </div>
                         </fieldset>
@@ -272,24 +273,18 @@ export default function TaskForm({toggleForm, setToggleForm, projects, intent, s
 
                     <label htmlFor={'description'}> Description </label>
                     <textarea id={'description'}
-                              name={'description'}
-                              className={'form-textarea'}
-                              placeholder={'Write a brief description...'}
-                              maxLength={250}
-                              value={formState?.tasks[0]?.description}
-                              onInput={handleOnInput}
-                              required
+                        name={'description'}
+                        className={'form-textarea'}
+                        placeholder={'Write a brief description...'}
+                        maxLength={250}
+                        value={formState?.tasks[0]?.description}
+                        onInput={handleOnInput}
+                        required
                     > </textarea>
-                    {/* <label htmlFor={'notes'}> Notes </label>
-                <textarea id={'notes'}
-                    name={'notes'}
-                    className={'form-textarea'}
-                    placeholder={'Write a brief note...'}
-                    maxLength={100}
-                > </textarea> */}
+                    
                     <div className="btn-container">
                         <button type="button" onClick={handleCloseBtn}>Close</button>
-                        <button type="submit" className="add-btn">{intent?.action==='edit'?'Edit Task': 'Add'}</button>
+                        <button type="submit" className="add-btn">{intent?.action === 'edit' ? 'Edit Task' : 'Add'}</button>
                     </div>
                 </Form>
             </div>

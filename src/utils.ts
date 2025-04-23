@@ -1,5 +1,6 @@
 import { redirect } from "react-router-dom";
 import { isProjectsEmpty } from "./api";
+import moment from "moment";
 
 // type Days = string[];
 
@@ -43,3 +44,12 @@ export async function checkUserProjects() {
   }
 }
 
+export function getDateTask(request: Request): string {
+  let date: string | null = moment().format('YYYY-MM-DD');
+  const param = new URL(request.url).searchParams;
+  const dateParam = param.get('date');
+  if (dateParam) {
+    date = dateParam;
+  }
+  return date;
+}
