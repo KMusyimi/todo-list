@@ -62,7 +62,7 @@ export type MyTask = {
   title: string;
   status: 'active' | 'overdue' | 'completed';
   dueDate: string;
-  startTime: string;
+  dueTime: string;
   priority: number | string;
   description: string;
   subtasks?: SubTaskEntity[];
@@ -140,7 +140,7 @@ export async function getProjects(date = '') {
   return await Promise.all(querySnapshot.docs.map(async (doc) => {
     const data = doc.data() as Project;
     const tasks = date ? await getTasksByDate(doc.id, date) : await getTasks(doc.id);
-      return { ...data, id: doc.id, tasks } as MyProject; 
+    return { ...data, id: doc.id, tasks } as MyProject;
   }));
 
 }
@@ -222,7 +222,7 @@ export async function getCompletedTasks() {
   const taskSnap = await getDocs(completedRef);
   if (taskSnap.empty) {
     return null;
-  } 
+  }
   const tasks = taskSnap.docs.map((doc) => {
     const taskData = doc.data() as Partial<MyTask>;
     return { ...taskData, id: doc.id };

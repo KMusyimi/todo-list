@@ -1,11 +1,11 @@
+import moment from "moment";
 import * as React from "react";
 import { useCallback } from "react";
 import { HiDotsVertical } from "react-icons/hi";
 import { Link, useLocation } from "react-router-dom";
 import { MyTask } from "../api.ts";
-import { FetcherCellOnInput } from "../Views/TaskLayout.tsx";
 import calendarIcon from '../assets/calendar.svg';
-import moment from "moment";
+import { FetcherCellOnInput } from "../Views/TaskLayout.tsx";
 
 
 interface TaskProps {
@@ -36,14 +36,14 @@ function DueDate({ date }: { date: string | Date }) {
 
     return (
         <p className="due-date" style={{ color: "#776EC9" }
-}>
-    <img src={ calendarIcon } alt = "a dark greenish calendar icon" /> Due { dueDate }
-</p>)
+        }>
+            <img src={calendarIcon} alt="a dark greenish calendar icon" /> Due {dueDate}
+        </p>)
 }
 
 export default function TaskWrapper({ id, task }: TaskProps) {
     const location = useLocation();
-    
+
     const handleTaskClick = useCallback((e: React.MouseEvent<HTMLElement>) => {
         const { dataset } = e.currentTarget;
         const { task } = dataset;
@@ -87,7 +87,7 @@ export default function TaskWrapper({ id, task }: TaskProps) {
 
                 <FetcherCellOnInput taskId={task.id} intent="status">
                     <input type="hidden" name="projectId" value={id} />
-                    <label className={getPriority(task.priority)} htmlFor={`c-${task.id}`}>
+                    <label className={`complete-label ${getPriority(task.priority)}`} htmlFor={`c-${task.id}`}>
                         <input
                             className="form-checkbox"
                             type="checkbox"
@@ -101,8 +101,8 @@ export default function TaskWrapper({ id, task }: TaskProps) {
                 <section className={`task-info`} onClick={handleTaskClick}>
                     {task.status !== 'completed' ?
                         <Link to={`/projects/${id}/todo/details/${task.id}`}
-                        state={{backTo: location.pathname, date: location.search}}
-                        className="title">{task.title}</Link> :
+                            state={{ backTo: location.pathname, date: location.search }}
+                            className="title">{task.title}</Link> :
                         <h3 className="title"> {task.title}</h3>
                     }
                 </section>
@@ -110,7 +110,7 @@ export default function TaskWrapper({ id, task }: TaskProps) {
                 <button id={`btn-${id}`} type="button" onClick={handleChange} data-task-id={task.id} data-project-id={id} data-status={task.status}>
                     <HiDotsVertical />
                 </button>
-                <DueDate date = { task.dueDate + 'T' + task.startTime } />
+                <DueDate date={task.dueDate + 'T' + task.dueTime} />
             </div>}
         </>
 

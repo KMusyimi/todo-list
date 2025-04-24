@@ -5,7 +5,7 @@ import { getProject, getTask } from "../api";
 import dropDownIcon from '../assets/arrow-down.svg';
 import Main from "../components/Main";
 import RectSolidSvg, { ProjectIcon } from "../components/Svg";
-import { FetcherCellSubmit } from "./TaskLayout";
+import { FetcherCellOnInput, FetcherCellSubmit } from "./TaskLayout";
 import SubTask from "../components/Subtask";
 
 
@@ -45,12 +45,28 @@ export default function TaskDetails(): JSX.Element {
   }, [location.state])
 
   return (
-    <Main>
+    <Main style={{padding:" 2em 1.115em"}}>
       <div className="task-details">
-        <Link to={backToLink} relative={'path'}> back </Link>
-        <section>
-          <header><RectSolidSvg /><h1>{title}</h1></header>
-          <div className="container">
+        <Link to={backToLink} relative={'path'}> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-5">
+          <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+        </svg>
+
+        </Link>
+          <div className="header-container">
+            <FetcherCellOnInput taskId={id ?? ''} intent="status" action="./../../:todoId">
+              <input type="hidden" name="projectId" value={project?.id} />
+              <label className="complete-label" htmlFor={`c-${id ?? ''}`}>
+                <input
+                  className="form-checkbox"
+                  type="checkbox"
+                  id={`c-${id ?? ''}`}
+                  name={'status'}
+                  value={'completed'} required />
+              </label>
+            </FetcherCellOnInput>
+            <header><h1>{title}</h1></header>
+          </div>
+          <div className="primary-container">
             <section className="category-section">
               <h2 className="category-title">Category</h2>
               <div className="dropdown-container">
@@ -74,17 +90,17 @@ export default function TaskDetails(): JSX.Element {
           </div>
           <FetcherCellSubmit taskId={id ?? ''} intent="add-subtask" action=".">
             <label htmlFor={'notes'}> Notes </label>
-                <textarea id={'notes'}
-                    name={'notes'}
-                    className={'form-textarea'}
-                    placeholder={'Write a brief note...'}
-                    maxLength={100}
-                > </textarea>
+            <textarea id={'notes'}
+              name={'notes'}
+              className={'form-textarea'}
+              placeholder={'Write a brief note...'}
+              maxLength={100}
+            > </textarea>
           </FetcherCellSubmit>
 
 
           {subtasks && <div>
-            <SubTask taskId={id ?? ''} subtask={subtasks}/>
+            <SubTask taskId={id ?? ''} subtask={subtasks} />
           </div>}
           <FetcherCellSubmit taskId={id ?? ''} intent="add-subtask" action=".">
             <svg viewBox="0 0 20 20" fill="currentColor">
@@ -92,9 +108,8 @@ export default function TaskDetails(): JSX.Element {
             </svg>
             <input className="subtask-input" name='title' type="text" placeholder="Add a subtask" />
           </FetcherCellSubmit>
-        </section>
         <div className="btn-container">
-            <button type="button">delete</button>
+          <button type="button">delete</button>
         </div>
       </div>
 

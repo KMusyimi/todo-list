@@ -7,11 +7,11 @@ export default function SubTask({ taskId, subtask }: { taskId: string, subtask: 
       const { id, title, status } = sub;
       return (<section key={id}>.
         <FetcherCellOnInput taskId={taskId} intent="complete" action=".">
-          <label htmlFor={`c-${id}`}>
+          <label htmlFor={`sub-${id}`}>
             <input
               className="form-checkbox"
               type="checkbox"
-              id={`c-${id}`}
+              id={`sub-${id}`}
               name={'status'}
               disabled={status === 'completed'}
               value={'completed'} required />

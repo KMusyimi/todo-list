@@ -1,4 +1,4 @@
-import { FormEvent, JSX, useCallback, useEffect, useState } from "react";
+import { FormEvent, JSX, useCallback, useEffect, useRef, useState } from "react";
 import { ActionFunctionArgs, Navigation, redirect, useFetcher, useNavigation } from "react-router-dom";
 import { addProject } from "../api";
 import { colors } from "../utils";
@@ -30,7 +30,7 @@ export async function projectAction({ request }: ActionFunctionArgs): Promise<Re
 
 export default function Modal({menuOpen}: {menuOpen: boolean}): JSX.Element {
     const fetcher = useFetcher();
-
+    const colorListRef = useRef<HTMLUListElement| null>(null);
     const [color, setColor] = useState(colors[0]);
     const [toggle, setToggle] = useState(false);
 
@@ -44,6 +44,12 @@ export default function Modal({menuOpen}: {menuOpen: boolean}): JSX.Element {
                 setToggle(false);
             }, 3000);
         }
+        timer = setTimeout(() => {
+                if (toggle && colorListRef.current){
+                colorListRef.current.scrollIntoView({behavior:"smooth", block: "start"})
+            }
+            }, 175);
+        
         return ()=> {
             clearTimeout(timer);
         }
@@ -77,7 +83,7 @@ export default function Modal({menuOpen}: {menuOpen: boolean}): JSX.Element {
                     <input type="hidden" name="iconColor" value={color} />
                 </fetcher.Form>
             </div>
-            <ul className={`colors-list ${toggle ? 'open' : ''}`}>{colors.map(color => <li key={color} className="color-item"
+            <ul ref={colorListRef} className={`colors-list ${toggle ? 'open' : ''}`}>{colors.map(color => <li key={color} className="color-item"
                 style={{ backgroundColor: color }}
                 onClick={handleClick}
                 data-color={color}></li>)}</ul>

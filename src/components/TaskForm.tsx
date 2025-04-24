@@ -28,19 +28,19 @@ export async function taskFormAction({ request }: ActionFunctionArgs) {
         Object.keys(data).forEach((item) => {
             payload[item] = data[item] as string;
         });
+        
         switch (payload.intent) {
             case 'edit':
                 await updateTask(payload);
                 break;
             case 'add':
                 await addTask(payload);
-                break;
+                return redirect(`../${projectId}/todo?date=${payload.dueDate}`);
             default:
                 // eslint-disable-next-line @typescript-eslint/only-throw-error
                 throw new Response("Bad Request", { status: 400 });
         }
-
-        return redirect(`../${projectId}/todo`);
+        
 
     } catch (e) {
         console.error(e);
@@ -81,7 +81,7 @@ export default function TaskForm({ toggleForm, setToggleForm, projects, intent, 
             title: '',
             status: 'active',
             dueDate: moment().format('YYYY-MM-DD'),
-            startTime: '00:00:00',
+            dueTime: '00:00:00',
             priority: '',
             description: '',
             createdAt: '',
@@ -232,13 +232,13 @@ export default function TaskForm({ toggleForm, setToggleForm, projects, intent, 
 
                         </div>
                         <div>
-                            <label htmlFor="startTime"> start time </label>
+                            <label htmlFor="dueTime"> due time </label>
                             <input type={'time'}
-                                id={'startTime'}
-                                name={'startTime'}
+                                id={'dueTime'}
+                                name={'dueTime'}
                                 placeholder="--:-- --"
                                 className={'form-input'}
-                                value={formState?.tasks[0]?.startTime}
+                                value={formState?.tasks[0]?.dueTime}
                                 onInput={handleOnInput}
                                 required />
                         </div>
@@ -282,7 +282,7 @@ export default function TaskForm({ toggleForm, setToggleForm, projects, intent, 
                         onInput={handleOnInput}
                         required
                     > </textarea>
-                    
+
                     <div className="btn-container">
                         <button type="button" onClick={handleCloseBtn}>Close</button>
                         <button type="submit" className="add-btn">{intent?.action === 'edit' ? 'Edit Task' : 'Add'}</button>

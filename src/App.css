@@ -47,7 +47,32 @@
     width: 15px;
     height: 15px;
 }
+.complete-label {
+    display: block;
+    height: 25px;
+    width: 25px;
+    padding: 0.249em 0;
+}
 
+.complete-label:disabled {
+    pointer-events: none;
+}
+.complete-label::before {
+    --_square-url: url(assets/square.svg);
+    content: '';
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    background-image: var(--_square-url);
+    background-repeat: no-repeat;
+    background-size: 20px;
+}
+
+.complete-label input {
+    appearance: none;
+    -webkit-appearance: none;
+}
 .intro-container {
     position: relative;
     display: flex;
@@ -156,7 +181,6 @@
     overflow: auto;
     padding-inline: 1.8em 1.265em;
     padding-block: 2.5em;
-    /* margin-bottom: 1.5em; */
     left: -150%;
     z-index: 5;
     transition: left 550ms cubic-bezier(0.39, 0.58, 0.57, 1), width var(--_ts-duration, 550ms) cubic-bezier(0.39, 0.58, 0.57, 1);
@@ -396,8 +420,7 @@
     grid-template-rows: repeat(auto-fit, minmax(20px, 1fr));
     column-gap: 1.25em;
     row-gap: .5em;
-    transition: height 250ms ease-in-out,
-        bottom 400ms cubic-bezier(0.4, 0, 0.2, 1),
+    transition: height 400ms cubic-bezier(0.45, 0.05, 0.55, 0.95),
         width 400ms linear 150ms;
 
 }
@@ -626,16 +649,7 @@
     border-radius: 1.2em;
     margin-bottom: 1em;
 }
-/* .main .task-container>.task-section>.tasks .task-card .task-wrapper::after {
-    position: absolute;
-    content: '';
-    height: 1px;
-    width: calc(100% - 30px);
-    right: 0;
-    bottom: -.5em;
-    background-color: rgba(18, 18, 18, .25);
-    z-index: 1;
-} */
+
 
 
 .main .task-container>.task-section>.tasks .task-card .task-wrapper:last-of-type {
@@ -648,46 +662,21 @@
 .main .task-container>.task-section>.tasks .task-card .task-wrapper form{
     grid-row: span 2;
 }
-.main .task-container>.task-section>.tasks .task-card .task-wrapper label {
-    display: block;
-    height: 25px;
-    width: 25px;
-    padding: 0.249em 0;
-}
 
-.main .task-container>.task-section>.tasks .task-card .task-wrapper label:disabled {
-    pointer-events: none;
-}
 
-.main .task-container>.task-section>.tasks .task-card .task-wrapper label::before {
-    --_square-url: url(assets/square.svg);
-    content: '';
-    display: inline-block;
-    width: 25px;
-    height: 25px;
-    cursor: pointer;
-    background-image: var(--_square-url);
-    background-repeat: no-repeat;
-    background-size: 20px;
-}
-
-.main .task-container>.task-section>.tasks .task-card .task-wrapper label.priority-medium::before {
+.main .task-container>.task-section>.tasks .task-card .task-wrapper .priority-medium::before {
     --_square-url: url(assets/square-orange.svg);
 }
 
-.main .task-container>.task-section>.tasks .task-card .task-wrapper label.priority-high::before {
+.main .task-container>.task-section>.tasks .task-card .task-wrapper .priority-high::before {
     --_square-url: url(assets/square-red.svg);
 }
 
-.main .task-container>.task-section>.tasks .task-card .task-wrapper label:has(:checked):before,
-.main .task-container>.task-section>.tasks .task-card .task-wrapper label:has(:disabled):before {
+.main .task-container>.task-section>.tasks .task-card .task-wrapper :has(:checked):before,
+.main .task-container>.task-section>.tasks .task-card .task-wrapper :has(:disabled):before {
     --_square-url: url(assets/checked.svg);
 }
 
-.main .task-container>.task-section>.tasks .task-card .task-wrapper input {
-    appearance: none;
-    -webkit-appearance: none;
-}
 
 .main .task-container>.task-section>.tasks .task-card .task-wrapper .task-info {
     cursor: pointer;
@@ -735,6 +724,57 @@
     font-size: .885rem;
     font-weight: 600;
     gap: .4em;
+}
+
+.main .task-details{
+    /* border: 1px solid red; */
+}
+.main .task-details > a{
+    margin-left: auto;
+    color: #a3a3a3;
+    width: 30px;
+}
+.main .task-details>.header-container{
+    display: flex;
+    align-items: center;
+    gap: .75em;
+    margin-bottom: 1.125em;
+}
+.main .task-details>.header-container h1{
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+.main .task-details>.header-container h1::first-letter{
+    text-transform: capitalize;
+}
+.main .task-details>.header-container .complete-label{
+    padding: 0;
+}
+.main .task-details > .header-container .complete-label::before{
+    --_square-url: url(assets/square-filled.svg);
+}
+.main .task-details .primary-container{
+    background-color: rgba(233, 233, 233, 1);
+    border-radius: .85em;
+    padding: 1em;
+}
+.main .task-details .primary-container > section,
+.main .task-details .primary-container>section .dropdown-container{
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+}
+.main .task-details .primary-container>section:first-of-type{
+    margin-bottom: 1.5em;
+}
+.main .task-details .primary-container > section h2{
+    color: #5d6063;
+   font-size: 1rem;
+   font-weight: 500;
+}
+.main .task-details .primary-container > section .dropdown-container{
+   font-size: 1rem;
+   font-weight: 500;
 }
 /* TODO: delete css */
 .main .task-container>.task-section>.tasks .task-card>.info-container {
@@ -887,6 +927,10 @@
 .main .task-form .bg-grey {
     background-color: #e9e9e9;
 }
+.main .task-form label,
+.main .task-form legend{
+    color: #5d6063;
+}
 
 .main .task-form>div:not(:first-of-type),
 .main .task-form>textarea {
@@ -914,7 +958,7 @@
     padding-inline: 1.115em;
 }
 
-.main .task-form>label {
+.main .task-form label:not(div> label) {
     visibility: hidden;
     height: 0;
 }
@@ -930,7 +974,7 @@
     border-radius: 1em;
     padding: .65em .6em;
     margin-bottom: 1em;
-    box-shadow: 0 4px 10px #d1d1d1;
+    box-shadow: 0 0px 10px #d1d1d1;
 }
 
 .main .task-form>div.input-container {
@@ -978,7 +1022,7 @@
     border: 1px solid #d1d1d1;
     grid-column: 3 / 4;
     grid-row: 1 / 1;
-    box-shadow: 0 4px 15px #d1d1d1;
+    box-shadow: 0 0 15px #d1d1d1;
 }
 
 .main .task-form>div.input-container option::first-letter {
@@ -1032,7 +1076,7 @@
     text-align: center;
     height: fit-content;
     padding: .5em 1em;
-    box-shadow: 0 4px 10px #d4d4d4;
+    box-shadow: 0 0 10px #d4d4d4;
     border-radius: .65em;
 }
 
@@ -1056,11 +1100,11 @@
 }
 
 .main .task-form textarea {
-    background-color: rgba(236, 220, 191, .35);
+    background-color: rgba(245, 232, 221, .85);
     height: 175px;
     border: 1px solid transparent;
     padding-block: 1.15em;
-    box-shadow: 0 4px 10px #d4d4d4;
+    box-shadow: 0 0px 15px #d4d4d4;
     margin-bottom: 1.5em;
 }
 
