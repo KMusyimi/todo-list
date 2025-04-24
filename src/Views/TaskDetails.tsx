@@ -4,7 +4,7 @@ import { Link, LoaderFunctionArgs, useLoaderData, useLocation } from "react-rout
 import { getProject, getTask } from "../api";
 import dropDownIcon from '../assets/arrow-down.svg';
 import Main from "../components/Main";
-import RectSolidSvg, { ProjectIcon } from "../components/Svg";
+import  { ProjectIcon } from "../components/Svg";
 import { FetcherCellOnInput, FetcherCellSubmit } from "./TaskLayout";
 import SubTask from "../components/Subtask";
 
