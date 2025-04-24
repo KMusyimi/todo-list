@@ -118,7 +118,6 @@ export default function TaskLayout(): JSX.Element {
         if (dropdownMenu) {
             if (dropdownMenu.classList.contains('open')) {
                 document.body.style.overflow = "";
-                document.body.style.position = "";
                 closeDropDownMenu(dropdownMenu);
             }
         }
@@ -130,7 +129,6 @@ export default function TaskLayout(): JSX.Element {
             const { projectId, taskId, status } = dropdownRef.current.dataset;
             if (status !== 'completed') {
                 setFormIntent({ taskId, projectId, action: 'edit' } as FormIntent);
-                document.body.style.position = 'fixed';
                 setToggleForm(!toggleForm);
                 closeDropDownMenu(dropdownRef.current);
             }
@@ -161,7 +159,7 @@ export default function TaskLayout(): JSX.Element {
                 </svg>
             </button>
             <Nav projects={projects} completed={completed} />
-            <Modal />
+            <Modal menuOpen={toggleMenu}/>
         </div>
         <Main>
             <div className="task-container">

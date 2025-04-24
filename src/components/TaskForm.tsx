@@ -143,7 +143,6 @@ export default function TaskForm({ toggleForm, setToggleForm, projects, intent, 
         const { id } = e.currentTarget;
         if (id === 'input-wrapper') {
             document.body.style.overflow = 'hidden';
-            document.body.style.position = 'fixed';
             setToggleForm(true);
         }
     }, [setToggleForm]);

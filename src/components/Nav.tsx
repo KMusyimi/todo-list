@@ -45,7 +45,6 @@ export default function Nav({ projects, completed }: NavProps): JSX.Element {
         width: '100%',
         backgroundImage: `linear-gradient(90deg, ${hexToRGB('#328E6E', 0.35)} 0%,${hexToRGB('#328E6E', 0.15)} 25%,rgba(218, 218, 218, 1) 75%)`
     } as CSSProperties
-    console.log(projects)
 
     return (
         <nav className="nav">

@@ -1,4 +1,4 @@
-import { FormEvent, JSX, useCallback, useState } from "react";
+import { FormEvent, JSX, useCallback, useEffect, useState } from "react";
 import { ActionFunctionArgs, Navigation, redirect, useFetcher, useNavigation } from "react-router-dom";
 import { addProject } from "../api";
 import { colors } from "../utils";
@@ -28,7 +28,7 @@ export async function projectAction({ request }: ActionFunctionArgs): Promise<Re
 }
 
 
-export default function Modal(): JSX.Element {
+export default function Modal({menuOpen}: {menuOpen: boolean}): JSX.Element {
     const fetcher = useFetcher();
 
     const [color, setColor] = useState(colors[0]);
@@ -36,6 +36,18 @@ export default function Modal(): JSX.Element {
 
     const navigation: Navigation = useNavigation();
     const status = navigation.state;
+
+    useEffect(()=> {
+        let timer: NodeJS.Timeout;
+        if(toggle && !menuOpen){
+            timer = setTimeout(() => {
+                setToggle(false);
+            }, 3000);
+        }
+        return ()=> {
+            clearTimeout(timer);
+        }
+    }, [menuOpen, toggle])
 
     const handleSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -53,15 +65,11 @@ export default function Modal(): JSX.Element {
     }, []);
 
     return (
-        <>
-            <div className="modal-container">
+        <div className="modal-container">
+            <div className="modal-wrapper">
                 <button type="button" className="dropdown" onClick={() => { setToggle(!toggle) }}>
                     <ProjectIcon color={color} />
                 </button>
-                <ul className={`colors-list ${toggle ? 'open' : ''}`}>{colors.map(color => <li key={color} className="color-item"
-                    style={{ backgroundColor: color }}
-                    onClick={handleClick}
-                    data-color={color}></li>)}</ul>
                 <fetcher.Form method="post" action="/" onSubmit={handleSubmit}>
                     <label htmlFor="projectName">projectName</label>
                     <input type="text" name="projectName" id="projectName" placeholder="Project name..."
@@ -69,7 +77,10 @@ export default function Modal(): JSX.Element {
                     <input type="hidden" name="iconColor" value={color} />
                 </fetcher.Form>
             </div>
-
-        </>
+            <ul className={`colors-list ${toggle ? 'open' : ''}`}>{colors.map(color => <li key={color} className="color-item"
+                style={{ backgroundColor: color }}
+                onClick={handleClick}
+                data-color={color}></li>)}</ul>
+        </div>
     )
 }

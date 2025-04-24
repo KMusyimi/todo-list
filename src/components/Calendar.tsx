@@ -12,6 +12,14 @@ function Dates({ filterChange, dateParam }: DateProps) {
     const [moments,] = useState(() => moment());
 
     const id = useId();
+    
+    useEffect(()=> {
+        const selectedDate: HTMLButtonElement | null = document.querySelector('.date-btn.selected') ;
+        if(selectedDate){
+            selectedDate.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }, []);
+
 
     const Dates = useCallback(() => {
         const currentDate = moments.format("YYYY-MM-DD");
@@ -27,7 +35,10 @@ function Dates({ filterChange, dateParam }: DateProps) {
                 <button className={selected ? 'date-btn selected' : 'date-btn'
                 } key={`day-${id + idx.toString()}`}
                     type="button"
-                    onClick={() => { filterChange('date', currentDate === fmtDate ? null : fmtDate) }}>
+                    onClick={(e: React.MouseEvent<HTMLButtonElement>) => { 
+                        filterChange('date', currentDate === fmtDate ? null : fmtDate) 
+                        e.currentTarget.scrollIntoView({behavior:'smooth', block:'start'});
+                    }}>
                     <p className="day"> {moment(weekDay).format('ddd')} </p>
                     <p className="date"> {date} </p>
                 </button>);

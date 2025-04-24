@@ -35,7 +35,7 @@ function DueDate({ date }: { date: string | Date }) {
     }, [date, updateDueDate]);
 
     return (
-        <p className= "due-date" style = {{ color: "rgb(9, 185, 115)" }
+        <p className="due-date" style={{ color: "#776EC9" }
 }>
     <img src={ calendarIcon } alt = "a dark greenish calendar icon" /> Due { dueDate }
 </p>)
@@ -67,7 +67,6 @@ export default function TaskWrapper({ id, task }: TaskProps) {
         const editBtn = document.getElementById('edit-btn') as HTMLButtonElement;
 
         document.body.style.overflow = 'hidden';
-        document.body.style.position = 'fixed';
         editBtn.disabled = status === 'completed';
 
         Object.keys(dataset).forEach((item) => {
