@@ -5,6 +5,7 @@ import TasksCard from "../components/TasksCard.tsx";
 import { getDateTask } from "../utils.ts";
 
 
+// eslint-disable-next-line react-refresh/only-export-components
 export async function taskLoader({ params, request }: LoaderFunctionArgs) {
     const date = getDateTask(request);
     if (!params.id) {

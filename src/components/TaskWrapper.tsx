@@ -37,7 +37,8 @@ function DueDate({ date }: { date: string | Date }) {
     return (
         <p className="due-date" style={{ color: "#776EC9" }
         }>
-            <img src={calendarIcon} alt="a dark greenish calendar icon" /> Due {dueDate}
+            <img src={calendarIcon} alt="a dark greenish calendar icon" />
+            <span>Due {dueDate}</span>
         </p>)
 }
 

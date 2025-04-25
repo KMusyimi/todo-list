@@ -31,7 +31,7 @@ export default function Intro({recommendations}: {
 
                 <fieldset>
                     <legend>recommended</legend>
-                    <div id="label-container" className="label-wrapper">
+                    <div id="label-container" className={recommendations?"label-wrapper": 'label-wrapper empty'}>
                         {renderRec(recommendations?.names)}
                     </div>
                 </fieldset>
