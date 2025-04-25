@@ -70,7 +70,7 @@ export default function TaskDetails(): JSX.Element {
             <section className="category-section">
               <h2 className="category-title">Category</h2>
               <div className="dropdown-container">
-                <span className="project-icon"><ProjectIcon color={project?.iconColor ?? ''} /></span>
+                <ProjectIcon color={project?.iconColor ?? ''} />
                 <p className="project-name">{project?.projectName}</p>
                 <img className="dropdown-icon" src={dropDownIcon} alt="a black arrow down icon" />
               </div>

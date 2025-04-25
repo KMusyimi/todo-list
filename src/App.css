@@ -722,7 +722,7 @@
 
 .main .task-container>.task-section>.tasks .task-card .task-wrapper .due-date {
     display: inline-flex;
-    font-size: 0.748rem;
+    font-size: 0.886rem;
     font-weight: 600;
     align-items: center;
     grid-column: 2 / span 2;
@@ -731,13 +731,12 @@
 .main .task-container>.task-section>.tasks .task-card .task-wrapper .due-date img {
     width: 19.47px;
     height: 17.96px;
-    padding: 0.125em 0.218em;
 }
 
 
 .main .task-details>a {
     margin-left: auto;
-    margin-bottom: 1.115em;
+    margin-bottom: 1em;
     color: #a3a3a3;
     width: 30px;
 }
