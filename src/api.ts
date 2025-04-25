@@ -96,7 +96,7 @@ const createdAt = currentDate;
 
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-setInterval(async () => await checkOverDueTasks(), 1000 * 60);
+setInterval(async () => await checkOverDueTasks(), 100 * 60);
 
 
 export async function getRecommendations() {
@@ -249,7 +249,7 @@ export async function deleteCompletedTask(id: string) {
     console.error('err=> ', e);
   }
 }
-
+ 
 async function checkOverDueTasks() {
   const dateFmt = moment(currentDate).local().format('YYYY-MM-DD');
   const timeFmt = moment().local().format('HH:mm');
@@ -262,6 +262,7 @@ async function checkOverDueTasks() {
       if (taskData) {
         taskData.status = 'overdue';
         const status = taskData.status;
+        console.log(status, taskData)
         await updateOverDueTask(doc.id, status);
       }
     }));
