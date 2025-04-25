@@ -81,7 +81,7 @@ export type SubTaskEntity = {
 
 
 export type CompleteTaskParams = Record<string, string>;
-export type UpdateTaskParams = Record<string, string>;
+export type TaskRecordParams = Record<string, string>;
 
 // Initialize Firebase
 const app: FirebaseApp = initializeApp(firebaseConfig);
@@ -93,7 +93,6 @@ const recommendationsRef = collection(db, 'recommendations');
 
 export const currentDate = new Date(Date.now());
 const createdAt = currentDate;
-export const dateFormatted = moment(currentDate).local().format('YYYY-MM-DDTHH:mm');
 
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -173,7 +172,7 @@ export async function getProject(id: string) {
 }
 
 
-export async function addTask(task: UpdateTaskParams): Promise<void> {
+export async function addTask(task: TaskRecordParams): Promise<void> {
   try {
     delete task.id;
     delete task.intent;
@@ -189,12 +188,12 @@ export async function addTask(task: UpdateTaskParams): Promise<void> {
 }
 
 async function getTasksByDate(id: string, date: string) {
-  const qry = query(tasksRef, where('projectId', '==', id), where('dueDate', '==', date), orderBy('dueDate', 'asc'), orderBy('priority', 'asc'));
+  const qry = query(tasksRef, where('projectId', '==', id), where('dueDate', '==', date), orderBy('dueDate', 'asc'), orderBy('priority', 'desc'));
   return taskByQry(qry);
 }
 
 async function getTasks(id: string) {
-  const qry = query(tasksRef, where('projectId', '==', id), orderBy('dueDate', 'asc'), orderBy('priority', 'asc'));
+  const qry = query(tasksRef, where('projectId', '==', id), orderBy('dueDate', 'asc'), orderBy('priority', 'desc'));
   return taskByQry(qry);
 }
 
@@ -252,7 +251,9 @@ export async function deleteCompletedTask(id: string) {
 }
 
 async function checkOverDueTasks() {
-  const qry = query(tasksRef, where('dueDate', '<', dateFormatted));
+  const dateFmt = moment(currentDate).local().format('YYYY-MM-DD');
+  const timeFmt = moment().local().format('HH:mm');
+  const qry = query(tasksRef, where('dueDate', '<=', dateFmt), where('dueTime', '<', timeFmt), where('status', '!=', 'overdue'));
   const taskSnapshot = await getDocs(qry);
 
   if (!taskSnapshot.empty) {
@@ -274,7 +275,8 @@ async function updateOverDueTask(id: string, status: string) {
   });
 }
 
-export async function updateTask(task: UpdateTaskParams) {
+export async function updateTask(task: TaskRecordParams) {
+  const dateFormatted = moment(currentDate).local().format('YYYY-MM-DDTHH:mm');
   try {
 
     const docRef = doc(db, 'tasks', task.id);
@@ -282,6 +284,7 @@ export async function updateTask(task: UpdateTaskParams) {
     delete task.intent;
     await updateDoc(docRef, {
       ...task,
+      status: 'active',
       updatedAt: dateFormatted
     });
   } catch (e) {

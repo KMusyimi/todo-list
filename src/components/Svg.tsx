@@ -23,3 +23,5 @@ export function ProjectIcon({ color }: { color: string }) {
     strokeWidth = "3" strokeLinejoin="round"/>
         </svg>)
 }
+
+

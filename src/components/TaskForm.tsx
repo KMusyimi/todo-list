@@ -2,7 +2,7 @@
 import moment from "moment";
 import { JSX, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { ActionFunctionArgs, Form, redirect, useNavigation } from "react-router-dom";
-import { addTask, MyProject, MyProjects, updateTask, UpdateTaskParams } from "../api";
+import { addTask, MyProject, MyProjects, TaskRecordParams, updateTask } from "../api";
 import { FormIntent } from "../Views/TaskLayout";
 import RectSolidSvg from "./Svg";
 
@@ -22,13 +22,13 @@ interface SelectProps {
 export async function taskFormAction({ request }: ActionFunctionArgs) {
     try {
         const formData = await request.formData();
-        const payload: UpdateTaskParams = {};
+        const payload: TaskRecordParams = {};
         const data = Object.fromEntries(formData);
         const projectId = formData.get('projectId') as string;
         Object.keys(data).forEach((item) => {
             payload[item] = data[item] as string;
         });
-        
+
         switch (payload.intent) {
             case 'edit':
                 await updateTask(payload);
@@ -40,7 +40,7 @@ export async function taskFormAction({ request }: ActionFunctionArgs) {
                 // eslint-disable-next-line @typescript-eslint/only-throw-error
                 throw new Response("Bad Request", { status: 400 });
         }
-        
+
 
     } catch (e) {
         console.error(e);
