@@ -48,7 +48,7 @@ export default function Modal({menuOpen}: {menuOpen: boolean}): JSX.Element {
                 if (toggle && colorListRef.current){
                 colorListRef.current.scrollIntoView({behavior:"smooth", block: "start"})
             }
-            }, 175);
+            }, 550);
         
         return ()=> {
             clearTimeout(timer);
