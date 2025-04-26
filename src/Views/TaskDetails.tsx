@@ -109,6 +109,13 @@ export default function TaskDetails(): JSX.Element {
             placeholder={'Write a brief note...'}
             maxLength={100}
           > </textarea>
+          <label htmlFor={'description'}> Description </label>
+          <textarea id={'description'}
+            name={'description'}
+            className={'form-textarea'}
+            placeholder={'Write a brief description...'}
+            maxLength={250}
+          > </textarea>
         </FetcherCellSubmit>
 
 

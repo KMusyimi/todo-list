@@ -773,9 +773,9 @@
 .main .task-details .primary-container>section {
     display: grid;
     align-items: center;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns:minmax(40px, 1fr) 3fr;
     grid-template-rows: minmax(30px, 1fr);
-    gap: 1.115em;
+    gap: 2.25em;
     margin-bottom: 1em;
 
 }
@@ -840,7 +840,7 @@
 .main .task-details > .notes-form textarea {
     background-color: rgb(254, 250, 224);
     height: 125px;
-    font-size: .985rem;
+    font-size: 1rem;
     width: 100%;
     color: #111D13;
     padding: 1.15em ;
@@ -1158,7 +1158,7 @@
 }
 
 .main .task-form textarea {
-    background-color: rgba(245, 232, 221, .85);
+    background-color: rgb(254, 250, 224);
     height: 175px;
     padding-block: 1.15em;
     box-shadow: 0 0px 15px #d4d4d4;
