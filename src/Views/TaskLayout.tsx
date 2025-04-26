@@ -24,6 +24,7 @@ interface FetcherProps {
     intent?: string;
     action?: string;
     children: ReactNode;
+    className?: string;
     id?: string;
 }
 
