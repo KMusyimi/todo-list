@@ -277,15 +277,13 @@ async function updateOverDueTask(id: string, status: string) {
 }
 
 export async function updateTask(task: TaskRecordParams) {
-  const dateFormatted = moment(currentDate).local().format('YYYY-MM-DDTHH:mm');
   try {
-
+    const dateFormatted = moment(currentDate).local().format('YYYY-MM-DDTHH:mm');
     const docRef = doc(db, 'tasks', task.id);
     delete task.id;
     delete task.intent;
     await updateDoc(docRef, {
       ...task,
-      status: 'active',
       updatedAt: dateFormatted
     });
   } catch (e) {
@@ -296,18 +294,15 @@ export async function updateTask(task: TaskRecordParams) {
 
 export async function completeTask(params: CompleteTaskParams) {
   try {
+    const dateFormatted = moment(currentDate).local().format('YYYY-MM-DDTHH:mm');
     const docRef = doc(db, 'tasks', params.taskId);
     const taskSnap = await getDoc(docRef);
     const data = taskSnap.data() as MyTask;
     if (data) {
-      await addDoc(completedRef, {
-        projectId: data.projectId,
-        title: data.title,
-        status: 'completed',
-        completedAt: currentDate,
-        createdAt: data.createdAt
+      await updateDoc(docRef, {
+        status: params.status,
+        completedAt: dateFormatted
       });
-      await deleteDoc(docRef);
     }
   } catch (e) {
     console.error('error => ', e)

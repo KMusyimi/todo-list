@@ -26,6 +26,9 @@ export async function taskDetailsLoader({ params }: LoaderFunctionArgs) {
 
 
 export default function TaskDetails(): JSX.Element {
+  const overdueStyles = {backgroundColor: 'rgba(235, 90, 60, .3)', color: 'rgba(235, 90, 60, 1)' };
+
+  const activeStyles = { backgroundColor: "rgba(119, 110, 201, .3)", color: "rgba(119, 110, 201, 1)" };
   const [backToLink, setBackToLink] = useState('');
   const location = useLocation();
   const { task, project } = useLoaderData<typeof taskDetailsLoader>();
@@ -70,10 +73,6 @@ export default function TaskDetails(): JSX.Element {
         </div>
 
         <div className="primary-container">
-          <section>
-            <h2>Status</h2>
-            <span className={'status'} style={status === 'overdue' ? { backgroundColor: 'rgb(235, 90, 60)' } : { backgroundColor: "#776EC9" }}>{status} </span>
-          </section>
 
           <section className="category-section">
             <h2 className="category-title">Category</h2>
@@ -88,6 +87,10 @@ export default function TaskDetails(): JSX.Element {
             <div className="due-container">
               <p className="due">{moment(dueDate).format('ll')}</p>
             </div>
+          </section>
+          <section>
+            <h2>Status</h2>
+            <span className={'status'} style={status === 'overdue' ? overdueStyles : activeStyles}>{status} </span>
           </section>
         </div>
 
@@ -107,14 +110,8 @@ export default function TaskDetails(): JSX.Element {
             name={'notes'}
             className={'form-textarea'}
             placeholder={'Write a brief note...'}
-            maxLength={100}
-          > </textarea>
-          <label htmlFor={'description'}> Description </label>
-          <textarea id={'description'}
-            name={'description'}
-            className={'form-textarea'}
-            placeholder={'Write a brief description...'}
-            maxLength={250}
+            maxLength={150}
+            defaultValue={''}
           > </textarea>
         </FetcherCellSubmit>
 
@@ -130,7 +127,8 @@ export default function TaskDetails(): JSX.Element {
         </FetcherCellSubmit>
       </div>
       <div className="btn-container">
-        <button type="button">delete</button>
+        <button className="edit-btn" type="button">edit task</button>
+        <button className="delete-btn" type="button">delete</button>
       </div>
     </Main>
 

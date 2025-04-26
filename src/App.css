@@ -143,13 +143,16 @@
     height: fit-content;
     text-overflow: ellipsis;
 }
-.intro-container>form .label-wrapper.empty{
+
+.intro-container>form .label-wrapper.empty {
     display: block;
 }
-.intro-container>form .label-wrapper > p {
+
+.intro-container>form .label-wrapper>p {
     font-size: 1.115rem;
     font-weight: 500;
 }
+
 .intro-container>form label {
     background-color: #F3EFEE;
     font-size: 1.06rem;
@@ -480,6 +483,32 @@
     width: 100dvw;
 }
 
+.main .btn-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: .535em;
+    align-self: end;
+    gap: 1em;
+}
+
+.main .btn-container button {
+    text-transform: capitalize;
+    font-size: 1.125em;
+    font-weight: 500;
+    width: min(100%, 225px);
+    padding: .64em 1.167em;
+    border-radius: .65em;
+}
+
+.main .btn-container button.delete-btn {
+    background-color: rgba(249, 56, 39, .1);
+    color: rgb(249, 56, 39);
+}
+.main .btn-container button.edit-btn {
+    background-color: rgba(128, 128, 128, .25);
+    color: #808080;
+}
+
 .main .task-container>header {
     margin-top: .55em;
     margin-bottom: 2em;
@@ -658,6 +687,10 @@
     border-radius: 1.2em;
     margin-bottom: 1em;
 }
+.main .task-container>.task-section>.tasks .task-card .task-wrapper.completed{
+    grid-template-rows: 1fr;
+}
+
 .main .task-container>.task-section>.tasks .task-card .task-wrapper .priority-medium::before {
     --_square-url: url(assets/square-orange.svg);
 }
@@ -672,12 +705,24 @@
 }
 
 .main .task-container>.task-section>.tasks .task-card .task-wrapper .task-info {
+    position: relative;
     cursor: pointer;
+    width: fit-content;
 }
 
-.main .task-container>.task-section>.tasks .task-card .task-wrapper .task-info:has(.strike) {
-    pointer-events: none;
-}
+.main .task-container>.task-section>.tasks .task-card .task-wrapper.completed .task-info {
+    cursor: none;
+
+} 
+.main .task-card .task-wrapper.completed  .task-info::after {
+    position: absolute;
+    content: '';
+    background-color: #131515;
+    width: 100%;
+    height: 1px;
+    bottom: 1em;
+    transition: width 300ms ease-in;
+} 
 
 .main .task-container>.task-section>.tasks .task-card .task-wrapper .title {
     white-space: nowrap;
@@ -688,11 +733,10 @@
     font-weight: 500;
     padding-block: 0.25em;
     padding-inline-end: 1.063em;
-}
-
-.main .task-container>.task-section>.tasks .task-card .task-wrapper .title .strike {
-    color: #B5B5BA;
-}
+}    
+.main .task-container>.task-section>.tasks .task-card .task-wrapper.completed .title {
+    padding-inline-end: 0em;
+}    
 
 .main .task-container>.task-section>.tasks .task-card .task-wrapper>button {
     display: flex;
@@ -711,7 +755,7 @@
     transition: all 200ms linear;
 }
 
-.main  .due-date {
+.main .due-date {
     display: inline-flex;
     font-size: 0.886rem;
     font-weight: 600;
@@ -719,16 +763,18 @@
     grid-column: 2 / span 2;
     gap: .4em;
 }
+
 .main .due-date svg {
     width: 19.47px;
     height: 17.96px;
 }
 
-.main:has(>.task-details){
+.main:has(>.task-details) {
     display: grid;
     grid-template-rows: 2fr 1fr;
     height: 100dvh;
 }
+
 .main .task-details>a {
     margin-left: auto;
     margin-bottom: 1em;
@@ -758,10 +804,12 @@
 .main .task-details>.header-container .due-date {
     font-size: .865rem;
 }
+
 .main .task-details>.header-container .due-date svg {
     width: 20px;
     height: 23px;
 }
+
 .main .task-details .complete-label::before {
     --_square-url: url(assets/square-filled.svg);
 }
@@ -773,26 +821,30 @@
 .main .task-details .primary-container>section {
     display: grid;
     align-items: center;
-    grid-template-columns:minmax(40px, 1fr) 3fr;
+    grid-template-columns: minmax(40px, 1fr) 3fr;
     grid-template-rows: minmax(30px, 1fr);
     gap: 2.25em;
     margin-bottom: 1em;
 
 }
+
+.main .task-details .primary-container>section>div>p {
+    font-weight: bold;
+}
+
 .main .task-details .primary-container>section:last-of-type {
     margin-bottom: 0em;
 }
+
 .main .task-details .primary-container>section .project-container {
     display: flex;
     align-items: center;
-    gap: .65em;
+    gap: .35em;
     text-transform: capitalize;
 }
 
 .main .task-details>.primary-container .status {
-    background-color: rgb(235, 90, 60);
-    font-size: .7rem;
-    color: #F3EFEE;
+    font-size: .75rem;
     font-weight: bold;
     padding: .25em .85em;
     letter-spacing: 2px;
@@ -802,7 +854,7 @@
 }
 
 .main .task-details .primary-container>section h2,
-.main .task-details .primary-container>section>div{
+.main .task-details .primary-container>section>div {
     font-size: 1rem;
     font-weight: 500;
 }
@@ -811,69 +863,80 @@
     color: #5d6063;
 }
 
-.main .task-details .desc-container{
+.main .task-details .desc-container {
     margin-bottom: 1.85em;
 }
-.main .task-details .desc-container h2{
+
+.main .task-details .desc-container h2 {
     display: inline-flex;
     align-items: center;
     gap: .5rem;
     font-size: 1.25rem;
     margin-bottom: .35em;
 }
-.main .task-details .desc-container i > svg{
+
+.main .task-details .desc-container i>svg {
     display: block;
     color: rgba(93, 96, 99, .85);
     height: 18px;
     width: 18px;
-    
+
 }
-.main .task-details .desc-container p{
+
+.main .task-details .desc-container p {
     color: rgba(93, 96, 99, 1);
 }
-.main .task-details > .notes-form label{
+
+.main .task-details>.notes-form label {
     visibility: hidden;
     opacity: 0;
     height: 0;
 }
 
-.main .task-details > .notes-form textarea {
+.main .task-details>.notes-form textarea {
     background-color: rgb(254, 250, 224);
     height: 125px;
     font-size: 1rem;
+    resize: none;
     width: 100%;
     color: #111D13;
-    padding: 1.15em ;
+    padding: 1.15em;
     border: 1px solid #e9e9e9;
     box-shadow: 0 0px 15px #d4d4d4;
     border-radius: .65em;
     margin-bottom: 1.45em;
 }
 
-.main .task-details > .notes-form  textarea::placeholder {
-    color: rgba(222, 183, 64, 1);
+.main .task-details>.notes-form textarea::placeholder {
+    color: #A8963D;
 }
+
 .main .task-details>.subtask-form {
     display: flex;
     align-items: center;
     gap: .15em;
 }
-.main .task-details>.subtask-container{
+
+.main .task-details>.subtask-container {
     margin-bottom: 1.5em;
 }
-.main .task-details>.subtask-container .subtask-section{
+
+.main .task-details>.subtask-container .subtask-section {
     display: flex;
     align-items: center;
     gap: .85em;
 }
-.main .task-details>.subtask-container .subtask-section h3{
+
+.main .task-details>.subtask-container .subtask-section h3 {
     font-size: 1rem;
     font-weight: 500;
 }
-.main .task-details > .subtask-form  svg {
+
+.main .task-details>.subtask-form svg {
     width: 27px;
     color: #a3a3a3;
 }
+
 .main .task-details>.subtask-form .subtask-input {
     font-size: 1rem;
     background-color: inherit;
@@ -882,14 +945,17 @@
     padding: .45em .85em;
     transition: background-color 200ms linear;
 }
+
 .main .task-details>.subtask-form .subtask-input:focus {
     background-color: #eff2f1;
 
 }
-.main .task-details>.subtask-form .subtask-input::placeholder{
+
+.main .task-details>.subtask-form .subtask-input::placeholder {
     color: #5d6063;
     font-weight: 500;
 }
+
 .main>.dropdown-task {
     position: absolute;
     background-color: #F4F4F4;
@@ -981,8 +1047,8 @@
 }
 
 .main .task-form .bg-grey {
-        background-color: rgba(211, 224, 234, .25);
-            
+    background-color: rgba(211, 224, 234, .25);
+
 }
 
 .main .task-form label,
@@ -1159,6 +1225,7 @@
 
 .main .task-form textarea {
     background-color: rgb(254, 250, 224);
+    resize: none;
     height: 175px;
     padding-block: 1.15em;
     box-shadow: 0 0px 15px #d4d4d4;
@@ -1167,26 +1234,10 @@
 }
 
 .main .task-form textarea::placeholder {
-    color: rgba(222, 183, 64, 1);
-}
-
-.main .task-form .btn-container {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: .535em;
-    gap: 1em;
-}
-
-.main .task-form .btn-container button {
-    font-size: 1.125em;
-    font-weight: 500;
-    width: min(100%, 225px);
-    padding: .64em 1.167em;
-    border-radius: .65em;
+    color: #A8963D;
 }
 
 .main .task-form .btn-container button[type='button'] {
-    text-transform: capitalize;
     background-color: rgba(249, 56, 39, .1);
     color: rgb(249, 56, 39);
 
@@ -1194,7 +1245,7 @@
 
 .main .task-form .btn-container button[type='submit'] {
     background-color: #e0edc5;
-    color:#111D13;
+    color: #111D13;
 }
 
 .main .task-form.collapse {

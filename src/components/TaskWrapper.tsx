@@ -70,7 +70,7 @@ export default function TaskWrapper({ id, task }: TaskProps) {
         const editBtn = document.getElementById('edit-btn') as HTMLButtonElement;
 
         document.body.style.overflow = 'hidden';
-        editBtn.disabled = status === 'completed';
+        editBtn.style.display = status === 'completed' ? 'none': '';
 
         Object.keys(dataset).forEach((item) => {
             const value = dataset[item];
@@ -85,11 +85,13 @@ export default function TaskWrapper({ id, task }: TaskProps) {
 
     return (
         <>
-            {task && <div className="task-wrapper">
+            {task && <div className={task.status !== 'completed' ? "task-wrapper" : `task-wrapper ${task.status}`}>
                 {/* TODO: change into inputs and useFetcher */}
 
                 <FetcherCellOnInput taskId={task.id} intent="status">
                     <input type="hidden" name="projectId" value={id} />
+                    <input type="hidden" name="status" value={'completed'} />
+
                     <label className={`complete-label ${getPriority(task.priority)}`} htmlFor={`c-${task.id}`}>
                         <input
                             className="form-checkbox"
@@ -113,7 +115,7 @@ export default function TaskWrapper({ id, task }: TaskProps) {
                 <button id={`btn-${id}`} type="button" onClick={handleChange} data-task-id={task.id} data-project-id={id} data-status={task.status}>
                     <HiDotsVertical />
                 </button>
-                <DueDate status={task.status} date={task.dueDate + 'T' + task.dueTime} />
+                {task.status !== 'completed' && <DueDate status={task.status} date={task.dueDate + 'T' + task.dueTime} />}
             </div>}
         </>
 
