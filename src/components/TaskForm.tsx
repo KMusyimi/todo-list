@@ -281,7 +281,7 @@ export default function TaskForm({ toggleForm, setToggleForm, projects, intent, 
                         value={formState?.tasks[0]?.description}
                         onInput={handleOnInput}
                         required
-                    > </textarea>
+                    ></textarea>
 
                     <div className="btn-container">
                         <button type="button" onClick={handleCloseBtn}>Close</button>
