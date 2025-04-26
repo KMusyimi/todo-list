@@ -111,7 +111,6 @@ export default function TaskDetails(): JSX.Element {
             className={'form-textarea'}
             placeholder={'Write a brief note...'}
             maxLength={150}
-            defaultValue={''}
           ></textarea>
         </FetcherCellSubmit>
 

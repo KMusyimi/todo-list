@@ -777,12 +777,13 @@
 
 .main .task-details>a {
     margin-left: auto;
-    margin-bottom: 1em;
+    margin-bottom: .35em;
     color: #a3a3a3;
     width: 30px;
 }
 
 .main .task-details>.header-container {
+    position: relative;
     display: grid;
     grid-template-columns: 25px 2fr;
     grid-template-rows: repeat(2, minmax(30px, 1fr));
@@ -790,6 +791,15 @@
     column-gap: 1.115em;
     row-gap: .15em;
     margin-bottom: 1.125em;
+}
+.main .task-details>.header-container::after {
+    position: absolute;
+    content: '';
+    left: -1.35em;
+    background-color: #e0e1dd;
+    bottom: -.15em;
+    width: 100dvw;
+    height: 1px;
 }
 
 .main .task-details>.header-container h1 {
