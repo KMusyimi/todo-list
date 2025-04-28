@@ -58,7 +58,7 @@ export default function TaskWrapper({ id, task }: TaskProps) {
 
 
     const getPriority = useCallback((priority: number | string) => {
-        return `priority-${priority == 3 ? 'high' : (priority == 2) ? 'medium' : 'low'}`;
+        return `priority-${priority === '3' ? 'high' : (priority === '2') ? 'medium' : 'low'}`;
     }, []);
 
     const handleChange = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
@@ -86,7 +86,6 @@ export default function TaskWrapper({ id, task }: TaskProps) {
     return (
         <>
             {task && <div className={task.status !== 'completed' ? "task-wrapper" : `task-wrapper ${task.status}`}>
-                {/* TODO: change into inputs and useFetcher */}
 
                 <FetcherCellOnInput taskId={task.id} intent="status">
                     <input type="hidden" name="projectId" value={id} />

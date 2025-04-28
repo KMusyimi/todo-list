@@ -1,6 +1,5 @@
 import { JSX, useState } from "react";
-import { ActionFunctionArgs } from "react-router-dom";
-import { completeTask, CompleteTaskParams, deleteTask, MyTask } from "../api";
+import { MyTask } from "../api";
 import dropDownIcon from '../assets/arrow-down.svg';
 import folderIcon from '../assets/projects.svg';
 import TaskWrapper from "./TaskWrapper.tsx";
@@ -11,28 +10,6 @@ interface TaskCardProps {
         id: string | undefined;
         projectName: string | undefined;
         tasks: MyTask[] | undefined;
-    }
-}
-
-// eslint-disable-next-line react-refresh/only-export-components
-export async function fetcherAction({ request }: ActionFunctionArgs) {
-    const formData = await request.formData();
-    const data = Object.fromEntries(formData.entries());
-    const payload: CompleteTaskParams = {};
-    Object.keys(data).forEach((item) => {
-        payload[item] = data[item] as string;
-    })
-    console.log(payload);
-    switch (payload.intent) {
-        case 'status':
-            await completeTask(payload);
-            break;
-        case 'delete':
-            await deleteTask(payload.taskId);
-            break;
-        default:
-            // eslint-disable-next-line @typescript-eslint/only-throw-error
-            throw new Response("Bad Request", { status: 400 });
     }
 }
 

@@ -7,6 +7,8 @@ import { ProjectIcon } from "../components/Svg";
 import { FetcherCellOnInput, FetcherCellSubmit } from "./TaskLayout";
 import SubTask from "../components/Subtask";
 import { DueDate } from "../components/TaskWrapper";
+import { v4 as uuidV4 } from 'uuid';
+
 
 
 // function DropdownContainer({ children }: { children: ReactNode }) {
@@ -29,13 +31,21 @@ export default function TaskDetails(): JSX.Element {
   const overdueStyles = {backgroundColor: 'rgba(235, 90, 60, .3)', color: 'rgba(235, 90, 60, 1)' };
 
   const activeStyles = { backgroundColor: "rgba(119, 110, 201, .3)", color: "rgba(119, 110, 201, 1)" };
+
+  const [subtaskId, setSubtaskId] = useState('');
   const [backToLink, setBackToLink] = useState('');
+  const [fetcherAction] = useState('./../../:todoId');
+
   const location = useLocation();
   const { task, project } = useLoaderData<typeof taskDetailsLoader>();
   const loadedTask: MyTask = use(task);
   const { id, title, dueDate, subtasks, description, status, dueTime } = loadedTask ?? {};
 
   useEffect(() => {
+    setSubtaskId((prev)=> {
+      prev = uuidV4();
+      return prev;
+    })
     setBackToLink((prev) => {
       if (location.state) {
         const { date, backTo } = location.state as { date: string, backTo: string };
@@ -45,10 +55,11 @@ export default function TaskDetails(): JSX.Element {
 
     });
 
-  }, [location.state])
+  }, [location.state]);
+  console.log(subtaskId);
 
   return (
-    <Main style={{ padding: " 2em 1.35em" }}>
+    <Main className={'main main-details'} style={{ padding: "1.5em 1.35em" }}>
       <div className="task-details">
         <Link to={backToLink} relative={'path'}> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-5">
           <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
@@ -56,7 +67,7 @@ export default function TaskDetails(): JSX.Element {
 
         </Link>
         <div className="header-container">
-          <FetcherCellOnInput taskId={id ?? ''} intent="status" action="./../../:todoId">
+          <FetcherCellOnInput taskId={id ?? ''} intent="status" action={fetcherAction}>
             <input type="hidden" name="projectId" value={project?.id} />
             <label className="complete-label" htmlFor={`c-${id ?? ''}`}>
               <input
@@ -72,7 +83,7 @@ export default function TaskDetails(): JSX.Element {
           <DueDate status={status ?? 'active'} date={`${dueDate ?? ''}T${dueTime ?? ''}`} />
         </div>
 
-        <div className="primary-container">
+        <div className="primary-container bg-grey">
 
           <section className="category-section">
             <h2 className="category-title">Category</h2>
@@ -94,7 +105,7 @@ export default function TaskDetails(): JSX.Element {
           </section>
         </div>
 
-        <div className="desc-container">
+        <div className="description-container bg-grey">
           <h2>Description
             <i>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="size-6">
@@ -104,30 +115,22 @@ export default function TaskDetails(): JSX.Element {
           </h2>
           <p className="description">{description}</p>
         </div>
-        <FetcherCellSubmit className="notes-form" taskId={id ?? ''} intent="add-subtask" action=".">
-          <label htmlFor={'notes'}> Notes </label>
-          <textarea id={'notes'}
-            name={'notes'}
-            className={'form-textarea'}
-            placeholder={'Write a brief note...'}
-            maxLength={150}
-          ></textarea>
-        </FetcherCellSubmit>
 
-
-        {subtasks && <div>
-          <SubTask taskId={id ?? ''} subtask={subtasks} />
-        </div>}
-        <FetcherCellSubmit className="subtask-form" taskId={id ?? ''} intent="add-subtask" action=".">
+        {subtasks && <SubTask taskId={id ?? ''} subtask={subtasks} action={fetcherAction} />
+        }
+        <FetcherCellSubmit className="subtask-form" taskId={id ?? ''} intent="add-subtask" action={fetcherAction}>
           <svg viewBox="0 0 20 20" fill="currentColor">
             <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
           </svg>
+          <input type="hidden" name="id" value={uuidV4()}/>
           <input className="subtask-input" name='title' type="text" placeholder="Add a subtask" />
         </FetcherCellSubmit>
       </div>
       <div className="btn-container">
-        <button className="edit-btn" type="button">edit task</button>
+        <button className="edit-btn" type="button">edit</button>
+         <FetcherCellOnInput id={'delete-form'} taskId={id ?? ''} intent="delete" action={fetcherAction}>               
         <button className="delete-btn" type="button">delete</button>
+                        </FetcherCellOnInput>
       </div>
     </Main>
 

@@ -44,11 +44,6 @@ export default function Modal({menuOpen}: {menuOpen: boolean}): JSX.Element {
                 setToggle(false);
             }, 3000);
         }
-        timer = setTimeout(() => {
-                if (toggle && colorListRef.current){
-                colorListRef.current.scrollIntoView({behavior:"smooth", block: "start"})
-            }
-            }, 550);
         
         return ()=> {
             clearTimeout(timer);
@@ -69,6 +64,15 @@ export default function Modal({menuOpen}: {menuOpen: boolean}): JSX.Element {
         const { dataset } = e.target as HTMLLIElement;
         setColor(dataset.color ?? '');
     }, []);
+    
+    const handleTransitionEnd = useCallback((e: React.TransitionEvent<HTMLUListElement>)=>{
+        e.preventDefault();
+        setTimeout(() => {
+            if (toggle && colorListRef.current) {
+                colorListRef.current.scrollIntoView({ behavior: "smooth", block: "start" })
+            }
+        }, 90);
+    }, [toggle]);
 
     return (
         <div className="modal-container">
@@ -83,10 +87,13 @@ export default function Modal({menuOpen}: {menuOpen: boolean}): JSX.Element {
                     <input type="hidden" name="iconColor" value={color} />
                 </fetcher.Form>
             </div>
-            <ul ref={colorListRef} className={`colors-list ${toggle ? 'open' : ''}`}>{colors.map(color => <li key={color} className="color-item"
+            <ul ref={colorListRef} className={`colors-list ${toggle ? 'open' : ''}`}
+                onTransitionEnd={handleTransitionEnd}
+            >{colors.map(color => <li key={color} className="color-item"
                 style={{ backgroundColor: color }}
                 onClick={handleClick}
-                data-color={color}></li>)}</ul>
+                data-color={color}
+                ></li>)}</ul>
         </div>
     )
 }

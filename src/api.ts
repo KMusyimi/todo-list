@@ -1,5 +1,6 @@
 import {
   addDoc,
+  arrayUnion,
   collection,
   deleteDoc,
   doc,
@@ -16,7 +17,6 @@ import {
 // Import the functions you need from the SDKs you need
 import { FirebaseApp, initializeApp } from "firebase/app";
 import moment from "moment";
-
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -186,6 +186,31 @@ export async function addTask(task: TaskRecordParams): Promise<void> {
     console.error("Error adding document: ", e);
   }
 }
+export async function addSubTask(task: TaskRecordParams): Promise<void> {
+  const docRef = doc(db, 'tasks', task.taskId);
+  try {
+    const payload: SubTaskEntity = {
+      id: task.id,
+      title: task.title,
+      status: 'active',
+      createdAt: currentDate
+    }
+    await updateDoc(docRef, {
+      subtasks: arrayUnion({...payload})
+    })
+    // console.log(task, taskEntity,'api')
+    // const docRef = await updateDoc(tasksRef, {
+    //   ...task,
+    //   updatedAt: '',
+    //   createdAt
+    // });
+    // console.log("Document updated with ID: ", docRef.id);
+  } catch (e) {
+    console.error("Error adding document: ", e);
+  }
+}
+
+
 
 async function getTasksByDate(id: string, date: string) {
   const qry = query(tasksRef, where('projectId', '==', id), where('dueDate', '==', date), orderBy('dueDate', 'asc'), orderBy('priority', 'desc'));

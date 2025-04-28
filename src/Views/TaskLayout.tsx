@@ -1,16 +1,16 @@
 /* eslint-disable react-refresh/only-export-components */
 import { FormEvent, JSX, ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { LuPencil, LuTrash } from "react-icons/lu";
-import { LoaderFunctionArgs, Outlet, useFetcher, useLoaderData, useSearchParams } from "react-router-dom";
-import { getCompletedTasks, getFilteredProjects, getProjects } from "../api.ts";
+import { ActionFunctionArgs, LoaderFunctionArgs, Outlet, redirect, useFetcher, useLoaderData, useSearchParams } from "react-router-dom";
+import { addSubTask, completeTask, CompleteTaskParams, deleteTask, getCompletedTasks, getFilteredProjects, getProjects } from "../api.ts";
 import Calendar from "../components/Calendar.tsx";
 import DropdownMenu from "../components/DropDownMenu.tsx";
 import Main from "../components/Main.tsx";
 import Modal from "../components/Modal.tsx";
 import Nav from "../components/Nav.tsx";
 import SuccessMsg from "../components/SuccessMsg.tsx";
-import TaskForm from "../components/TaskForm.tsx";
 import { checkUserProjects, getDateTask } from "../utils.ts";
+import TaskForm from "../components/TaskForm.tsx";
 
 
 export type FormIntent = {
@@ -49,6 +49,33 @@ export function FetcherCellOnInput({ taskId, children, intent, action, ...rest }
             {children}
         </fetcher.Form>)
 }
+
+export async function fetcherAction({ request }: ActionFunctionArgs) {
+    const formData = await request.formData();
+    const data = Object.fromEntries(formData.entries());
+    const payload: CompleteTaskParams = {};
+    Object.keys(data).forEach((item) => {
+        payload[item] = data[item] as string;
+    })
+    console.log(payload);
+    switch (payload.intent) {
+        case 'status':
+            await completeTask(payload);
+            return redirect(`../${payload.projectId}/todo`);
+        case 'delete':
+            await deleteTask(payload.taskId);
+            break;
+        case 'add-subtask':
+            console.log('hello')
+            await addSubTask(payload);
+            break;
+        // return redirect(`../${projectId}/todo?date=${payload.dueDate}`);
+        default:
+            // eslint-disable-next-line @typescript-eslint/only-throw-error
+            throw new Response("Bad Request", { status: 400 });
+    }
+}
+
 export function FetcherCellSubmit({ taskId, children, intent, action, ...rest }: FetcherProps) {
     const fetcher = useFetcher();
     const handleSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
@@ -162,7 +189,7 @@ export default function TaskLayout(): JSX.Element {
             <Nav projects={projects} completed={completed} />
             <Modal menuOpen={toggleMenu}/>
         </div>
-        <Main>
+        <Main className={'main'}>
             <div className="task-container">
                 <Calendar />
                 {successMsg && <SuccessMsg successMsg={successMsg} />}

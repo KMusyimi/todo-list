@@ -15,7 +15,7 @@ interface FormProps {
 }
 
 interface SelectProps {
-    projects?: MyProjects | null
+    projects?: MyProjects | null;
 }
 
 
@@ -35,12 +35,13 @@ export async function taskFormAction({ request }: ActionFunctionArgs) {
                 break;
             case 'add':
                 await addTask(payload);
-                return redirect(`../${projectId}/todo?date=${payload.dueDate}`);
+                break;
             default:
                 // eslint-disable-next-line @typescript-eslint/only-throw-error
                 throw new Response("Bad Request", { status: 400 });
         }
 
+        return redirect(`../${projectId}/todo?date=${payload.dueDate}`);
 
     } catch (e) {
         console.error(e);
@@ -53,10 +54,8 @@ export async function addLoader() {
 }
 
 function ProjectsList({ projects }: SelectProps) {
-
     return (
-        <Suspense fallback={<h1> Loading...</h1>
-        }>
+        <Suspense fallback={<h1> Loading...</h1>}>
             {
                 projects?.map(project => {
                     let projectStr = '';
@@ -66,7 +65,7 @@ function ProjectsList({ projects }: SelectProps) {
                     return (<option key={project?.id} value={project?.id}>
                         {projectStr} </option>)
                 })}
-        </Suspense>)
+        </Suspense>);
 }
 
 export default function TaskForm({ toggleForm, setToggleForm, projects, intent, setFormIntent }: FormProps): JSX.Element {
@@ -205,14 +204,14 @@ export default function TaskForm({ toggleForm, setToggleForm, projects, intent, 
 
                                     <label htmlFor="projects"> category </label>
                                     <select className="bg-grey" name="projectId" id="projects" onInput={handleOnInput} required>
-                                        {intent?.action === 'edit' ? <option value={formState?.id}> {formState?.projectName} </option> :
-                                            <>
-                                                <option value="" hidden> No list</option>
-                                                <ProjectsList projects={projects} />
-                                            </>
+                                        {
+                                            intent?.action === 'edit' ? <option value={formState?.id}> {formState?.projectName} </option> :
+                                                <>
+                                                    <option value="" hidden> No list</option>
+                                                    <ProjectsList projects={projects} />
+                                                </>
                                         }
                                     </select>
-
                                 </> : <span>Write a new task</span>}
 
                     </div>
@@ -250,20 +249,20 @@ export default function TaskForm({ toggleForm, setToggleForm, projects, intent, 
                             <div className="radio-wrapper">
                                 <label className="label-radio" htmlFor={'high'}> High
                                     <input id={'high'} type={'radio'} name={'priority'}
-                                        checked={formState?.tasks[0]?.priority == '3'}
+                                        checked={formState?.tasks[0]?.priority === '3'}
                                         onChange={handleOnInput}
                                         value={3}
                                         required />
                                 </label>
                                 <label className="label-radio" htmlFor={'medium'}> Medium
                                     <input id={'medium'} type={'radio'} name={'priority'}
-                                        checked={formState?.tasks[0]?.priority == '2'}
+                                        checked={formState?.tasks[0]?.priority === '2'}
                                         onChange={handleOnInput}
                                         value={2} />
                                 </label>
                                 <label className="label-radio" htmlFor={'low'}> Low
                                     <input id={'low'} type={'radio'} name={'priority'}
-                                        checked={formState?.tasks[0]?.priority == '1'}
+                                        checked={formState?.tasks[0]?.priority === '1'}
                                         onChange={handleOnInput}
                                         value={1} />
                                 </label>
@@ -277,7 +276,7 @@ export default function TaskForm({ toggleForm, setToggleForm, projects, intent, 
                         name={'description'}
                         className={'form-textarea'}
                         placeholder={'Write a brief description...'}
-                        maxLength={250}
+                        maxLength={400}
                         value={formState?.tasks[0]?.description}
                         onInput={handleOnInput}
                         required
@@ -285,7 +284,7 @@ export default function TaskForm({ toggleForm, setToggleForm, projects, intent, 
 
                     <div className="btn-container">
                         <button type="button" onClick={handleCloseBtn}>Close</button>
-                        <button type="submit" className="add-btn">{intent?.action === 'edit' ? 'Edit Task' : 'Add'}</button>
+                        <button type="submit" className="add-btn">{intent?.action === 'edit' ? 'Edit' : 'Add'}</button>
                     </div>
                 </Form>
             </div>
