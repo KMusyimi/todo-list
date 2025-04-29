@@ -1,13 +1,14 @@
 import moment from "moment";
-import { JSX, use, useEffect, useState } from "react";
+import { JSX, use, useCallback, useEffect, useState } from "react";
 import { Link, LoaderFunctionArgs, useLoaderData, useLocation } from "react-router-dom";
-import { getProject, getTask, MyTask } from "../api";
+import { getProject, getTask, MyProjects, MyTask } from "../api";
 import Main from "../components/Main";
 import { ProjectIcon } from "../components/Svg";
-import { FetcherCellOnInput, FetcherCellSubmit } from "./TaskLayout";
+import { FetcherCellOnInput, FetcherCellSubmit, FormIntent } from "./TaskLayout";
 import SubTask from "../components/Subtask";
 import { DueDate } from "../components/TaskWrapper";
 import { v4 as uuidV4 } from 'uuid';
+import TaskForm from "../components/TaskForm";
 
 
 
@@ -28,39 +29,53 @@ export async function taskDetailsLoader({ params }: LoaderFunctionArgs) {
 
 
 export default function TaskDetails(): JSX.Element {
-  const overdueStyles = {backgroundColor: 'rgba(235, 90, 60, .3)', color: 'rgba(235, 90, 60, 1)' };
+  const overdueStyles = { backgroundColor: 'rgba(235, 90, 60, .3)', color: 'rgba(235, 90, 60, 1)' };
 
   const activeStyles = { backgroundColor: "rgba(119, 110, 201, .3)", color: "rgba(119, 110, 201, 1)" };
 
-  const [subtaskId, setSubtaskId] = useState('');
   const [backToLink, setBackToLink] = useState('');
-  const [fetcherAction] = useState('./../../:todoId');
+  const [fetcherAction, setFetcherAction] = useState('');
+  const [toggleForm, setToggleForm] = useState(false);
+  const [formIntent, setFormIntent] = useState<FormIntent>(null);
 
   const location = useLocation();
   const { task, project } = useLoaderData<typeof taskDetailsLoader>();
   const loadedTask: MyTask = use(task);
   const { id, title, dueDate, subtasks, description, status, dueTime } = loadedTask ?? {};
-
+  const editProject = [{...project, tasks: [loadedTask]}] as MyProjects; 
+  
+  
   useEffect(() => {
-    setSubtaskId((prev)=> {
-      prev = uuidV4();
-      return prev;
-    })
+    const { date, backTo } = location.state as { date: string, backTo: string };
     setBackToLink((prev) => {
-      if (location.state) {
-        const { date, backTo } = location.state as { date: string, backTo: string };
+      if (!prev) {
         prev = date ? backTo.concat(date) : backTo;
       }
       return prev;
 
     });
 
+    setFetcherAction(prev => {
+      if (!prev) {
+        prev = date ? './../../:todoId'.concat(date) : './../../:todoId';
+      }
+      return prev;
+    })
+
   }, [location.state]);
-  console.log(subtaskId);
+
+  const handleEditBtn = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setFormIntent({ taskId: id, projectId: project?.id, intent: 'edit' } as FormIntent);
+    setToggleForm(true);
+
+  }, [id, project?.id]);
 
   return (
-    <Main className={'main main-details'} style={{ padding: "1.5em 1.35em" }}>
-      <div className="task-details">
+    <Main className={'main main-details'} style={toggleForm? {overflow: 'hidden'}: {}}>
+      
+      <div className="task-details" style={toggleForm ? { visibility: 'hidden' } : {}}>
+
         <Link to={backToLink} relative={'path'}> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-5">
           <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
         </svg>
@@ -84,7 +99,6 @@ export default function TaskDetails(): JSX.Element {
         </div>
 
         <div className="primary-container bg-grey">
-
           <section className="category-section">
             <h2 className="category-title">Category</h2>
             <div className="project-container">
@@ -122,16 +136,18 @@ export default function TaskDetails(): JSX.Element {
           <svg viewBox="0 0 20 20" fill="currentColor">
             <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
           </svg>
-          <input type="hidden" name="id" value={uuidV4()}/>
+          <input type="hidden" name="id" value={uuidV4()} />
           <input className="subtask-input" name='title' type="text" placeholder="Add a subtask" />
         </FetcherCellSubmit>
       </div>
       <div className="btn-container">
-        <button className="edit-btn" type="button">edit</button>
-         <FetcherCellOnInput id={'delete-form'} taskId={id ?? ''} intent="delete" action={fetcherAction}>               
-        <button className="delete-btn" type="button">delete</button>
-                        </FetcherCellOnInput>
+        <button className="edit-btn" type="button" onClick={handleEditBtn}>edit</button>
+        <FetcherCellOnInput id={'delete-form'} taskId={id ?? ''} intent="delete" action={fetcherAction}>
+          <button className="delete-btn" type="submit">delete</button>
+        </FetcherCellOnInput>
       </div>
+      {toggleForm && <TaskForm formIntent={formIntent} setFormIntent={setFormIntent} toggleForm={toggleForm} projects={editProject} setToggleForm={setToggleForm}/>}
+      <div className={'ovly'}></div>
     </Main>
 
   )

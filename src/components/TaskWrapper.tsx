@@ -90,7 +90,7 @@ export default function TaskWrapper({ id, task }: TaskProps) {
                 <FetcherCellOnInput taskId={task.id} intent="status">
                     <input type="hidden" name="projectId" value={id} />
                     <input type="hidden" name="status" value={'completed'} />
-
+                    <input type="hidden" name="date" value={task.dueDate} />
                     <label className={`complete-label ${getPriority(task.priority)}`} htmlFor={`c-${task.id}`}>
                         <input
                             className="form-checkbox"
@@ -107,7 +107,7 @@ export default function TaskWrapper({ id, task }: TaskProps) {
                         <Link to={`/projects/${id}/todo/details/${task.id}`}
                             state={{ backTo: location.pathname, date: location.search }}
                             className="title">{task.title}</Link> :
-                        <h3 className="title"> {task.title}</h3>
+                        <s className="title"> {task.title}</s>
                     }
                 </section>
 

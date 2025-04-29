@@ -11,6 +11,7 @@ import {
   orderBy,
   Query,
   query,
+  setDoc,
   updateDoc,
   where
 } from "firebase/firestore";
@@ -197,14 +198,7 @@ export async function addSubTask(task: TaskRecordParams): Promise<void> {
     }
     await updateDoc(docRef, {
       subtasks: arrayUnion({...payload})
-    })
-    // console.log(task, taskEntity,'api')
-    // const docRef = await updateDoc(tasksRef, {
-    //   ...task,
-    //   updatedAt: '',
-    //   createdAt
-    // });
-    // console.log("Document updated with ID: ", docRef.id);
+    });
   } catch (e) {
     console.error("Error adding document: ", e);
   }
@@ -317,17 +311,37 @@ export async function updateTask(task: TaskRecordParams) {
 
 }
 
-export async function completeTask(params: CompleteTaskParams) {
+export async function completeTask(payload: CompleteTaskParams) {
   try {
     const dateFormatted = moment(currentDate).local().format('YYYY-MM-DDTHH:mm');
-    const docRef = doc(db, 'tasks', params.taskId);
+    const docRef = doc(db, 'tasks', payload.taskId);
     const taskSnap = await getDoc(docRef);
     const data = taskSnap.data() as MyTask;
     if (data) {
       await updateDoc(docRef, {
-        status: params.status,
+        status: payload.status,
+        subtasks: [],
         completedAt: dateFormatted
       });
+    }
+  } catch (e) {
+    console.error('error => ', e)
+  }
+}
+
+
+
+export async function completeSubtask(payload: CompleteTaskParams) {
+  try {
+    const docRef = doc(db, 'tasks', payload.taskId);
+    const taskSnap = await getDoc(docRef);
+    const data = taskSnap.data() as MyTask;
+    if (data) {
+      const subtask = data.subtasks?.find(subtask => subtask?.id === payload.id)
+      if (subtask){
+        subtask.status = 'completed';
+      }
+      await setDoc(docRef, {...data});
     }
   } catch (e) {
     console.error('error => ', e)

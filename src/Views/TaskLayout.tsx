@@ -2,21 +2,21 @@
 import { FormEvent, JSX, ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { LuPencil, LuTrash } from "react-icons/lu";
 import { ActionFunctionArgs, LoaderFunctionArgs, Outlet, redirect, useFetcher, useLoaderData, useSearchParams } from "react-router-dom";
-import { addSubTask, completeTask, CompleteTaskParams, deleteTask, getCompletedTasks, getFilteredProjects, getProjects } from "../api.ts";
+import { addSubTask, completeSubtask, completeTask, CompleteTaskParams, deleteTask, getCompletedTasks, getFilteredProjects, getProjects } from "../api.ts";
 import Calendar from "../components/Calendar.tsx";
 import DropdownMenu from "../components/DropDownMenu.tsx";
 import Main from "../components/Main.tsx";
 import Modal from "../components/Modal.tsx";
 import Nav from "../components/Nav.tsx";
 import SuccessMsg from "../components/SuccessMsg.tsx";
-import { checkUserProjects, getDateTask } from "../utils.ts";
 import TaskForm from "../components/TaskForm.tsx";
+import { checkUserProjects, getDateTask } from "../utils.ts";
 
 
 export type FormIntent = {
     projectId?: string;
     taskId?: string;
-    action?: string;
+    intent?: string;
 } | null;
 
 interface FetcherProps {
@@ -50,26 +50,32 @@ export function FetcherCellOnInput({ taskId, children, intent, action, ...rest }
         </fetcher.Form>)
 }
 
-export async function fetcherAction({ request }: ActionFunctionArgs) {
+export async function fetcherAction({ params, request }: ActionFunctionArgs) {
     const formData = await request.formData();
+
+    const dateParams = new URL(request.url).searchParams;
+    const date = dateParams.get('date');
     const data = Object.fromEntries(formData.entries());
     const payload: CompleteTaskParams = {};
+
     Object.keys(data).forEach((item) => {
         payload[item] = data[item] as string;
     })
-    console.log(payload);
+    const completeUrl = payload.date || date ? `../${payload.projectId}/todo?date=${date ?? payload.date}` : `../${payload.projectId}/todo`;
+
     switch (payload.intent) {
         case 'status':
             await completeTask(payload);
-            return redirect(`../${payload.projectId}/todo`);
+            return redirect(completeUrl);
         case 'delete':
             await deleteTask(payload.taskId);
-            break;
+            return params.id ? redirect(`/projects/${params.id}/todo`) : null;
         case 'add-subtask':
-            console.log('hello')
             await addSubTask(payload);
             break;
-        // return redirect(`../${projectId}/todo?date=${payload.dueDate}`);
+        case 'complete-subtask':
+            await completeSubtask(payload);
+            break;
         default:
             // eslint-disable-next-line @typescript-eslint/only-throw-error
             throw new Response("Bad Request", { status: 400 });
@@ -92,9 +98,6 @@ export function FetcherCellSubmit({ taskId, children, intent, action, ...rest }:
             {children}
         </fetcher.Form>)
 }
-
-
-
 
 
 export default function TaskLayout(): JSX.Element {
@@ -154,12 +157,10 @@ export default function TaskLayout(): JSX.Element {
     const handleEditBtn = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         if (dropdownRef.current) {
-            const { projectId, taskId, status } = dropdownRef.current.dataset;
-            if (status !== 'completed') {
-                setFormIntent({ taskId, projectId, action: 'edit' } as FormIntent);
-                setToggleForm(!toggleForm);
-                closeDropDownMenu(dropdownRef.current);
-            }
+            const { projectId, taskId } = dropdownRef.current.dataset;
+            setFormIntent({ taskId, projectId, intent: 'edit' } as FormIntent);
+            setToggleForm(!toggleForm);
+            closeDropDownMenu(dropdownRef.current);
         }
     }, [toggleForm]);
 
@@ -187,7 +188,7 @@ export default function TaskLayout(): JSX.Element {
                 </svg>
             </button>
             <Nav projects={projects} completed={completed} />
-            <Modal menuOpen={toggleMenu}/>
+            <Modal menuOpen={toggleMenu} />
         </div>
         <Main className={'main'}>
             <div className="task-container">
@@ -199,7 +200,7 @@ export default function TaskLayout(): JSX.Element {
             </div>
 
             <TaskForm setToggleForm={setToggleForm} toggleForm={toggleForm}
-                projects={projects} intent={formIntent} setFormIntent={setFormIntent} />
+                projects={projects} formIntent={formIntent} setFormIntent={setFormIntent} />
 
             <DropdownMenu ref={dropdownRef} id={'dropdown-menu'} className={'dropdown-task'}>
                 <button id={'edit-btn'} type={'button'} onClick={handleEditBtn}><LuPencil /><span>edit</span></button>

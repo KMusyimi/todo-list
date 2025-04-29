@@ -44,7 +44,7 @@
     left: 0;
     height: 0%;
     width: 0%;
-    transition: background-color 300ms linear;
+    transition: background-color 100ms linear;
 }
 
 .project-icon {
@@ -73,6 +73,11 @@
     background-repeat: no-repeat;
     background-size: contain;
 }
+.complete-label:has(:checked):before,
+.complete-label:has(:disabled):before {
+    --_square-url: url(assets/checked.svg)!important;
+}
+
 
 .complete-label input {
     appearance: none;
@@ -102,20 +107,20 @@
     background-repeat: no-repeat;
 }
 
-.intro-container>header {
+.intro-container > header {
     padding: 6em;
     padding-inline: .5em;
 }
 
-.intro-container>header h1 {
+.intro-container > header h1 {
     font-size: 2.25rem;
 }
 
-.intro-container>form {
+.intro-container > form {
     margin-right: -1.5em;
 }
 
-.intro-container>form fieldset {
+.intro-container > form fieldset {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     border: transparent;
@@ -123,7 +128,7 @@
     margin-bottom: 2.125em;
 }
 
-.intro-container>form legend {
+.intro-container > form legend {
     color: var(--brown-color);
     font-size: .75rem;
     font-weight: 600;
@@ -133,7 +138,7 @@
     padding-inline: 1.35em;
 }
 
-.intro-container>form .label-wrapper {
+.intro-container > form .label-wrapper {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(auto-fit, minmax(30px, 1fr));
@@ -144,16 +149,16 @@
     text-overflow: ellipsis;
 }
 
-.intro-container>form .label-wrapper.empty {
+.intro-container > form .label-wrapper.empty {
     display: block;
 }
 
-.intro-container>form .label-wrapper>p {
+.intro-container > form .label-wrapper > p {
     font-size: 1.115rem;
     font-weight: 500;
 }
 
-.intro-container>form label {
+.intro-container > form label {
     background-color: #F3EFEE;
     font-size: 1.06rem;
     padding: 0.706em 1.176em;
@@ -166,17 +171,17 @@
 
 }
 
-.intro-container>form label:has(> input[type=radio]:checked) {
+.intro-container > form label:has(> input[type=radio]:checked) {
     border-color: rgb(84, 58, 20);
     background-color: #ede2d5;
 }
 
-.intro-container>form input[type=radio] {
+.intro-container > form input[type=radio] {
     appearance: none;
     -webkit-appearance: none;
 }
 
-.intro-container>form button {
+.intro-container > form button {
     border: transparent;
     background-color: #393433;
     font-size: 1.125rem;
@@ -232,7 +237,7 @@
     stroke: #121212;
     stroke-width: 6;
     transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1),
-        stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1);
+    stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .line1 {
@@ -268,45 +273,45 @@
     stroke-width: 6;
 }
 
-.menu>div .link--wrapper {
+.menu > div .link--wrapper {
     text-align: center;
     margin-bottom: .85em;
 }
 
-.menu>div .link--wrapper a {
+.menu > div .link--wrapper a {
     font-size: 2em;
     font-weight: bold;
 }
 
-.menu>nav {
+.menu > nav {
     width: 100%;
     padding-block-start: 1.5em;
     overflow: auto;
     margin-bottom: .25em;
 }
 
-.menu>nav ul {
+.menu > nav ul {
     width: min(100%, 450px);
     margin: auto;
 }
 
-.menu>nav ul li {
+.menu > nav ul li {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: .65em;
 }
 
-.menu>nav ul li:first-of-type {
+.menu > nav ul li:first-of-type {
     width: 100%;
 }
 
-.menu>nav ul li:not(:first-of-type) {
+.menu > nav ul li:not(:first-of-type) {
     gap: 1em;
     padding-inline-end: .8em;
 }
 
-.menu>nav ul li:has(> a.active) {
+.menu > nav ul li:has(> a.active) {
     background: rgba(224, 224, 224, 1);
     border-radius: 1em;
     box-shadow: 0 4px 30px rgb(209, 209, 209, .1);
@@ -315,7 +320,7 @@
     border: 1px solid rgba(224, 224, 224, 0.3);
 }
 
-.menu>nav ul li a {
+.menu > nav ul li a {
     display: flex;
     align-items: center;
     gap: 1.275em;
@@ -328,11 +333,11 @@
     border-radius: 1em 0 0 1em;
 }
 
-.menu>nav ul li:first-of-type a {
+.menu > nav ul li:first-of-type a {
     border-radius: 1em;
 }
 
-.menu>nav ul li .count {
+.menu > nav ul li .count {
     display: flex;
     position: relative;
     align-items: center;
@@ -344,7 +349,7 @@
     color: #908b8b;
 }
 
-.menu>nav ul li .count::before {
+.menu > nav ul li .count::before {
     content: '';
     position: absolute;
     top: 0;
@@ -356,17 +361,17 @@
     box-shadow: 0 0 10px #d4d4d4;
 }
 
-.menu>nav ul li:has(> a.active) .count {
+.menu > nav ul li:has(> a.active) .count {
     color: #5d6063;
 }
 
-.menu>.modal-container {
+.menu > .modal-container {
     display: grid;
     grid-template-rows: repeat(auto-fit, minmax(45px, 1fr));
     grid-template-columns: 1fr;
 }
 
-.menu>.modal-container .modal-wrapper {
+.menu > .modal-container .modal-wrapper {
     /* TODO: test with full list */
     position: sticky;
     bottom: 1.5em;
@@ -381,13 +386,13 @@
     border-radius: 1em;
 }
 
-.menu>.modal-container .modal-wrapper:has(:focus) {
+.menu > .modal-container .modal-wrapper:has(:focus) {
     outline: 4px solid #8E7DBE;
     box-shadow: 0 0 14px #d1d1d1;
     transition: all 200ms linear;
 }
 
-.menu>.modal-container .modal-wrapper>button {
+.menu > .modal-container .modal-wrapper > button {
     display: flex;
     align-items: center;
     gap: .45em;
@@ -398,22 +403,22 @@
     border-radius: 1.15em;
 }
 
-.menu>.modal-container .modal-wrapper>button::after {
+.menu > .modal-container .modal-wrapper > button::after {
     content: '▼';
     color: #121212;
 }
 
-.menu>.modal-container .modal-wrapper form {
+.menu > .modal-container .modal-wrapper form {
     width: 100%;
 }
 
-.menu>.modal-container .modal-wrapper form label {
+.menu > .modal-container .modal-wrapper form label {
     display: block;
     visibility: hidden;
     height: 0;
 }
 
-.menu>.modal-container .modal-wrapper form input {
+.menu > .modal-container .modal-wrapper form input {
     width: inherit;
     font-size: 1rem;
     border: none;
@@ -423,15 +428,15 @@
     border-radius: 0 1em 1em 0;
 }
 
-.menu>.modal-container .modal-wrapper form input:focus {
+.menu > .modal-container .modal-wrapper form input:focus {
     outline: transparent;
 }
 
-.menu>.modal-container .modal-wrapper form input::placeholder {
+.menu > .modal-container .modal-wrapper form input::placeholder {
     font-size: .887rem;
 }
 
-.menu>.modal-container .colors-list {
+.menu > .modal-container .colors-list {
     width: 55px;
     height: 0;
     grid-template-columns: repeat(auto-fit, minmax(20px, 1fr));
@@ -439,11 +444,11 @@
     column-gap: 1.25em;
     row-gap: .5em;
     transition: height 400ms cubic-bezier(0.45, 0.05, 0.55, 0.95),
-        width 400ms linear 150ms;
+    width 400ms linear 150ms;
 
 }
 
-.menu>.modal-container .colors-list.open {
+.menu > .modal-container .colors-list.open {
     display: grid;
     align-items: center;
     justify-content: center;
@@ -455,12 +460,12 @@
     box-shadow: 0 0 10px #d1d1d1;
 }
 
-.menu>.modal-container .colors-list>li {
+.menu > .modal-container .colors-list > li {
     opacity: 0;
     visibility: hidden;
 }
 
-.menu>.modal-container .colors-list.open>li {
+.menu > .modal-container .colors-list.open > li {
     opacity: 1;
     visibility: visible;
     justify-self: center;
@@ -470,7 +475,7 @@
     border-radius: .485em;
     box-shadow: 0 0 2px #121212;
     transition: opacity 200ms cubic-bezier(0.39, 0.575, 0.565, 1) 600ms,
-        visibility 0ms 300ms;
+    visibility 0ms 300ms;
 }
 
 /* Main styles */
@@ -482,11 +487,16 @@
     min-height: 100dvh;
     width: 100dvw;
 }
+
 .main.main-details {
     display: grid;
     grid-template-rows: 2fr 1fr;
     height: 100dvh;
     gap: 1em;
+    padding: 1.5em 1.35em;
+}
+.main .title::first-letter {
+    text-transform: capitalize;
 }
 .main .btn-container {
     display: grid;
@@ -496,12 +506,14 @@
     align-self: end;
     gap: 1em;
 }
+
 .main.main-details .btn-container {
     position: sticky;
     background-color: inherit;
     bottom: 1.5em;
     z-index: 1;
 }
+
 .main.main-details .btn-container::after {
     content: '';
     position: absolute;
@@ -531,12 +543,12 @@
     color: #808080;
 }
 
-.main .task-container>header {
+.main .task-container > header {
     margin-top: .55em;
     margin-bottom: 2em;
 }
 
-.main .task-container>header h1 {
+.main .task-container > header h1 {
     display: inline-flex;
     align-items: center;
     font-size: 1.915rem;
@@ -545,7 +557,7 @@
 }
 
 .main .task-container .calendar,
-.main .task-container .calendar>button {
+.main .task-container .calendar > button {
     display: flex;
     justify-content: space-between;
 }
@@ -559,7 +571,7 @@
     margin-right: -1.5em;
 }
 
-.main .task-container .calendar>button {
+.main .task-container .calendar > button {
     display: flex;
     flex-direction: column;
     place-items: center;
@@ -576,37 +588,37 @@
     opacity: .5;
 }
 
-.main .task-container .calendar>button>* {
+.main .task-container .calendar > button > * {
     font-weight: 600;
 }
 
-.main .task-container .calendar>button:last-of-type {
+.main .task-container .calendar > button:last-of-type {
     margin-right: 1.5em;
 }
 
-.main .task-container .calendar>button.selected {
+.main .task-container .calendar > button.selected {
     background-color: #E6D9CB;
     opacity: 1;
     border-color: transparent;
 }
 
-.main .task-container .calendar>button .day {
+.main .task-container .calendar > button .day {
     font-weight: 600;
     font-size: 0.75rem;
 }
 
-.main .task-container .calendar>button .date {
+.main .task-container .calendar > button .date {
     font-weight: bold;
     font-size: 1.063rem;
 }
 
-.main .task-container>.task-section {
+.main .task-container > .task-section {
     width: 100%;
     max-height: calc(100dvh - 330px);
     overflow-x: auto;
 }
 
-.main .task-container>.task-section>.tasks {
+.main .task-container > .task-section > .tasks {
     max-height: 35px;
     overflow: hidden;
     padding-inline: .3em;
@@ -614,11 +626,11 @@
     transition: max-height 450ms cubic-bezier(0.45, 0.05, 0.55, 0.95);
 }
 
-.main .task-container>.task-section>.tasks.expand {
-    max-height: 1000px;
+.main .task-container > .task-section > .tasks.expand {
+    max-height: 400px;
 }
 
-.main .task-container>.task-section>.tasks .heading-container {
+.main .task-container > .task-section > .tasks .heading-container {
     position: relative;
     display: grid;
     grid-template-columns: 25px 2fr;
@@ -628,7 +640,7 @@
     margin-bottom: 2em;
 }
 
-.main .task-container>.task-section>.tasks .heading-container::after {
+.main .task-container > .task-section > .tasks .heading-container::after {
     position: absolute;
     left: 0;
     z-index: 1;
@@ -639,12 +651,12 @@
     bottom: -.25em;
 }
 
-.main .task-container>.task-section>.tasks .heading-container .folder-icon {
+.main .task-container > .task-section > .tasks .heading-container .folder-icon {
     align-self: self-start;
     padding: .312em 0.187em;
 }
 
-.main .task-container>.task-section>.tasks .heading-container header {
+.main .task-container > .task-section > .tasks .heading-container header {
     color: #413F3F;
     display: flex;
     justify-content: space-between;
@@ -654,13 +666,13 @@
     height: fit-content;
 }
 
-.main .task-container>.task-section>.tasks .heading-container header>.project-name {
+.main .task-container > .task-section > .tasks .heading-container header > .project-name {
     text-transform: capitalize;
     font-size: .936rem;
     text-wrap: nowrap;
 }
 
-.main .task-container>.task-section>.tasks .heading-container header>.count {
+.main .task-container > .task-section > .tasks .heading-container header > .count {
     font-size: 0.899rem;
     margin-right: auto;
     padding-block-start: calc(.936rem - .899rem);
@@ -668,38 +680,33 @@
 }
 
 
-.main .task-container>.task-section>.tasks .heading-container header>div .dropdown-icon {
+.main .task-container > .task-section > .tasks .heading-container header > div .dropdown-icon {
     rotate: 0deg;
     width: 13px;
     height: 15px;
     transition: rotate 300ms cubic-bezier(0.45, 0.05, 0.55, 0.95) 75ms;
 }
 
-.main .task-container>.task-section>.tasks.expand .heading-container header>div .dropdown-icon {
+.main .task-container > .task-section > .tasks.expand .heading-container header > div .dropdown-icon {
     rotate: 180deg;
 }
 
-.main .task-container>.task-section>.tasks .empty-task {
+.main .task-container > .task-section > .tasks .empty-task {
     text-align: center;
     font-weight: 600;
     padding: 1em 0;
 }
 
-.main .task-container>.task-section>.tasks .task-card {
+.main .task-container > .task-section > .tasks .task-card {
     margin-bottom: 1.25em;
 }
 
-.main .task-container>.task-section>.tasks .task-card:last-of-type {
+.main .task-container > .task-section > .tasks .task-card:last-of-type {
     margin-bottom: .55em;
 }
 
-.main .task-container>.task-section>.tasks .task-wrapper .title::first-letter,
-.main .task-container>.task-section>.tasks .info-section .notes::first-letter,
-.main .task-container>.task-section>.tasks .info-section .description::first-letter {
-    text-transform: capitalize;
-}
 
-.main .task-container>.task-section>.tasks .task-card .task-wrapper {
+.main .task-container > .task-section > .tasks .task-card .task-wrapper {
     position: relative;
     display: grid;
     grid-template-columns: 25px minmax(145px, 3fr) 25px;
@@ -710,46 +717,31 @@
     margin-bottom: 1em;
 }
 
-.main .task-container>.task-section>.tasks .task-card .task-wrapper.completed {
+.main .task-container > .task-section > .tasks .task-card .task-wrapper.completed {
     grid-template-rows: 1fr;
 }
 
-.main .task-container>.task-section>.tasks .task-card .task-wrapper .priority-medium::before {
+.main .task-container > .task-section > .tasks .task-card .task-wrapper .priority-medium::before {
     --_square-url: url(assets/square-orange.svg);
 }
 
-.main .task-container>.task-section>.tasks .task-card .task-wrapper .priority-high::before {
+.main .task-container > .task-section > .tasks .task-card .task-wrapper .priority-high::before {
     --_square-url: url(assets/square-red.svg);
 }
 
-.main .task-container>.task-section>.tasks .task-card .task-wrapper :has(:checked):before,
-.main .task-container>.task-section>.tasks .task-card .task-wrapper :has(:disabled):before {
-    --_square-url: url(assets/checked.svg);
-}
-
-.main .task-container>.task-section>.tasks .task-card .task-wrapper .task-info {
+.main .task-container > .task-section > .tasks .task-card .task-wrapper .task-info {
     position: relative;
     cursor: pointer;
     width: 100%;
 }
 
-.main .task-container>.task-section>.tasks .task-card .task-wrapper.completed .task-info {
+.main .task-container > .task-section > .tasks .task-card .task-wrapper.completed .task-info {
     cursor: none;
     width: fit-content;
 
 }
 
-.main .task-card .task-wrapper.completed .task-info::after {
-    position: absolute;
-    content: '';
-    background-color: #131515;
-    width: 100%;
-    height: 1px;
-    bottom: 1em;
-    transition: width 300ms ease-in;
-}
-
-.main .task-container>.task-section>.tasks .task-card .task-wrapper .title {
+.main .task-container > .task-section > .tasks .task-card .task-wrapper .title {
     white-space: nowrap;
     text-overflow: ellipsis;
     color: #413F3F;
@@ -760,11 +752,12 @@
     padding-inline-end: 1.063em;
 }
 
-.main .task-container>.task-section>.tasks .task-card .task-wrapper.completed .title {
+.main .task-container > .task-section > .tasks .task-card .task-wrapper.completed .title {
     padding-inline-end: 0em;
 }
 
-.main .task-container>.task-section>.tasks .task-card .task-wrapper>button {
+
+.main .task-container > .task-section > .tasks .task-card .task-wrapper > button {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -775,7 +768,7 @@
     padding: .155em;
 }
 
-.main .task-container>.task-section>.tasks .task-card .task-wrapper button:focus {
+.main .task-container > .task-section > .tasks .task-card .task-wrapper button:focus {
     background-color: #ebebeb;
     border-radius: .55em;
     transition: all 200ms linear;
@@ -796,10 +789,11 @@
 }
 
 
-.main .task-details{
+.main .task-details {
     background-color: inherit;
 }
-.main .task-details>a {
+
+.main .task-details > a {
     position: sticky;
     margin-left: auto;
     margin-bottom: .35em;
@@ -809,7 +803,7 @@
     z-index: 1;
 }
 
-.main .task-details>.header-container {
+.main .task-details > .header-container {
     display: grid;
     grid-template-columns: 25px 2fr;
     grid-template-rows: repeat(2, minmax(30px, 1fr));
@@ -820,7 +814,7 @@
     z-index: 1;
 }
 
-.main .task-details>.bg-grey {
+.main .task-details > .bg-grey {
     background-color: rgba(211, 224, 234, .35);
     padding: .75em 1.15em;
     margin-bottom: 1.115em;
@@ -829,20 +823,20 @@
     box-shadow: 0 0px 15px #d4d4d4;
 }
 
-.main .task-details>.header-container h1 {
+.main .task-details > .header-container h1 {
     font-size: 1.25rem;
     font-weight: 600;
 }
 
-.main .task-details>.header-container h1::first-letter {
+.main .task-details > .header-container h1::first-letter {
     text-transform: capitalize;
 }
 
-.main .task-details>.header-container .due-date {
+.main .task-details > .header-container .due-date {
     font-size: .865rem;
 }
 
-.main .task-details>.header-container .due-date svg {
+.main .task-details > .header-container .due-date svg {
     width: 20px;
     height: 23px;
 }
@@ -851,7 +845,7 @@
     --_square-url: url(assets/square-filled.svg);
 }
 
-.main .task-details .primary-container>section {
+.main .task-details .primary-container > section {
     display: grid;
     align-items: center;
     grid-template-columns: 1fr 3fr;
@@ -860,22 +854,22 @@
     margin-bottom: .55em;
 }
 
-.main .task-details .primary-container>section>div>p {
+.main .task-details .primary-container > section > div > p {
     font-weight: 600;
 }
 
-.main .task-details .primary-container>section:last-of-type {
+.main .task-details .primary-container > section:last-of-type {
     margin-bottom: 0em;
 }
 
-.main .task-details .primary-container>section .project-container {
+.main .task-details .primary-container > section .project-container {
     display: flex;
     align-items: center;
     gap: .35em;
     text-transform: capitalize;
 }
 
-.main .task-details>.primary-container .status {
+.main .task-details > .primary-container .status {
     font-size: .75rem;
     font-weight: bold;
     padding: .25em .85em;
@@ -885,13 +879,13 @@
     width: fit-content;
 }
 
-.main .task-details .primary-container>section h2,
-.main .task-details .primary-container>section>div {
+.main .task-details .primary-container > section h2,
+.main .task-details .primary-container > section > div {
     font-size: 1rem;
     font-weight: 500;
 }
 
-.main .task-details .primary-container>section h2 {
+.main .task-details .primary-container > section h2 {
     color: #5d6063;
     text-wrap: nowrap;
 }
@@ -904,7 +898,7 @@
     margin-bottom: .15em;
 }
 
-.main .task-details .description-container i>svg {
+.main .task-details .description-container i > svg {
     display: block;
     color: rgba(93, 96, 99, .85);
     height: 18px;
@@ -915,52 +909,55 @@
 .main .task-details .description-container p {
     color: rgba(93, 96, 99, 1);
 }
+
 .main .task-details .description-container p::first-letter {
     text-transform: capitalize;
 }
 
-.main .task-details>.notes-form label {
+.main .task-details > .notes-form label {
     visibility: hidden;
     opacity: 0;
     height: 0;
 }
 
-.main .task-details>.subtask-form {
+.main .task-details > .subtask-form {
     display: flex;
     align-items: center;
     gap: .15em;
     margin-bottom: 1.15em;
 }
 
-.main .task-details>.subtask-container,
-.main .task-details>.subtask-container .subtask-section {
+.main .task-details > .subtask-container,
+.main .task-details > .subtask-container .subtask-section {
     margin-bottom: .85em;
 }
 
-.main .task-details>.subtask-container .subtask-section {
+.main .task-details > .subtask-container .subtask-section {
     display: flex;
     align-items: center;
     gap: .85em;
 }
-.main .task-details>.subtask-container .subtask-section:last-of-type {
+
+.main .task-details > .subtask-container .subtask-section:last-of-type {
     margin-bottom: 0;
 }
 
-.main .task-details>.subtask-container .subtask-section h3 {
+.main .task-details > .subtask-container .subtask-section .subtask-title {
+    position: relative;
     font-size: 1rem;
     font-weight: 500;
 }
 
-.main .task-details>.subtask-container .subtask-section h3::first-letter {
+.main .task-details > .subtask-container .subtask-section .subtask-title::first-letter {
     text-transform: capitalize;
 }
 
-.main .task-details>.subtask-form svg {
+.main .task-details > .subtask-form svg {
     width: 27px;
     color: #a3a3a3;
 }
 
-.main .task-details>.subtask-form .subtask-input {
+.main .task-details > .subtask-form .subtask-input {
     font-size: 1rem;
     background-color: inherit;
     border: 1px solid transparent;
@@ -969,17 +966,17 @@
     transition: background-color 200ms linear;
 }
 
-.main .task-details>.subtask-form .subtask-input:focus {
+.main .task-details > .subtask-form .subtask-input:focus {
     background-color: #eff2f1;
 
 }
 
-.main .task-details>.subtask-form .subtask-input::placeholder {
+.main .task-details > .subtask-form .subtask-input::placeholder {
     color: #5d6063;
     font-weight: 500;
 }
 
-.main>.dropdown-task {
+.main > .dropdown-task {
     --_dp-width: 0;
     position: absolute;
     background-color: #F4F4F4;
@@ -993,7 +990,7 @@
     transition: bottom 350ms ease-in-out;
 }
 
-.main>.dropdown-task.open {
+.main > .dropdown-task.open {
     --_dp-width: calc(100dvw - 1.115em);
     bottom: calc(1.115em / 2);
     width: var(--_dp-width);
@@ -1002,11 +999,11 @@
 
 }
 
-.main>.dropdown-task button {
+.main > .dropdown-task button {
     visibility: hidden;
 }
 
-.main>.dropdown-task.open button {
+.main > .dropdown-task.open button {
     display: flex;
     justify-content: start;
     align-items: center;
@@ -1020,16 +1017,16 @@
     visibility: visible;
 }
 
-.main>.dropdown-task.open button:focus {
+.main > .dropdown-task.open button:focus {
     background-color: #e9e9e9;
     border-radius: .25em;
 }
 
-.main>.dropdown-task.open>button:first-of-type {
+.main > .dropdown-task.open > button:first-of-type {
     margin-bottom: .85em;
 }
 
-.main>.dropdown-task button svg {
+.main > .dropdown-task button svg {
     color: #5d6063;
     stroke-width: 2.85;
 }
@@ -1067,7 +1064,7 @@
     width: 100%;
     margin: 0 auto;
     transition: max-height 300ms linear var(--mah-delay, 0ms),
-        width 300ms cubic-bezier(1, -0.51, 0, 1.16) var(--wdh-delay, 0ms);
+    width 300ms cubic-bezier(1, -0.51, 0, 1.16) var(--wdh-delay, 0ms);
 }
 
 .main .task-form .bg-grey {
@@ -1079,8 +1076,8 @@
     color: #5d6063;
 }
 
-.main .task-form>div:not(:first-of-type),
-.main .task-form>textarea {
+.main .task-form > div:not(:first-of-type),
+.main .task-form > textarea {
     opacity: 1;
     visibility: visible;
     transition: opacity 200ms linear var(--trs-delay, 0ms), visibility 0ms;
@@ -1115,7 +1112,7 @@
     border: 1px solid transparent;
 }
 
-.main .task-form>div:not(:last-of-type) {
+.main .task-form > div:not(:last-of-type) {
     text-align: left;
     border-radius: 1em;
     padding: .65em .6em;
@@ -1124,7 +1121,7 @@
     box-shadow: 0px 0px 10px #e9e9e9;
 }
 
-.main .task-form>div.input-container {
+.main .task-form > div.input-container {
     display: grid;
     grid-template-columns: 21px 3fr 1fr;
     grid-template-rows: 1fr;
@@ -1136,18 +1133,18 @@
     transition: border-radius 600ms linear 200ms;
 }
 
-.main .task-form>div.input-container label {
+.main .task-form > div.input-container label {
     visibility: hidden;
     height: 0;
     width: 0;
 }
 
-.main .task-form>div.input-container svg {
+.main .task-form > div.input-container svg {
     grid-column: 1 / 2;
     grid-row: 1 / 1;
 }
 
-.main .task-form>div.input-container input {
+.main .task-form > div.input-container input {
     padding: 0;
     height: 45px;
     padding: .5em 0;
@@ -1157,11 +1154,11 @@
     grid-row: 1 / 1;
 }
 
-.main .task-form>div.input-container input:focus-visible {
+.main .task-form > div.input-container input:focus-visible {
     outline: transparent;
 }
 
-.main .task-form>div.input-container select {
+.main .task-form > div.input-container select {
     background-color: #ebebeb;
     font-size: .915rem;
     padding: .65em .85em;
@@ -1172,11 +1169,11 @@
     box-shadow: 0 0 15px #d1d1d1;
 }
 
-.main .task-form>div.input-container option::first-letter {
+.main .task-form > div.input-container option::first-letter {
     text-transform: uppercase;
 }
 
-.main .task-form .dueDate-container>div {
+.main .task-form .dueDate-container > div {
     text-transform: capitalize;
     display: flex;
     justify-content: space-between;
@@ -1184,15 +1181,15 @@
     gap: 1em;
 }
 
-.main .task-form .dueDate-container>div:first-of-type {
+.main .task-form .dueDate-container > div:first-of-type {
     margin-bottom: .765em;
 }
 
-.main .task-form .dueDate-container>div label {
+.main .task-form .dueDate-container > div label {
     padding-inline-start: .5em;
 }
 
-.main .task-form .dueDate-container>div input {
+.main .task-form .dueDate-container > div input {
     padding-block: .685em;
     font-size: .923rem;
     background-color: #F9F5F4;
@@ -1200,7 +1197,7 @@
     width: min(100%, 185px);
 }
 
-.main .task-form .dueDate-container>div input::placeholder {
+.main .task-form .dueDate-container > div input::placeholder {
     color: #908b8b;
 }
 
@@ -1209,7 +1206,7 @@
     margin-bottom: .725em;
 }
 
-.main .task-form fieldset>div {
+.main .task-form fieldset > div {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     gap: .65em;
@@ -1217,7 +1214,7 @@
     justify-content: space-between;
 }
 
-.main .task-form fieldset>div label {
+.main .task-form fieldset > div label {
     background-color: #F3EFEE;
     position: relative;
     text-align: center;
@@ -1227,15 +1224,15 @@
     border-radius: .65em;
 }
 
-.main .task-form fieldset>div label:has(:checked) {
+.main .task-form fieldset > div label:has(:checked) {
     background-color: #b8b8b8;
 }
 
-.main .task-form fieldset>div label:has(:focus) {
+.main .task-form fieldset > div label:has(:focus) {
     outline: 2px solid #121212;
 }
 
-.main .task-form fieldset>div input {
+.main .task-form fieldset > div input {
     display: block;
     position: absolute;
     top: 0;
@@ -1290,8 +1287,8 @@
 }
 
 
-.main .task-form.collapse>div:not(:first-of-type),
-.main .task-form.collapse>textarea {
+.main .task-form.collapse > div:not(:first-of-type),
+.main .task-form.collapse > textarea {
     opacity: 0;
     visibility: hidden;
 }
