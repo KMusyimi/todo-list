@@ -507,7 +507,7 @@
     gap: 1em;
 }
 
-.main.main-details .btn-container {
+.main.main-details > .btn-container {
     position: sticky;
     background-color: inherit;
     bottom: 1.5em;

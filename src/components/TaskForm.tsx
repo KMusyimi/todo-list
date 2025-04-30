@@ -183,7 +183,7 @@ export default function TaskForm({
             if (inputRef.current) {
                 inputRef.current.focus();
             }
-        }, 90);
+        }, 100);
     }, []);
 
     const handleCloseBtn = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
