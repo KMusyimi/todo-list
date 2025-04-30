@@ -1,10 +1,11 @@
 /* eslint-disable react-refresh/only-export-components */
 import moment from "moment";
 import {JSX, Suspense, useCallback, useEffect, useRef, useState} from "react";
-import {ActionFunctionArgs, Form, redirect, useNavigation} from "react-router-dom";
+import {ActionFunctionArgs, redirect, useFetcher, useNavigation} from "react-router-dom";
 import {addTask, MyProject, MyProjects, TaskRecordParams, updateTask} from "../api";
 import {FormIntent} from "../Views/TaskLayout";
 import RectSolidSvg from "./Svg";
+import { IoCreateOutline } from "react-icons/io5";
 
 interface FormProps {
     toggleForm?: boolean;
@@ -35,13 +36,12 @@ export async function taskFormAction({request}: ActionFunctionArgs) {
                 break;
             case 'add':
                 await addTask(payload);
-                break;
+                return redirect(`../${projectId}/todo?date=${payload.dueDate}`);
             default:
                 // eslint-disable-next-line @typescript-eslint/only-throw-error
                 throw new Response("Bad Request", {status: 400});
         }
 
-        return redirect(`../${projectId}/todo?date=${payload.dueDate}`);
 
     } catch (e) {
         console.error(e);
@@ -55,7 +55,7 @@ export async function addLoader() {
 
 function ProjectsList({projects}: SelectProps) {
     return (
-        <Suspense fallback={< h1> Loading...</h1>
+        <Suspense fallback={<h1> Loading...</h1>
         }>
             {
                 projects?.map(project => {
@@ -101,7 +101,9 @@ export default function TaskForm({
     const [minDate] = useState(() => moment().format('YYYY-MM-DD'));
     const navigation = useNavigation();
     const inputRef = useRef<HTMLInputElement | null>(null)
-    const dueDate = formState?.tasks[0]?.dueDate;
+    const [dueDate, setDueDate] = useState(()=>formState?.tasks[0]?.dueDate);
+    const fetcher = useFetcher();
+    
     const status = navigation.state;
 
     useEffect(() => {
@@ -165,7 +167,10 @@ export default function TaskForm({
     }, [setToggleForm]);
 
     const handleOnInput = useCallback((e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        const {name, value} = e.target as HTMLInputElement | HTMLTextAreaElement;
+        const {name, value, type} = e.target as HTMLInputElement | HTMLTextAreaElement;
+        if(type === 'date'){
+            setDueDate(value);
+        }
         setFormState((prev) => ({
             ...prev,
             tasks: [{...prev?.tasks[0], [name]: value}]
@@ -178,7 +183,7 @@ export default function TaskForm({
             if (inputRef.current) {
                 inputRef.current.focus();
             }
-        }, 600);
+        }, 90);
     }, []);
 
     const handleCloseBtn = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
@@ -189,28 +194,30 @@ export default function TaskForm({
     const handleSubmit = useCallback(() => {
         closeForm();
     }, [closeForm]);
+
     return (
         <>
             <div className={'form-container'}>
-                <Form ref={formRef}
-                      action={"add"}
+                <header><i><IoCreateOutline /></i><h1>{formIntent?.intent?? "Add"} Task</h1></header>
+                <p>Make your daily and weekly plans, activities, and schedules easier.</p>
+                <fetcher.Form ref={formRef}
+                      action={"/projects/add"}
                       className={toggleForm ? 'task-form' : 'task-form collapse'}
                       method="post"
                       onSubmit={handleSubmit}
                       onTransitionEnd={handleTransitionEnd}>
                     <input type="hidden" name="intent" value={formIntent?.intent ?? 'add'
                     }/>
-                    < input type="hidden" name="status" value={'active'}/>
+                    <input type="hidden" name="status" value={'active'}/>
                     {formIntent?.intent === 'edit' && <input type="hidden" name="id" value={formIntent.taskId ?? ''}/>}
 
                     <div id="input-wrapper" className="input-container" onClick={handleClick}>
                         {
-
                             toggleForm ?
                                 <>
-                                    < RectSolidSvg/>
+                                    <RectSolidSvg/>
                                     <label htmlFor={'title'}> Title </label>
-                                    < input
+                                    <input
                                         ref={inputRef}
                                         type={'text'}
                                         id={'title'}
@@ -222,14 +229,14 @@ export default function TaskForm({
                                         required/>
 
                                     <label htmlFor="projects"> category </label>
-                                    < select className="bg-grey" name="projectId" id="projects" onInput={handleOnInput}
+                                    <select className="bg-grey" name="projectId" id="projects" onInput={handleOnInput}
                                              required>
                                         {
                                             formIntent?.intent === 'edit' ?
                                                 <option value={formState?.id}> {formState?.projectName} </option> :
                                                 <>
                                                     <option value="" hidden> No list</option>
-                                                    < ProjectsList projects={projects}/>
+                                                    <ProjectsList projects={projects}/>
                                                 </>
                                         }
                                     </select>
@@ -237,10 +244,10 @@ export default function TaskForm({
 
                     </div>
 
-                    < div className="dueDate-container bg-grey">
+                    <div className="dueDate-container bg-grey">
                         <div>
                             <label htmlFor="dueDate"> due date </label>
-                            < input type={'date'}
+                            <input type={'date'}
                                     id={'dueDate'}
                                     name={'dueDate'}
                                     placeholder="mm/dd/yyyy"
@@ -253,7 +260,7 @@ export default function TaskForm({
                         </div>
                         <div>
                             <label htmlFor="dueTime"> due time </label>
-                            < input type={'time'}
+                            <input type={'time'}
                                     id={'dueTime'}
                                     name={'dueTime'}
                                     placeholder="--:-- --"
@@ -265,25 +272,25 @@ export default function TaskForm({
                         </div>
                     </div>
 
-                    < div className="bg-grey">
+                    <div className="bg-grey">
                         <fieldset>
                             <legend>Priority</legend>
-                            < div className="radio-wrapper">
+                            <div className="radio-wrapper">
                                 <label className="label-radio" htmlFor={'high'}> High
-                                    < input id={'high'} type={'radio'} name={'priority'}
+                                    <input id={'high'} type={'radio'} name={'priority'}
                                             checked={formState?.tasks[0]?.priority === '3'}
                                             onChange={handleOnInput}
                                             value={3}
                                             required/>
                                 </label>
-                                < label className="label-radio" htmlFor={'medium'}> Medium
-                                    < input id={'medium'} type={'radio'} name={'priority'}
+                                <label className="label-radio" htmlFor={'medium'}> Medium
+                                    <input id={'medium'} type={'radio'} name={'priority'}
                                             checked={formState?.tasks[0]?.priority === '2'}
                                             onChange={handleOnInput}
                                             value={2}/>
                                 </label>
-                                < label className="label-radio" htmlFor={'low'}> Low
-                                    < input id={'low'} type={'radio'} name={'priority'}
+                                <label className="label-radio" htmlFor={'low'}> Low
+                                    <input id={'low'} type={'radio'} name={'priority'}
                                             checked={formState?.tasks[0]?.priority === '1'}
                                             onChange={handleOnInput}
                                             value={1}/>
@@ -293,8 +300,8 @@ export default function TaskForm({
 
                     </div>
 
-                    < label htmlFor={'description'}> Description </label>
-                    < textarea id={'description'}
+                    <label htmlFor={'description'}> Description </label>
+                    <textarea id={'description'}
                                name={'description'}
                                className={'form-textarea'}
                                placeholder={'Write a brief description...'}
@@ -304,12 +311,12 @@ export default function TaskForm({
                                required
                     > </textarea>
 
-                    < div className="btn-container">
+                    <div className="btn-container">
                         <button type="button" onClick={handleCloseBtn}> Close</button>
                         <button type="submit"
                                  className="add-btn"> {formIntent?.intent === 'edit' ? 'Edit' : 'Add'}</button>
                     </div>
-                </Form>
+                </fetcher.Form>
             </div>
         </>
     )

@@ -1,5 +1,5 @@
 import moment from "moment";
-import { JSX, use, useCallback, useEffect, useState } from "react";
+import { JSX, use, useCallback, useEffect, useRef, useState } from "react";
 import { Link, LoaderFunctionArgs, useLoaderData, useLocation } from "react-router-dom";
 import { getProject, getTask, MyProjects, MyTask } from "../api";
 import Main from "../components/Main";
@@ -11,10 +11,6 @@ import { v4 as uuidV4 } from 'uuid';
 import TaskForm from "../components/TaskForm";
 
 
-
-// function DropdownContainer({ children }: { children: ReactNode }) {
-
-// }
 
 // eslint-disable-next-line react-refresh/only-export-components
 export async function taskDetailsLoader({ params }: LoaderFunctionArgs) {
@@ -32,18 +28,19 @@ export default function TaskDetails(): JSX.Element {
   const overdueStyles = { backgroundColor: 'rgba(235, 90, 60, .3)', color: 'rgba(235, 90, 60, 1)' };
 
   const activeStyles = { backgroundColor: "rgba(119, 110, 201, .3)", color: "rgba(119, 110, 201, 1)" };
-
+  
   const [backToLink, setBackToLink] = useState('');
   const [fetcherAction, setFetcherAction] = useState('');
   const [toggleForm, setToggleForm] = useState(false);
   const [formIntent, setFormIntent] = useState<FormIntent>(null);
-
+  
   const location = useLocation();
   const { task, project } = useLoaderData<typeof taskDetailsLoader>();
   const loadedTask: MyTask = use(task);
   const { id, title, dueDate, subtasks, description, status, dueTime } = loadedTask ?? {};
   const editProject = [{...project, tasks: [loadedTask]}] as MyProjects; 
   
+  const displayFormRef = useRef(true);
   
   useEffect(() => {
     const { date, backTo } = location.state as { date: string, backTo: string };
@@ -54,7 +51,9 @@ export default function TaskDetails(): JSX.Element {
       return prev;
 
     });
-
+    if(!toggleForm){
+      displayFormRef.current = true;  
+    }
     setFetcherAction(prev => {
       if (!prev) {
         prev = date ? './../../:todoId'.concat(date) : './../../:todoId';
@@ -62,25 +61,35 @@ export default function TaskDetails(): JSX.Element {
       return prev;
     })
 
-  }, [location.state]);
+  }, [location.state, toggleForm]);
 
   const handleEditBtn = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    displayFormRef.current = false;
     setFormIntent({ taskId: id, projectId: project?.id, intent: 'edit' } as FormIntent);
-    setToggleForm(true);
 
   }, [id, project?.id]);
+  
+  const handleTransitionEnd = useCallback(()=> {
+    if (!displayFormRef.current){
+      setToggleForm(!toggleForm);
+      
+    }
+  }, [toggleForm]);
 
   return (
     <Main className={'main main-details'} style={toggleForm? {overflow: 'hidden'}: {}}>
       
-      <div className="task-details" style={toggleForm ? { visibility: 'hidden' } : {}}>
+      <div id="task-details" className={displayFormRef.current ?'task-details':"task-details hidden"} 
+        onTransitionEnd={handleTransitionEnd}
+      >
 
         <Link to={backToLink} relative={'path'}> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-5">
           <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
         </svg>
 
         </Link>
+        
         <div className="header-container">
           <FetcherCellOnInput taskId={id ?? ''} intent="status" action={fetcherAction}>
             <input type="hidden" name="projectId" value={project?.id} />
@@ -140,13 +149,16 @@ export default function TaskDetails(): JSX.Element {
           <input className="subtask-input" name='title' type="text" placeholder="Add a subtask" />
         </FetcherCellSubmit>
       </div>
+      
       <div className="btn-container">
         <button className="edit-btn" type="button" onClick={handleEditBtn}>edit</button>
         <FetcherCellOnInput id={'delete-form'} taskId={id ?? ''} intent="delete" action={fetcherAction}>
           <button className="delete-btn" type="submit">delete</button>
         </FetcherCellOnInput>
       </div>
+      
       {toggleForm && <TaskForm formIntent={formIntent} setFormIntent={setFormIntent} toggleForm={toggleForm} projects={editProject} setToggleForm={setToggleForm}/>}
+
       <div className={'ovly'}></div>
     </Main>
 
