@@ -272,7 +272,7 @@ export default function TaskForm({
                         </div>
                     </div>
 
-                    <div className="bg-grey">
+                    <div className="bg-grey priority-container" style={{marginBottom: '1.5em'}}>
                         <fieldset>
                             <legend>Priority</legend>
                             <div className="radio-wrapper">
@@ -305,7 +305,7 @@ export default function TaskForm({
                                name={'description'}
                                className={'form-textarea'}
                                placeholder={'Write a brief description...'}
-                               maxLength={1000}
+                               maxLength={600}
                                value={formState?.tasks[0]?.description}
                                onInput={handleOnInput}
                                required

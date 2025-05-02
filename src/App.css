@@ -864,7 +864,6 @@ s {
     border-radius: 1em;
     justify-self: right;
     padding: .15em 1em;
-    box-shadow: 0px 0px 15px #d4d4d4;
 }
 
 .main .task-details .header-container>.project-container span {
@@ -885,7 +884,7 @@ s {
 }
 
 .main .task-details>.bg-grey {
-    background-color: #b0c0bc35 ;
+    background-color: #b0c0bc35;
     padding: .85em 1.15em;
     margin-bottom: 1.115em;
     border-radius: 1em;
@@ -893,21 +892,23 @@ s {
 
 .main .task-details>.bg-grey:last-of-type {
     display: block;
-    margin-bottom: 1.5em;
 }
 
 .main .task-details .primary-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
     grid-template-rows: repeat(auto-fit, minmax(30px, 1fr));
-    column-gap: 1em;
+    column-gap: .65em;
     row-gap: 1em;
     align-items: center;
+    justify-content: space-between;
 
 }
+
 .main .task-details .primary-container>section {
-    justify-self: center;
+    justify-self: left;
 }
+
 .main .task-details .primary-container>section p {
     text-wrap: nowrap;
     font-weight: 600;
@@ -943,13 +944,18 @@ s {
     --bd-color: rgb(247 55 79 / 35%);
     color: #F7374F;
 }
+
 .main .task-details .primary-container .priority--medium {
-    --bd-color: rgba(255, 218, 95, 0.365);
-    color: #FBA518;
+    --bd-color: rgba(255, 157, 35, 0.35);
+    color: #FF9D23;
 }
 
 .main .task-details .primary-container .priority::first-letter {
     text-transform: capitalize;
+}
+
+.main .task-details .description-container {
+    margin-bottom: 1.85em;
 }
 
 .main .task-details .description-container h2 {
@@ -1006,7 +1012,7 @@ s {
 
 .main .task-details>.subtask-container .subtask-section .subtask-title {
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 400;
 }
 
 .main .task-details>.subtask-container .subtask-section .subtask-title::first-letter {
@@ -1298,6 +1304,7 @@ s {
 .main .task-form .dueDate-container>div input::placeholder {
     color: #908b8b;
 }
+
 
 .main .task-form fieldset legend {
     padding-inline-start: .5em;

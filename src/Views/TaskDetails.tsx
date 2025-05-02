@@ -114,13 +114,13 @@ export default function TaskDetails(): JSX.Element {
         </div>
 
         <div className="primary-container bg-grey">
-          <section>
-            <h2>Status</h2>
-            <span className={'status'} style={status === 'overdue' ? overdueStyles : activeStyles}>{status} </span>
-          </section>
           <section className="priority-section">
             <h2 className="priority-title">Priority</h2>
             <p className={`priority priority--${taskPriority}`}>{taskPriority}</p>
+          </section>
+          <section>
+            <h2>Status</h2>
+            <p className={'status'} style={status === 'overdue' ? overdueStyles : activeStyles}>{status} </p>
           </section>
 
           <section className="dueDate-section">
