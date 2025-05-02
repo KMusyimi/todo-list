@@ -911,9 +911,9 @@ s {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
     grid-template-rows: repeat(auto-fit, minmax(30px, 1fr));
-    column-gap: 1em;
+    column-gap: .65em;
     row-gap: 1em;
-    padding: 1em .85em;
+    padding: 1em ;
     align-items: center;
     justify-content: space-between;
 
@@ -921,12 +921,14 @@ s {
 
 .main .task-details .primary-container>section {
     justify-self: center;
+    width: 100%;
 }
 
 .main .task-details .primary-container>section p {
     text-wrap: nowrap;
+    text-align: center;
     font-weight: 600;
-    width: fit-content;
+    /* width: fit-content; */
 }
 
 .main .task-details .primary-container .priority,
