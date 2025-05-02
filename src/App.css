@@ -841,6 +841,7 @@ s {
     row-gap: .15em;
     margin-bottom: 1.35em;
 }
+
 .main .task-details>.header-container::after {
     content: '';
     position: absolute;
@@ -913,7 +914,7 @@ s {
     grid-template-rows: repeat(auto-fit, minmax(30px, 1fr));
     column-gap: .65em;
     row-gap: 1em;
-    padding: 1em ;
+    padding: 1em .85em;
     align-items: center;
     justify-content: space-between;
 
@@ -927,18 +928,21 @@ s {
 .main .task-details .primary-container>section p {
     text-wrap: nowrap;
     text-align: center;
-    font-weight: 600;
-    /* width: fit-content; */
+    font-size: .85rem;
+    font-weight: bold;
+    padding-block: .35em;
+    border-radius: 1.6em;
+    text-transform: uppercase;
 }
 
 .main .task-details .primary-container .priority,
 .main .task-details>.primary-container .status {
-    font-size: .85rem;
-    font-weight: bold;
-    padding: .25em 1em;
     letter-spacing: 2px;
-    text-transform: uppercase;
-    border-radius: 1em;
+}
+.main .task-details>.primary-container .due {
+/* border: 2px solid red; */
+background-color: #9fc490;
+color: #1c1c1c;
 }
 
 
@@ -1241,7 +1245,6 @@ s {
     padding: .55em .6em;
     margin-bottom: .75em;
     border: 1px solid #d5cfe1;
-    box-shadow: 0px 0px 15px #d5cfe1;
 }
 
 .main .task-form>div.input-container {

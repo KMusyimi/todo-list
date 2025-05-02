@@ -28,20 +28,20 @@ export default function TaskDetails(): JSX.Element {
   const overdueStyles = { backgroundColor: 'rgba(235, 90, 60, .3)', color: 'rgba(235, 90, 60, 1)' };
 
   const activeStyles = { backgroundColor: "rgba(119, 110, 201, .3)", color: "rgba(119, 110, 201, 1)" };
-  
+
   const [backToLink, setBackToLink] = useState('');
   const [fetcherAction, setFetcherAction] = useState('');
   const [toggleForm, setToggleForm] = useState(false);
   const [formIntent, setFormIntent] = useState<FormIntent>(null);
-  
+
   const location = useLocation();
   const { task, project } = useLoaderData<typeof taskDetailsLoader>();
   const loadedTask: MyTask = use(task);
-  const { id, title, priority,dueDate, subtasks, description, status, dueTime } = loadedTask ?? {};
-  const editProject = [{...project, tasks: [loadedTask]}] as MyProjects; 
-  
+  const { id, title, priority, dueDate, subtasks, description, status, dueTime } = loadedTask ?? {};
+  const editProject = [{ ...project, tasks: [loadedTask] }] as MyProjects;
+
   const displayFormRef = useRef(true);
-  
+
   useEffect(() => {
     const { date, backTo } = location.state as { date: string, backTo: string };
     setBackToLink((prev) => {
@@ -51,8 +51,8 @@ export default function TaskDetails(): JSX.Element {
       return prev;
 
     });
-    if(!toggleForm){
-      displayFormRef.current = true;  
+    if (!toggleForm) {
+      displayFormRef.current = true;
     }
     setFetcherAction(prev => {
       if (!prev) {
@@ -62,7 +62,7 @@ export default function TaskDetails(): JSX.Element {
     })
 
   }, [location.state, toggleForm]);
-  const taskPriority = getPriority(priority ?? '') ;
+  const taskPriority = getPriority(priority ?? '');
 
   const handleEditBtn = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -70,30 +70,30 @@ export default function TaskDetails(): JSX.Element {
     setFormIntent({ taskId: id, projectId: project?.id, intent: 'edit' } as FormIntent);
 
   }, [id, project?.id]);
-  
-  const handleTransitionEnd = useCallback(()=> {
-    if (!displayFormRef.current){
+
+  const handleTransitionEnd = useCallback(() => {
+    if (!displayFormRef.current) {
       setToggleForm(!toggleForm);
-      
+
     }
   }, [toggleForm]);
 
   return (
-    <Main className={'main main-details'} style={toggleForm? {overflow: 'hidden'}: {}}>
-      
-      <div id="task-details" className={displayFormRef.current ?'task-details':"task-details hidden"} 
+    <Main className={'main main-details'} style={toggleForm ? { overflow: 'hidden' } : {}}>
+
+      <div id="task-details" className={displayFormRef.current ? 'task-details' : "task-details hidden"}
         onTransitionEnd={handleTransitionEnd}
       >
 
         <Link to={backToLink} relative={'path'}> <i>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-5">
-          <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
-        </svg>
-          
-          </i> 
+            <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+          </svg>
+
+        </i>
 
         </Link>
-        
+
         <div className="header-container">
           <FetcherCellOnInput taskId={id ?? ''} intent="status" action={fetcherAction}>
             <input type="hidden" name="projectId" value={project?.id} />
@@ -109,9 +109,9 @@ export default function TaskDetails(): JSX.Element {
           <header>
             <h1>{title}</h1>
           </header>
-            <div className="project-container" style={{ backgroundColor: hexToRGB(project?.iconColor ?? '', 1)}}>
-              <span className="project-name">{project?.projectName}</span>
-            </div>
+          <div className="project-container" style={{ backgroundColor: hexToRGB(project?.iconColor ?? '', 1) }}>
+            <span className="project-name">{project?.projectName}</span>
+          </div>
 
           <DueDate status={status ?? 'active'} date={`${dueDate ?? ''}T${dueTime ?? ''}`} />
         </div>
@@ -128,9 +128,7 @@ export default function TaskDetails(): JSX.Element {
 
           <section className="dueDate-section">
             <h2 className="due-title">Due date</h2>
-            <div className="due-container">
-              <p className="due">{moment(dueDate).format('ll')}</p>
-            </div>
+            <p className="due">{moment(dueDate).format('ll')}</p>
           </section>
         </div>
 
@@ -155,15 +153,15 @@ export default function TaskDetails(): JSX.Element {
           <input className="subtask-input" name='title' type="text" placeholder="Add a subtask" />
         </FetcherCellSubmit>
       </div>
-      
+
       <div className="btn-container">
         <button className="edit-btn" type="button" onClick={handleEditBtn}>edit</button>
         <FetcherCellOnInput id={'delete-form'} taskId={id ?? ''} intent="delete" action={fetcherAction}>
           <button className="delete-btn" type="submit">delete</button>
         </FetcherCellOnInput>
       </div>
-      
-      {toggleForm && <TaskForm formIntent={formIntent} setFormIntent={setFormIntent} toggleForm={toggleForm} projects={editProject} setToggleForm={setToggleForm}/>}
+
+      {toggleForm && <TaskForm formIntent={formIntent} setFormIntent={setFormIntent} toggleForm={toggleForm} projects={editProject} setToggleForm={setToggleForm} />}
 
       <div className={'ovly'}></div>
     </Main>
