@@ -305,7 +305,7 @@ export default function TaskForm({
                                name={'description'}
                                className={'form-textarea'}
                                placeholder={'Write a brief description...'}
-                               maxLength={400}
+                               maxLength={1000}
                                value={formState?.tasks[0]?.description}
                                onInput={handleOnInput}
                                required

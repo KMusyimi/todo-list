@@ -5,6 +5,7 @@ import { HiDotsVertical } from "react-icons/hi";
 import { Link, useLocation } from "react-router-dom";
 import { MyTask } from "../api.ts";
 import { FetcherCellOnInput } from "../Views/TaskLayout.tsx";
+import { getPriority } from "../utils.ts";
 
 
 interface TaskProps {
@@ -57,10 +58,6 @@ export default function TaskWrapper({ id, task }: TaskProps) {
     }, []);
 
 
-    const getPriority = useCallback((priority: number | string) => {
-        return `priority-${priority === '3' ? 'high' : (priority === '2') ? 'medium' : 'low'}`;
-    }, []);
-
     const handleChange = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
@@ -91,7 +88,8 @@ export default function TaskWrapper({ id, task }: TaskProps) {
                     <input type="hidden" name="projectId" value={id} />
                     <input type="hidden" name="status" value={'completed'} />
                     <input type="hidden" name="date" value={task.dueDate} />
-                    <label className={`complete-label ${getPriority(task.priority)}`} htmlFor={`c-${task.id}`}>
+                    <label 
+                    className={`complete-label priority-${getPriority(task.priority)}`} htmlFor={`c-${task.id}`}>
                         <input
                             className="form-checkbox"
                             type="checkbox"

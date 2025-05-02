@@ -64,7 +64,7 @@ export type MyTask = {
   status: 'active' | 'overdue' | 'completed';
   dueDate: string;
   dueTime: string;
-  priority: number | string;
+  priority: string;
   description: string;
   subtasks?: SubTaskEntity[];
   updatedAt?: Date | null;

@@ -3,12 +3,12 @@ import { JSX, use, useCallback, useEffect, useRef, useState } from "react";
 import { Link, LoaderFunctionArgs, useLoaderData, useLocation } from "react-router-dom";
 import { getProject, getTask, MyProjects, MyTask } from "../api";
 import Main from "../components/Main";
-import { ProjectIcon } from "../components/Svg";
 import { FetcherCellOnInput, FetcherCellSubmit, FormIntent } from "./TaskLayout";
 import SubTask from "../components/Subtask";
 import { DueDate } from "../components/TaskWrapper";
 import { v4 as uuidV4 } from 'uuid';
 import TaskForm from "../components/TaskForm";
+import { getPriority, hexToRGB } from "../utils";
 
 
 
@@ -37,7 +37,7 @@ export default function TaskDetails(): JSX.Element {
   const location = useLocation();
   const { task, project } = useLoaderData<typeof taskDetailsLoader>();
   const loadedTask: MyTask = use(task);
-  const { id, title, dueDate, subtasks, description, status, dueTime } = loadedTask ?? {};
+  const { id, title, priority,dueDate, subtasks, description, status, dueTime } = loadedTask ?? {};
   const editProject = [{...project, tasks: [loadedTask]}] as MyProjects; 
   
   const displayFormRef = useRef(true);
@@ -62,6 +62,7 @@ export default function TaskDetails(): JSX.Element {
     })
 
   }, [location.state, toggleForm]);
+  const taskPriority = getPriority(priority ?? '') ;
 
   const handleEditBtn = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -102,18 +103,24 @@ export default function TaskDetails(): JSX.Element {
                 value={'completed'} required />
             </label>
           </FetcherCellOnInput>
-          <header><h1>{title} </h1></header>
+          <header>
+            <h1>{title}</h1>
+          </header>
+            <div className="project-container" style={{ backgroundColor: hexToRGB(project?.iconColor ?? '', 1)}}>
+              <span className="project-name">{project?.projectName}</span>
+            </div>
 
           <DueDate status={status ?? 'active'} date={`${dueDate ?? ''}T${dueTime ?? ''}`} />
         </div>
 
         <div className="primary-container bg-grey">
-          <section className="category-section">
-            <h2 className="category-title">Category</h2>
-            <div className="project-container">
-              <ProjectIcon color={project?.iconColor ?? ''} />
-              <p className="project-name">{project?.projectName}</p>
-            </div>
+          <section>
+            <h2>Status</h2>
+            <span className={'status'} style={status === 'overdue' ? overdueStyles : activeStyles}>{status} </span>
+          </section>
+          <section className="priority-section">
+            <h2 className="priority-title">Priority</h2>
+            <p className={`priority priority--${taskPriority}`}>{taskPriority}</p>
           </section>
 
           <section className="dueDate-section">
@@ -121,10 +128,6 @@ export default function TaskDetails(): JSX.Element {
             <div className="due-container">
               <p className="due">{moment(dueDate).format('ll')}</p>
             </div>
-          </section>
-          <section>
-            <h2>Status</h2>
-            <span className={'status'} style={status === 'overdue' ? overdueStyles : activeStyles}>{status} </span>
           </section>
         </div>
 
