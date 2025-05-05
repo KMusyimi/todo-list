@@ -922,7 +922,7 @@ i {
     background: hsla(233, 100%, 90%, 1);
     background: linear-gradient(90deg, hsla(233, 100%, 90%, 1) 0%, hsla(0, 0%, 89%, 1) 100%);
     background: -moz-linear-gradient(90deg, hsla(233, 100%, 90%, 1) 0%, hsla(0, 0%, 89%, 1) 100%);
-    background: -webkit-linear-gradient(90deg, hsla(233, 100%, 90%, 1) 0%, hsla(0, 0%, 89%, 1) 100%);
+    background: -webkit-linear-gradient(120deg, hsla(233, 100%, 90%, 1) 0%, hsla(0, 0%, 89%, 1) 100%);
 }
 
 .main .task-details>.bg-grey:last-of-type {
@@ -935,7 +935,7 @@ i {
     grid-template-rows: repeat(auto-fit, minmax(30px, 1fr));
     column-gap: .85em;
     row-gap: 1em;
-    padding: 1em .85em;
+    padding: 1.35em .75em;
     align-items: center;
     justify-content: space-between;
 
