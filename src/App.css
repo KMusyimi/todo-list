@@ -35,7 +35,13 @@
 #root:has(.task-form:not(.collapse)) .ovly {
     z-index: 100;
 }
+s {
+    opacity: .5;
+}
 
+i {
+    display: block;
+}
 .ovly {
     position: absolute;
     background-color: rgba(0, 0, 0, 0.25);
@@ -51,8 +57,13 @@
     height: 15px;
 }
 
-s {
-    opacity: .5;
+
+
+.bg-gradient {
+    background: hsla(298, 68%, 90%, 1);
+    background: linear-gradient(90deg, hsla(298, 68%, 90%, 1) 0%, hsla(30, 82%, 91%, 1) 100%);
+    background: -moz-linear-gradient(90deg, hsla(298, 68%, 90%, 1) 0%, hsla(30, 82%, 91%, 1) 100%);
+    background: -webkit-linear-gradient(90deg, hsla(298, 68%, 90%, 1) 0%, hsla(30, 82%, 91%, 1) 100%);
 }
 
 .complete-label {
@@ -300,9 +311,13 @@ s {
     margin: auto;
 }
 
-.menu>nav ul li {
+.menu>nav ul li a,
+.menu>nav ul li{
     display: flex;
     align-items: center;
+}
+
+.menu>nav ul li {
     justify-content: space-between;
     margin-bottom: .65em;
 }
@@ -317,17 +332,11 @@ s {
 }
 
 .menu>nav ul li:has(> a.active) {
-    background: rgba(224, 224, 224, 1);
+    background: hsla(275, 19%, 88%, 1) 100%;
     border-radius: 1em;
-    box-shadow: 0 4px 30px rgb(209, 209, 209, .1);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    border: 1px solid rgba(224, 224, 224, 0.3);
 }
 
 .menu>nav ul li a {
-    display: flex;
-    align-items: center;
     gap: 1.275em;
     width: calc(100% - 23px);
     color: #121212;
@@ -340,6 +349,10 @@ s {
 
 .menu>nav ul li:first-of-type a {
     border-radius: 1em;
+}
+.menu>nav ul li button {
+    width: 30px;
+    height: inherit;
 }
 
 .menu>nav ul li .count {
@@ -603,7 +616,6 @@ s {
 }
 
 .main .task-container .calendar>button.selected {
-    background-color: #E6D9CB;
     opacity: 1;
     border-color: transparent;
 }
@@ -834,7 +846,7 @@ s {
 .main .task-details>.header-container {
     position: relative;
     display: grid;
-    grid-template-columns: 25px 2fr 1fr;
+    grid-template-columns: 25px 3fr 1fr;
     grid-template-rows: repeat(2, minmax(30px, 1fr));
     align-items: center;
     column-gap: .7em;
@@ -852,10 +864,23 @@ s {
     bottom: -.5em;
 }
 
+.main .task-details .header-container span,
 .main .task-details>.header-container h1 {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.main .task-details .header-container>header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .5em;
+    overflow: hidden;
+
+}
+
+.main .task-details>.header-container h1 {
     font-size: 1.25rem;
     font-weight: 600;
 }
@@ -864,25 +889,18 @@ s {
     text-transform: capitalize;
 }
 
-.main .task-details .header-container>header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: .5em;
-
-}
-
 .main .task-details .header-container>.project-container {
     width: fit-content;
     text-transform: capitalize;
     color: #F3EFEE;
     border-radius: 1em;
     justify-self: right;
-    padding: .15em 1em;
+    padding: .15em .65em;
 }
 
 .main .task-details .header-container>.project-container span {
-    font-size: clamp(0.75rem, 0.1682rem + 2.9091vw, 0.85rem);
+
+    font-size: .85rem;
 }
 
 .main .task-details>.header-container .due-date {
@@ -899,9 +917,12 @@ s {
 }
 
 .main .task-details>.bg-grey {
-    background-color: #b0c0bc35;
-    margin-bottom: 1.115em;
+    margin-bottom: .85em;
     border-radius: 1em;
+    background: hsla(233, 100%, 90%, 1);
+    background: linear-gradient(90deg, hsla(233, 100%, 90%, 1) 0%, hsla(0, 0%, 89%, 1) 100%);
+    background: -moz-linear-gradient(90deg, hsla(233, 100%, 90%, 1) 0%, hsla(0, 0%, 89%, 1) 100%);
+    background: -webkit-linear-gradient(90deg, hsla(233, 100%, 90%, 1) 0%, hsla(0, 0%, 89%, 1) 100%);
 }
 
 .main .task-details>.bg-grey:last-of-type {
@@ -912,7 +933,7 @@ s {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
     grid-template-rows: repeat(auto-fit, minmax(30px, 1fr));
-    column-gap: .65em;
+    column-gap: .85em;
     row-gap: 1em;
     padding: 1em .85em;
     align-items: center;
@@ -926,11 +947,13 @@ s {
 }
 
 .main .task-details .primary-container>section p {
-    text-wrap: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     text-align: center;
     font-size: .85rem;
     font-weight: bold;
-    padding-block: .35em;
+    padding: .35em .65em;
     border-radius: 1.6em;
     text-transform: uppercase;
 }
@@ -939,10 +962,9 @@ s {
 .main .task-details>.primary-container .status {
     letter-spacing: 2px;
 }
+
 .main .task-details>.primary-container .due {
-/* border: 2px solid red; */
-background-color: #9fc490;
-color: #1c1c1c;
+    background-color: #9fc490;
 }
 
 
@@ -967,8 +989,8 @@ color: #1c1c1c;
 }
 
 .main .task-details .primary-container .priority--medium {
-    --bd-color: rgba(255, 157, 35, 0.35);
-    color: #FF9D23;
+    --bd-color: #FBCEB1;
+    color: #FF7F50;
 }
 
 .main .task-details .primary-container .priority::first-letter {
@@ -1372,11 +1394,11 @@ color: #1c1c1c;
 .main .task-form textarea {
     background-color: rgb(254, 250, 224);
     resize: none;
-    height: 150px;
+    height: 175px;
 
     padding-block: 1em;
     box-shadow: 0 0px 15px #d4d4d4;
-    margin-bottom: 1.115em;
+    margin-bottom: 1.5em;
     border: 1px solid rgba(245, 232, 221, .25);
 }
 

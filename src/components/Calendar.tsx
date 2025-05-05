@@ -32,7 +32,7 @@ function Dates({ filterChange, dateParam }: DateProps) {
             const date = weekDay.format('DD');
             const selected = !dateParam ? currentDate === fmtDate : (dateParam === fmtDate ? true : false);
             return (
-                <button className={selected ? 'date-btn selected' : 'date-btn'
+                <button className={selected ? 'date-btn bg-gradient selected' : 'date-btn'
                 } key={`day-${id + idx.toString()}`}
                     type="button"
                     onClick={(e: React.MouseEvent<HTMLButtonElement>) => { 

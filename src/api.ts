@@ -212,7 +212,7 @@ async function getTasksByDate(id: string, date: string) {
 }
 
 async function getTasks(id: string) {
-  const qry = query(tasksRef, where('projectId', '==', id), orderBy('dueDate', 'asc'), orderBy('priority', 'desc'));
+  const qry = query(tasksRef, where('projectId', '==', id),where('status',"!=", 'overdue'), orderBy('dueDate', 'asc'), orderBy('priority', 'desc'));
   return taskByQry(qry);
 }
 
