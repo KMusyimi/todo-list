@@ -16,9 +16,9 @@ export function ProjectIcon({ color }: { color: string }) {
     return (
         <svg className= "project-icon" viewBox = "0 0 28 28" fill = "none" >
             <rect x="3.997817" y = "3.997817" width = "19.0044" height = "19.0044" rx = "6.98909"
-            stroke = { color }
-            strokeLinecap = "round" strokeLinejoin = "round"
-            strokeWidth = "5" />
+    stroke = { color }
+    strokeLinecap = "round" strokeLinejoin = "round"
+    strokeWidth = "4.15" />
         </svg>)
 }
 

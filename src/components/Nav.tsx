@@ -1,4 +1,4 @@
-import { CSSProperties, JSX } from "react";
+import React, { CSSProperties, JSX, useCallback} from "react";
 import { NavLink } from "react-router-dom";
 import { CompletedTask, MyProjects } from "../api";
 import { hexToRGB } from "../utils";
@@ -12,10 +12,34 @@ interface NavProps {
 
 
 function Render({ projects }: NavProps) {
-    if (!projects) {
-        return null;
-    }
-    return projects.map((project) => {
+    const handleClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        const { id } = e.currentTarget.dataset;
+        if (id) {
+            const menuOvly = document.getElementById('menu-ovly');
+            const optionsMenu = document.getElementById(`menu-${id}`);
+            if (optionsMenu && menuOvly) {
+                optionsMenu.className = 'project-menu';
+                menuOvly.style.height = '100%';
+            }
+        }
+    }, []);
+
+    const handleCloseBtn = useCallback((e: React.MouseEvent<HTMLButtonElement>)=> {
+        e.preventDefault();
+        console.log('click');
+        const menuOvly = document.getElementById('menu-ovly');
+        const optionMenu = document.querySelectorAll('.project-menu');
+        optionMenu.forEach(item=> {
+
+            item.classList.add('hidden');
+        })
+        if (menuOvly){
+            menuOvly.style.height = '0';
+        }
+    }, [])
+
+    return projects ? projects.map((project) => {
         const { id, projectName, iconColor, tasks } = project ?? {};
         const rgba = hexToRGB(iconColor ?? '', 0.25)
 
@@ -33,7 +57,7 @@ function Render({ projects }: NavProps) {
                     {projectName}
                 </NavLink>}
 
-                <button type="button">
+                <button type="button" onClick={handleClick} data-id={id}>
                     <i>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-5">
                             <path d="M10 3a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM10 8.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM11.5 15.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0Z" />
@@ -41,8 +65,18 @@ function Render({ projects }: NavProps) {
                     </i>
                 </button>
                 <span className="count">{tasks?.length}</span>
-            </li>);
-    });
+                <div id={`menu-${id ?? ''}`} className={"project-menu hidden"}>
+                    <button className="close-btn" type="button" onClick={handleCloseBtn}><i>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="size-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                        </svg>
+                    </i></button>
+                    <button type="button">Edit</button>
+                    <button type="button">Delete</button>
+                </div>
+            </li>
+        );
+    }) : null;
 }
 
 
@@ -67,7 +101,6 @@ export default function Nav({ projects, completed }: NavProps): JSX.Element {
                 {projects && <Render projects={projects} />}
                 <li>
                     <NavLink to={'completed'}><FaCheck />{completed?.projectName}</NavLink>
-
                 </li>
             </ul>
         </nav>

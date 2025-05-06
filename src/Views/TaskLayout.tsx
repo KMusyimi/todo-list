@@ -189,6 +189,7 @@ export default function TaskLayout(): JSX.Element {
             </button>
             <Nav projects={projects} completed={completed} />
             <Modal menuOpen={toggleMenu} />
+            <div id="menu-ovly" className="menu-ovly"></div>
         </div>
         <Main className={'main'}>
             <div className="task-container">
