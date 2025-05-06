@@ -86,7 +86,6 @@ i {
     background-image: var(--_square-url);
     background-repeat: no-repeat;
     background-size: contain;
-    border-radius: .35em;
 }
 
 .complete-label:has(:checked):before,
@@ -315,19 +314,16 @@ i {
 .menu>nav ul li{
     display: flex;
     align-items: center;
+    width: 100%;
 }
 
 .menu>nav ul li {
     justify-content: space-between;
     margin-bottom: .65em;
 }
-
-.menu>nav ul li:first-of-type {
-    width: 100%;
-}
-
-.menu>nav ul li:not(:first-of-type) {
-    gap: 1em;
+.menu>nav ul li:not(:first-of-type),
+.menu>nav ul li:not(:last-of-type) {
+    /* gap: 1em; */
     padding-inline-end: .8em;
 }
 
@@ -338,7 +334,6 @@ i {
 
 .menu>nav ul li a {
     gap: 1.275em;
-    width: calc(100% - 23px);
     color: #121212;
     text-transform: capitalize;
     font-weight: 600;
@@ -352,14 +347,18 @@ i {
 }
 .menu>nav ul li button {
     width: 30px;
-    height: inherit;
+    height: 30px;
+    margin-right: .65em;
+}
+.menu>nav ul li .count,
+.menu>nav ul li button > i {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .menu>nav ul li .count {
-    display: flex;
     position: relative;
-    align-items: center;
-    justify-content: center;
     font-weight: 600;
     font-size: .911rem;
     height: 23px;
@@ -841,17 +840,20 @@ i {
     border: 2px solid #808080;
     border-radius: 50%;
 }
+.main .task-details>.header-container,
+.main .task-details .primary-container{
+    display: grid;
+    align-items: center;
+    column-gap: .85em;
 
+}
 
 .main .task-details>.header-container {
     position: relative;
-    display: grid;
     grid-template-columns: 25px 3fr 1fr;
     grid-template-rows: repeat(2, minmax(30px, 1fr));
-    align-items: center;
-    column-gap: .7em;
     row-gap: .15em;
-    margin-bottom: 1.35em;
+    margin-bottom: 1.65em;
 }
 
 .main .task-details>.header-container::after {
@@ -859,7 +861,7 @@ i {
     position: absolute;
     height: 1px;
     width: 100dvw;
-    background-color: #b0c0bc85;
+    background-color: #DBD7D2;
     left: -1em;
     bottom: -.5em;
 }
@@ -899,7 +901,6 @@ i {
 }
 
 .main .task-details .header-container>.project-container span {
-
     font-size: .85rem;
 }
 
@@ -917,12 +918,10 @@ i {
 }
 
 .main .task-details>.bg-grey {
+    width: 100%;
     margin-bottom: .85em;
     border-radius: 1em;
-    background: hsla(233, 100%, 90%, 1);
-    background: linear-gradient(90deg, hsla(233, 100%, 90%, 1) 0%, hsla(0, 0%, 89%, 1) 100%);
-    background: -moz-linear-gradient(90deg, hsla(233, 100%, 90%, 1) 0%, hsla(0, 0%, 89%, 1) 100%);
-    background: -webkit-linear-gradient(120deg, hsla(233, 100%, 90%, 1) 0%, hsla(0, 0%, 89%, 1) 100%);
+    background: #F0EBE3;
 }
 
 .main .task-details>.bg-grey:last-of-type {
@@ -930,14 +929,10 @@ i {
 }
 
 .main .task-details .primary-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    grid-template-columns: repeat(3, minmax(80px, 1fr));
     grid-template-rows: repeat(auto-fit, minmax(30px, 1fr));
-    column-gap: .85em;
     row-gap: 1em;
     padding: 1.35em .75em;
-    align-items: center;
-    justify-content: space-between;
 
 }
 
@@ -1174,13 +1169,14 @@ i {
     align-items: center;
     gap: .25em;
     font-size: 1.85rem;
-    margin-bottom: .35em;
+    padding-block: .115em;
+    margin-bottom: .115em;
 }
 
 .main .form-container header i {
     display: inline-flex;
     padding-inline: .25em 0;
-    color: #a09abc;
+    color: #0070BB;
 }
 
 .main .form-container header h1 {
@@ -1243,7 +1239,7 @@ i {
 .main .task-form input:not([type='radio']),
 .main .task-form select {
     color: #413F3F;
-    border-radius: .85em;
+    border-radius: .75em;
 }
 
 .main .task-form textarea,
@@ -1257,6 +1253,7 @@ i {
 }
 
 .main .task-form fieldset,
+.main .task-form textarea,
 .main .task-form input:not([type='radio']) {
     border: 1px solid transparent;
 }
@@ -1266,7 +1263,7 @@ i {
     border-radius: 1em;
     padding: .55em .6em;
     margin-bottom: .75em;
-    border: 1px solid #d5cfe1;
+    box-shadow: 0 0px 10px #DBD7D2;
 }
 
 .main .task-form>div.input-container {
@@ -1306,14 +1303,14 @@ i {
 }
 
 .main .task-form>div.input-container select {
-    background-color: #ebebeb;
+    background-color: #e2e2e2;
     font-size: .915rem;
-    padding: .65em .85em;
+    padding: .65em;
     font-weight: 600;
-    border: 1px solid #d1d1d1;
+    border: none;
     grid-column: 3 / 4;
     grid-row: 1 / 1;
-    box-shadow: 0 0 15px #d1d1d1;
+    width: fit-content;
 }
 
 .main .task-form>div.input-container option::first-letter {
@@ -1392,14 +1389,14 @@ i {
 }
 
 .main .task-form textarea {
-    background-color: rgb(254, 250, 224);
+    background-color: rgb(249 247 207 / 65%);
     resize: none;
     height: 175px;
 
     padding-block: 1em;
-    box-shadow: 0 0px 15px #d4d4d4;
+    box-shadow: 0 0px 15px #DBD7D2;
     margin-bottom: 1.5em;
-    border: 1px solid rgba(245, 232, 221, .25);
+    
 }
 
 .main .task-form textarea::placeholder {

@@ -70,6 +70,7 @@ button{
   border-color: transparent;
   cursor: pointer;
 }
+
 button:disabled{
   color: rgba(179, 179, 179, .8) !important;
   cursor:none;
