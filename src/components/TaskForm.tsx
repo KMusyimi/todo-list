@@ -99,7 +99,7 @@ export default function TaskForm({
     const [minTime, setMinTime] = useState('');
     const [minDate] = useState(() => moment().format('YYYY-MM-DD'));
     const navigation = useNavigation();
-    const inputRef = useRef<HTMLInputElement | null>(null)
+    const inputRef = useRef<HTMLInputElement | null>(null);
     const [dueDate, setDueDate] = useState(() => formState?.tasks[0]?.dueDate);
     const fetcher = useFetcher();
 

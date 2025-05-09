@@ -14,7 +14,7 @@ export async function taskLoader({ params, request }: LoaderFunctionArgs) {
     }
     const myProject = await getProject(params.id);
     if (myProject) {
-        return { project: myProject.withTasks(date) };
+        return { project: myProject.filteredTask(date) };
     }
     else {
         // eslint-disable-next-line @typescript-eslint/only-throw-error
@@ -28,7 +28,8 @@ export default function Task() {
     const loadedTask = use(project);
     const { id, projectName, tasks } = loadedTask ?? {};
     return (
-        <Suspense fallback= {<h1 > Loading... </h1>}>
-            <TasksCard project={ { id, projectName, tasks } }/>
+        <Suspense fallback= {< h1 > Loading... </h1>
+}>
+    <TasksCard project={ { id, projectName, tasks } }/>
         </Suspense>)
 }

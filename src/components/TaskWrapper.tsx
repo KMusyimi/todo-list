@@ -48,16 +48,6 @@ export function DueDate({ status,date }: { status: string,date: string | Date })
 export default function TaskWrapper({ id, task }: TaskProps) {
     const location = useLocation();
 
-    // const handleTaskClick = useCallback((e: React.MouseEvent<HTMLElement>) => {
-    //     const { dataset } = e.currentTarget;
-    //     const { task } = dataset;
-    //     const taskCard = document.getElementById(`task-${task ?? ''}`);
-    //     if (taskCard) {
-    //         taskCard.classList.toggle('expand');
-    //     }
-    // }, []);
-
-
     const handleChange = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 

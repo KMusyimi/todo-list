@@ -83,6 +83,7 @@ export type SubTaskEntity = {
 
 export type CompleteTaskParams = Record<string, string>;
 export type TaskRecordParams = Record<string, string>;
+export type ProjectParams = Record<string, string>;
 
 // Initialize Firebase
 const app: FirebaseApp = initializeApp(firebaseConfig);
@@ -116,7 +117,7 @@ export async function addProject(payload: Record<string, FormDataEntryValue>) {
   try {
     const docRef = await addDoc(projectsRef, {
       ...payload,
-      updateAt: '',
+      updatedAt: '',
       createdAt
     });
     console.log("Document written with ID: ", docRef.id);
@@ -160,7 +161,7 @@ export async function getProject(id: string) {
   if (!projectSnap.exists()) { return null; }
 
   return {
-    withTasks: async (date: string) => {
+    filteredTask: async (date: string) => {
       const data = projectSnap.data() as Project;
       const tasks = await getTasksByDate(id, date);
       return { ...data, id: projectSnap.id, tasks } as MyProject;
@@ -168,7 +169,12 @@ export async function getProject(id: string) {
     withoutTasks: () => {
       const data = projectSnap.data() as Project;
       return { ...data, id: projectSnap.id } as Project;
-    }
+    },
+    withTasks: async () => {
+      const data = projectSnap.data() as Project;
+      const tasks = await getTasks(id);
+      return { ...data, id: projectSnap.id, tasks } as MyProject;
+    } 
   };
 }
 
@@ -197,14 +203,12 @@ export async function addSubTask(task: TaskRecordParams): Promise<void> {
       createdAt: currentDate
     }
     await updateDoc(docRef, {
-      subtasks: arrayUnion({...payload})
+      subtasks: arrayUnion({ ...payload })
     });
   } catch (e) {
     console.error("Error adding document: ", e);
   }
 }
-
-
 
 async function getTasksByDate(id: string, date: string) {
   const qry = query(tasksRef, where('projectId', '==', id), where('dueDate', '==', date), orderBy('dueDate', 'asc'), orderBy('priority', 'desc'));
@@ -212,7 +216,7 @@ async function getTasksByDate(id: string, date: string) {
 }
 
 async function getTasks(id: string) {
-  const qry = query(tasksRef, where('projectId', '==', id),where('status',"!=", 'overdue'), orderBy('dueDate', 'asc'), orderBy('priority', 'desc'));
+  const qry = query(tasksRef, where('projectId', '==', id), where('status', "!=", 'overdue'), orderBy('dueDate', 'asc'), orderBy('priority', 'desc'));
   return taskByQry(qry);
 }
 
@@ -236,6 +240,21 @@ async function taskByQry(qry: Query) {
     return { ...taskData, id: doc.id } as MyTask;
   });
 }
+
+export async function updateProject(payload: ProjectParams) {
+  const dateFormatted = moment(currentDate).local().format('YYYY-MM-DDTHH:mm');
+  const docRef = doc(db, 'projects', payload.id);
+  try {
+    await updateDoc(docRef, {
+      ...payload,
+      updatedAt:dateFormatted
+    })
+
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 export async function getCompletedTasks() {
   const taskSnap = await getDocs(completedRef);
   if (taskSnap.empty) {
@@ -268,20 +287,19 @@ export async function deleteCompletedTask(id: string) {
     console.error('err=> ', e);
   }
 }
- 
+
 async function checkOverDueTasks() {
   const dateFmt = moment(currentDate).local().format('YYYY-MM-DD');
   const timeFmt = moment().local().format('HH:mm');
   const qry = query(tasksRef, where('dueDate', '<=', dateFmt), where('dueTime', '<', timeFmt), where('status', '!=', 'overdue'));
   const taskSnapshot = await getDocs(qry);
-
   if (!taskSnapshot.empty) {
     return await Promise.all(taskSnapshot.docs.map(async (doc) => {
       const taskData = doc.data() as MyTask;
       if (taskData) {
         taskData.status = 'overdue';
         const status = taskData.status;
-        console.log(status, taskData)
+        console.log(status, taskData);
         await updateOverDueTask(doc.id, status);
       }
     }));
@@ -338,16 +356,38 @@ export async function completeSubtask(payload: CompleteTaskParams) {
     const data = taskSnap.data() as MyTask;
     if (data) {
       const subtask = data.subtasks?.find(subtask => subtask?.id === payload.id)
-      if (subtask){
+      if (subtask) {
         subtask.status = 'completed';
       }
-      await setDoc(docRef, {...data});
+      await setDoc(docRef, { ...data });
     }
   } catch (e) {
     console.error('error => ', e)
   }
 }
 
+export async function deleteProject(payload:ProjectParams) {
+  try{
+    const project = await getProject(payload.id);
+    const myProject = await project?.withTasks();
+    if (myProject){
+      const {id, tasks} = myProject
+      if (tasks.length > 0){
+        for (const task of tasks) {
+          if (task){
+            const docRef = doc(db, 'tasks', task.id);
+            await deleteDoc(docRef);
+          }
+        }
+        
+        console.log('deleted doc with id:', id);
+      }
+      await deleteDoc(doc(db, 'projects', myProject.id));
+    }
+  }catch (e){
+    console.error(e);
+  }
+}
 
 
 

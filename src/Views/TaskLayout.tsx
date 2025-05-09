@@ -59,7 +59,7 @@ export async function fetcherAction({ params, request }: ActionFunctionArgs) {
     const payload: CompleteTaskParams = {};
 
     Object.keys(data).forEach((item) => {
-        payload[item] = data[item] as string;
+        payload[item] = (data[item] as string).trim();
     })
     const completeUrl = payload.date || date ? `../${payload.projectId}/todo?date=${date ?? payload.date}` : `../${payload.projectId}/todo`;
 
@@ -104,6 +104,7 @@ export default function TaskLayout(): JSX.Element {
     const [toggleMenu, setToggleMenu] = useState(false);
     const [toggleForm, setToggleForm] = useState(false);
     const [formIntent, setFormIntent] = useState<FormIntent>(null);
+    const [modalIntent, setModalIntent] = useState<Record<string, string>>({});
 
     const { filteredProjects, completed, projects } = useLoaderData<typeof projectsLoader>();
 
@@ -123,14 +124,13 @@ export default function TaskLayout(): JSX.Element {
             }, 5000);
         }
     }, [setSearchParams, successMsg]);
-
-
+    
     useEffect(() => {
         const timer = displaySuccessMsg();
         return () => {
             clearTimeout(timer);
         }
-    }, [displaySuccessMsg, toggleForm]);
+    }, [displaySuccessMsg, toggleMenu]);
 
 
     const closeDropDownMenu = (dropdown: HTMLDivElement) => {
@@ -171,7 +171,6 @@ export default function TaskLayout(): JSX.Element {
             closeDropDownMenu(dropdownRef.current);
         }
     }
-
     return (<>
         <div className={`menu ${toggleMenu ? 'menu-mobile--open' : ''}`}>
             <button type="button" className={`menu-btn ${toggleMenu ? 'expand' : ''} `}
@@ -187,9 +186,9 @@ export default function TaskLayout(): JSX.Element {
                         d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
                 </svg>
             </button>
-            <Nav projects={projects} completed={completed} />
-            <Modal menuOpen={toggleMenu} />
-            <div id="menu-ovly" className="menu-ovly"></div>
+            <Nav projects={projects} completed={completed} setModalIntent={setModalIntent} />
+            <Modal menuOpen={toggleMenu} modalIntent={modalIntent} setModalIntent={setModalIntent} />
+            <div id="menu-ovly" className="menu-ovly" style={{height: '0'}}></div>
         </div>
         <Main className={'main'}>
             <div className="task-container">
@@ -210,7 +209,7 @@ export default function TaskLayout(): JSX.Element {
                 </FetcherCellOnInput>
             </DropdownMenu>
         </Main>
-
+        
         <div className={'ovly'} onClick={handleOverlay}></div>
     </>)
 }

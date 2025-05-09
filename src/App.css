@@ -299,7 +299,6 @@ i {
 .menu>nav {
     width: 100%;
     padding-block-start: 1.5em;
-    overflow: auto;
     margin-bottom: .25em;
 }
 
@@ -346,8 +345,9 @@ i {
 }
 
 .menu>nav ul li>button {
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
+    padding: .255em;
     margin-right: .65em;
 }
 
@@ -384,38 +384,51 @@ i {
 }
 
 .menu>nav ul li>.project-menu {
-    background-color: #F2F3F4;
+    background-color: #F4F6FF;
     position: absolute;
-    right: 3.5em;
-    bottom: -5.5em;
+    right: 0;
+    top: 0;
     z-index: 1;
-    padding: .225em;
-    border-radius: .75em;
+    width: 150px;
+    padding: .35em;
+    border-radius: .85em;
     border: 1px solid #e2e2e2;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
+
 .menu>nav ul li>.project-menu.hidden {
     display: none;
 }
 
 .menu>nav ul li>div button:not(.close-btn) {
+    gap: .45em;
     width: 100%;
     font-weight: 500;
     font-size: 1em;
-    padding: .65em 1em;
-    background-color: #e2e2e2;
-    border-radius: inherit;
+    padding: .65em 1.115em;
+    background-color: #FBFBFB;
+    border-radius: .65em;
+}
+.menu>nav ul li>div > button {
     margin-bottom: .45em;
 }
 
-.menu>nav ul li>div button:last-of-type {
-    margin-bottom: 0;
+
+.menu>nav ul li>div button,
+.menu>nav ul li>div button>i {
+    display: flex;
+    align-items: center;
 }
+
+.menu>nav ul li>div button>i {
+    width: 18px;
+}
+
 .menu>nav ul li>div .close-btn {
     position: absolute;
     width: 25px;
-    top: -2.5em;
-    right:-1.5em;
+    top: -1.45em;
+    right: -.85em;
 }
 
 .menu>.modal-container {
@@ -541,7 +554,7 @@ i {
     background: rgba(255, 255, 255, 0.2);
     border-radius: inherit;
     backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(3px);
     /* border: 1px solid rgba(255, 255, 255, 0.3); */
 }
 
@@ -913,7 +926,7 @@ i {
     position: absolute;
     height: 1px;
     width: 100dvw;
-    background-color: #DBD7D2;
+    background-color: #E5E4E2;
     left: -1em;
     bottom: -.5em;
 }
@@ -973,10 +986,9 @@ i {
     width: 100%;
     margin-bottom: .85em;
     border-radius: 1em;
-    background: #F0EBE3;
-    /* background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%); */
-    background-image: radial-gradient(73% 147%, #EADFDF 59%, #ECE2DF 100%), radial-gradient(91% 146%, rgba(255, 255, 255, 0.50) 47%, rgba(0, 0, 0, 0.50) 100%);
-    background-blend-mode: screen;
+    /* From https://css.glass */
+    background: #f5efed;
+    border: 1px solid #E5E4E2;
 }
 
 .main .task-details>.bg-grey:last-of-type {
@@ -987,14 +999,16 @@ i {
     grid-template-columns: repeat(3, minmax(80px, 1fr));
     grid-template-rows: repeat(auto-fit, minmax(30px, 1fr));
     row-gap: 1em;
-    padding: 1.35em .75em;
+    padding: 1em .75em;
 
 }
 
 .main .task-details .primary-container>section {
+    position: relative;
     justify-self: center;
     width: 100%;
 }
+
 
 .main .task-details .primary-container>section p {
     overflow: hidden;
@@ -1140,23 +1154,23 @@ i {
 .main>.dropdown-task {
     --_dp-width: 0;
     position: absolute;
-    background-color: #F4F4F4;
+    background-color: #F4F6FF;
     bottom: -100%;
-    left: calc((100dvw - var(--_dp-width)) / 2);
+    left: 0;
     width: var(--_dp-width);
     height: 0;
     z-index: 250;
     overflow: hidden;
-    border-radius: .65em;
     transition: bottom 350ms ease-in-out;
 }
 
 .main>.dropdown-task.open {
-    --_dp-width: calc(100dvw - 1.115em);
-    bottom: calc(1.115em / 2);
+    --_dp-width: 100dvw;
+    bottom: 0;
     width: var(--_dp-width);
     height: fit-content;
-    padding: .255em;
+    padding:1.115em .5em;
+    border-radius: 1.35em 1.35em 0 0;
 }
 
 .main>.dropdown-task button {
@@ -1167,16 +1181,18 @@ i {
     display: flex;
     justify-content: start;
     align-items: center;
-    padding: .65em 1em;
+    padding: .85em 1em;
     text-transform: capitalize;
-    gap: 1.155em;
+    gap: 1em;
     font-size: 1.115rem;
     font-weight: 500;
     color: #222222;
-    background-color: #e2e2e2;
+    background-color: #FBFBFB;
     width: 100%;
     visibility: visible;
     border-radius: .65em;
+    
+    box-shadow: 0 4px 30px #eeeeee;
 }
 
 .main>.dropdown-task.open button:focus {
