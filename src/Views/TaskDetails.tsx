@@ -109,7 +109,7 @@ export default function TaskDetails(): JSX.Element {
           <header>
             <h1>{title}</h1>
           </header>
-          <div className="project-container" style={{ backgroundColor: hexToRGB(project?.iconColor ?? '', 1) }}>
+          <div className="project-container" style={{ backgroundColor: hexToRGB(project?.iconColor ?? '', .35) }}>
             <span className="project-name">{project?.projectName}</span>
           </div>
 

@@ -38,7 +38,6 @@ export async function projectAction({ request }: ActionFunctionArgs): Promise<Re
                 await updateProject(payload)
                 break;
             case 'delete':
-                console.log('delete')
                 await deleteProject(payload);
                 return redirect('/');
             default:
@@ -99,6 +98,7 @@ export default function Modal({ menuOpen, modalIntent, setModalIntent, ...rest }
         e.currentTarget.reset();
         resetFormState();
         setModalIntent({});
+        inputRef.current?.blur();
 
         if (toggle) { setToggle(prev => prev ? prev = !prev : prev); }
 
