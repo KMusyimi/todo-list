@@ -2,7 +2,6 @@ import { JSX, useCallback, useEffect, useId, useState } from "react";
 import moment from "moment";
 import { useSearchParams } from "react-router-dom";
 import { ActiveDates } from "../api";
-import { GoDot } from "react-icons/go";
 import { PiDotFill } from "react-icons/pi";
 
 interface DateProps {
