@@ -289,16 +289,18 @@ export async function deleteTask(id: string) {
 async function checkOverDueTasks() {
   const dateFmt = moment(currentDate).local().format('YYYY-MM-DD');
   const timeFmt = moment().local().format('HH:mm');
-  const qry = query(tasksRef, where('dueDate', '<=', dateFmt), where('dueTime', '<', timeFmt), where('status', '!=', 'overdue'));
+  const qry = query(tasksRef, where('dueDate', '<=', dateFmt), where('status', '==', 'active'));
   const taskSnapshot = await getDocs(qry);
   if (!taskSnapshot.empty) {
     return await Promise.all(taskSnapshot.docs.map(async (doc) => {
       const taskData = doc.data() as MyTask;
       if (taskData) {
-        taskData.status = 'overdue';
-        const status = taskData.status;
-        console.log(status, taskData);
-        await updateOverDueTask(doc.id, status);
+        if (taskData.dueTime < timeFmt){
+          taskData.status = 'overdue';
+          const status = taskData.status;
+          console.log(status, taskData);
+          await updateOverDueTask(doc.id, status);
+        }
       }
     }));
   }
@@ -331,6 +333,7 @@ export async function completeTask(payload: CompleteTaskParams) {
     const docRef = doc(db, 'tasks', payload.taskId);
     const taskSnap = await getDoc(docRef);
     const data = taskSnap.data() as MyTask;
+    console.log(data);
     if (data) {
       await updateDoc(docRef, {
         status: payload.status,

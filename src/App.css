@@ -686,7 +686,10 @@ i {
 .main .task-container .calendar>button i {
     font-size: 1.35rem;
     height: .885em;
-    color: #1DCD9F;
+    color: rgb(159, 159, 159);
+}
+.main .task-container .calendar>button i.active {
+    color: #0B2F9F;
 }
 
 .main .task-container .calendar>button .day {

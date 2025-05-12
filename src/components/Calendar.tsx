@@ -22,7 +22,6 @@ function Dates({ filterChange, dateParam, activeDates }: DateProps) {
             selectedDate.scrollIntoView({ behavior: 'smooth', block: 'end' });
         }
     }, []);
-    // console.log(activeDates);
     const handleBtnClick = useCallback((currentDate: string, fmtDate: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         filterChange('date', currentDate === fmtDate ? null : fmtDate)
@@ -39,12 +38,15 @@ function Dates({ filterChange, dateParam, activeDates }: DateProps) {
             const fmtDate = weekDay.format('YYYY-MM-DD');
             const date = weekDay.format('DD');
             const selected = !dateParam ? currentDate === fmtDate : (dateParam === fmtDate ? true : false);
+
             return (
                 <button className={selected ? 'date-btn bg-gradient selected' : 'date-btn'
                 } key={`day-${id + idx.toString()}`}
                     type="button"
                     onClick={handleBtnClick(currentDate, fmtDate)}>
-                    {(activeDates && activeDates[fmtDate]) && <i className="indicator"><PiDotFill /></i>}
+                    {(activeDates) && 
+                    <i className={activeDates[fmtDate] ? "active" : ''}>
+                        <PiDotFill /></i>}
                     <p className="day"> {moment(weekDay).format('ddd')} </p>
                     <p className="date"> {date} </p>
                 </button>);
