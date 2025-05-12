@@ -85,8 +85,8 @@ export default function TaskForm({
             id: '',
             title: '',
             status: 'active',
-            dueDate: '',
-            dueTime: '',
+            dueDate: moment().format('YYYY-MM-DD'),
+            dueTime: moment().format('HH:mm'),
             priority: '',
             description: '',
             createdAt: '',
@@ -96,30 +96,25 @@ export default function TaskForm({
 
     const [formState, setFormState] = useState<MyProject>(task);
     const formRef = useRef<HTMLFormElement>(null);
-    const [minTime, setMinTime] = useState('');
     const inputRef = useRef<HTMLInputElement | null>(null);
-    const [dueDate, setDueDate] = useState(() => formState?.tasks[0]?.dueDate);
+    const [minDate] = useState(()=>moment().format('YYYY-MM-DD'));
     const fetcher = useFetcher();
     const navigation = useNavigation();
 
     const status = navigation.state;
 
     useEffect(() => {
-        const minDate = moment().format('YYYY-MM-DD');
         let timer: string | number | NodeJS.Timeout | undefined;
-        
-        setMinTime(() => (dueDate === minDate ? moment().format('HH:mm') : ''));
 
         if (formIntent) {
             let task: MyProject | undefined;
-            
             const { intent, projectId, taskId } = formIntent;
             if (intent === 'edit' && taskId) {
+                const regexp = new RegExp(`^.*${taskId}.*$`);
                 if (projects) {
                     const projectsCopy = [...projects]
                     for (const project of projectsCopy) {
                         if (project?.id === projectId) {
-                            const regexp = new RegExp(`^.*${taskId}.*$`);
                             const tasks = project?.tasks.filter(task => regexp.test(task?.id ?? ''));
                             task = { ...project, tasks } as MyProject;
                         }
@@ -134,9 +129,9 @@ export default function TaskForm({
         return () => {
             clearTimeout(timer);
         }
-    }, [status, toggleForm, setToggleForm, formIntent, projects, dueDate]);
-   
-   
+    }, [status, toggleForm, setToggleForm, formIntent, projects]);
+
+
     const closeForm = useCallback(() => {
         setFormState(prev => {
             prev = task;
@@ -145,13 +140,7 @@ export default function TaskForm({
         document.body.style.overflow = '';
         document.body.style.position = '';
         setFormIntent({} as FormIntent);
-        setDueDate(() => moment().format('YYYY-MM-DD'));
-        setToggleForm(prev => {
-            if (prev) {
-                prev = !prev;
-            }
-            return prev
-        });
+        setToggleForm(prev => prev ? !prev : prev);
     }, [setFormIntent, setToggleForm, task]);
 
     const handleClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
@@ -164,13 +153,7 @@ export default function TaskForm({
     }, [setToggleForm]);
 
     const handleOnInput = useCallback((e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        const { name, value, type } = e.target as HTMLInputElement | HTMLTextAreaElement;
-        if (type === 'date') {
-            setDueDate(prev => {
-                prev = value;
-                return prev;
-            });
-        }
+        const { name, value } = e.target as HTMLInputElement | HTMLTextAreaElement;
         setFormState((prev) => ({
             ...prev,
             tasks: [{ ...prev?.tasks[0], [name]: value }]
@@ -197,7 +180,7 @@ export default function TaskForm({
 
         }, 70);
     }, [closeForm]);
-    console.log(formState);
+
     return (
         <>
             <div className={'form-container'}>
@@ -274,7 +257,7 @@ export default function TaskForm({
                                 name={'dueTime'}
                                 placeholder="--:-- --"
                                 className={'form-input'}
-                                min={minTime}
+                                min={formState?.tasks[0]?.dueDate === minDate ? moment().format('HH:mm') : '' }
                                 value={formState?.tasks[0]?.dueTime}
                                 onInput={handleOnInput}
                                 required />

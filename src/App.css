@@ -657,12 +657,13 @@ i {
     display: flex;
     flex-direction: column;
     place-items: center;
+    justify-content: end;
     background-color: transparent;
     color: #121212;
     flex: 0 0 60px;
-    height: 68px;
-    gap: .5em;
-    padding: 0.75em 0.375em;
+    height: 80px;
+    gap: .35em;
+    padding: 0.65em 0.375em;
     text-transform: uppercase;
     letter-spacing: 3px;
     border-radius: 0.5em;
@@ -681,6 +682,11 @@ i {
 .main .task-container .calendar>button.selected {
     opacity: 1;
     border-color: transparent;
+}
+.main .task-container .calendar>button i {
+    font-size: 1.35rem;
+    height: .885em;
+    color: #1DCD9F;
 }
 
 .main .task-container .calendar>button .day {
@@ -1138,13 +1144,15 @@ i {
     background-color: inherit;
     border: 1px solid transparent;
     border-radius: .25em;
-    padding: .45em .65em;
+    padding: .45em 1em;
+    width: 80%;
     transition: background-color 200ms linear;
 }
 
 .main .task-details>.subtask-form .subtask-input:focus {
-    background-color: #eff2f1;
-
+    background-color: #DDDDDD;
+    border-radius: 1em;
+    outline-color: #1c1c1c;
 }
 
 .main .task-details>.subtask-form .subtask-input::placeholder {

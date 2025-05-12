@@ -1,22 +1,29 @@
-import { Suspense, useId } from "react";
+import { Suspense, useEffect, useId } from "react";
 import { Await, useOutletContext } from "react-router-dom";
-import { MyTask } from "../api.ts";
+import { ActiveDates, MyTask } from "../api.ts";
 import TasksCard from "../components/TasksCard.tsx";
 
-interface ProjectPromise {
+interface ContextParams {
     projects: Promise<{
         id: string;
         tasks: MyTask[];
         projectName: string;
         updatedAt?: Date | string;
         createdAt: Date;
-    }[]>
+    }[]>;
+    setActiveDates: (value: React.SetStateAction<ActiveDates | null | undefined>)=> void;
+    activeDates :ActiveDates | null | undefined
 }
 
 export default function AllTasks() {
-    const { projects }: ProjectPromise = useOutletContext();
+    const { projects, activeDates, setActiveDates }: ContextParams = useOutletContext();
     const idStr = useId();
 
+    useEffect(()=> {
+        if (activeDates){
+            setActiveDates(activeDates);
+        }
+    }, [activeDates, setActiveDates])
     function renderAllTasks(projects: {
         id: string;
         projectName: string;
