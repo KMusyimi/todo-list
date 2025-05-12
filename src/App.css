@@ -989,7 +989,6 @@ i {
     /* From https://css.glass */
     background: #f5efed;
     border: 1px solid #E5E4E2;
-    box-shadow: 0 4px 30px #E5E4E2;
 }
 
 .main .task-details>.bg-grey:last-of-type {
