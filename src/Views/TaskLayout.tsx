@@ -134,13 +134,13 @@ export default function TaskLayout(): JSX.Element {
 
     const { filteredProjects, completed, projects, activeDates } = useLoaderData<typeof projectsLoader>();
 
-
     const [activeDate, setActiveDates] = useState<ActiveDates | null | undefined>({});
 
     const [searchParams, setSearchParams] = useSearchParams();
 
     const dropdownRef = useRef<HTMLDivElement | null>(null)
     const successMsg = searchParams.get('message');
+    const completedTasks = searchParams.get('tasks');
 
 
     const displaySuccessMsg = useCallback(() => {
@@ -193,7 +193,7 @@ export default function TaskLayout(): JSX.Element {
             closeDropDownMenu(dropdownRef.current);
         }
     }, [toggleForm]);
-    
+
     const handleClick = () => {
         if (dropdownRef.current) {
             const { taskId } = dropdownRef.current.dataset;
@@ -221,7 +221,7 @@ export default function TaskLayout(): JSX.Element {
             <Modal menuOpen={toggleMenu} modalIntent={modalIntent} setModalIntent={setModalIntent} />
             <div id="menu-ovly" className="menu-ovly" style={{ height: '0' }}></div>
         </div>
-        < Main className={'main'}>
+        <Main className={'main'}>
             <div className="task-container">
                 <Calendar activeDates={activeDate} />
                 {successMsg && <SuccessMsg successMsg={successMsg} />}
@@ -230,8 +230,8 @@ export default function TaskLayout(): JSX.Element {
                 </section>
             </div>
 
-            <TaskForm setToggleForm={setToggleForm} toggleForm={toggleForm}
-                projects={projects} formIntent={formIntent} setFormIntent={setFormIntent} />
+            {!completedTasks && <TaskForm setToggleForm={setToggleForm} toggleForm={toggleForm}
+                projects={projects} formIntent={formIntent} setFormIntent={setFormIntent} />}
 
             <DropdownMenu ref={dropdownRef} id={'dropdown-menu'} className={'dropdown-task'}>
                 <button id={'edit-btn'} type={'button'} onClick={handleEditBtn}><LuPencil /><span>edit</span></button>

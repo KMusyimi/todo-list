@@ -263,15 +263,16 @@ export async function updateProject(payload: ProjectParams) {
 }
 
 export async function getCompletedTasks() {
-  const taskSnap = await getDocs(tasksRef);
+  const qry = query(tasksRef, where('status', '==', 'completed'));
+  const taskSnap = await getDocs(qry);
   if (taskSnap.empty) {
-    return null;
+    return { projectName: 'completed', iconColor: '#F0FFF0', tasks: [] } as unknown as MyProject;;
   }
   const tasks = taskSnap.docs.map((doc) => {
-    const taskData = doc.data() as Partial<MyTask>;
+    const taskData = doc.data() as MyTask;
     return { ...taskData, id: doc.id };
   }) as MyTask[];
-  return { projectName: 'complete', iconColor: '#077A7D', tasks } as CompletedTask
+  return { projectName: 'complete', iconColor: '#F0FFF0', tasks } as MyProject;
 }
 
 export async function deleteTask(id: string) {

@@ -23,7 +23,8 @@ export default function AllTasks() {
         if (activeDates){
             setActiveDates(activeDates);
         }
-    }, [activeDates, setActiveDates])
+    }, [activeDates, setActiveDates]);
+
     function renderAllTasks(projects: {
         id: string;
         projectName: string;

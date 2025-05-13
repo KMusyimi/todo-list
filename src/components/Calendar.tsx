@@ -1,4 +1,4 @@
-import { JSX, useCallback, useEffect, useId, useState } from "react";
+import { CSSProperties, JSX, useCallback, useEffect, useId, useState } from "react";
 import moment from "moment";
 import { useSearchParams } from "react-router-dom";
 import { ActiveDates } from "../api";
@@ -11,10 +11,17 @@ interface DateProps {
 }
 
 
-function Dates({ filterChange, dateParam, activeDates }: DateProps) {
+function Dates({ filterChange, dateParam, activeDates }: DateProps): JSX.Element {
+    const completedStyles = {
+        height: '68px',
+        gap: '.255em',
+        justifyContent: 'center'
+    }as CSSProperties;
     const [moments,] = useState(() => moment());
-
+    const [searchParams] = useSearchParams();
+    const completed = searchParams.get('tasks');
     const id = useId();
+
     
     useEffect(()=> {
         const selectedDate: HTMLButtonElement | null = document.querySelector('.date-btn.selected');
@@ -43,15 +50,18 @@ function Dates({ filterChange, dateParam, activeDates }: DateProps) {
                 <button className={selected ? 'date-btn bg-gradient selected' : 'date-btn'
                 } key={`day-${id + idx.toString()}`}
                     type="button"
+                    style={completed ? completedStyles: {}}
+                    disabled={completed === 'completed'}
                     onClick={handleBtnClick(currentDate, fmtDate)}>
                     <p className="day"> {moment(weekDay).format('ddd')} </p>
                     <p className="date"> {date} </p>
-                    {(activeDates) && 
+                    {(activeDates && !completed) && 
                     <i className={activeDates[fmtDate] ? "active" : ''}>
                         <PiDotFill /></i>}
                 </button>);
         })
-    }, [activeDates, dateParam, handleBtnClick, id, moments])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [activeDates, completed,  dateParam, handleBtnClick, id, moments])
 
 
     return <RenderDates />

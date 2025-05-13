@@ -66,7 +66,7 @@ function Render({ projects, setModalIntent }: NavProps) {
 
     return projects ? projects.map((project, idx) => {
         const { id, projectName, iconColor, tasks } = project ?? {};
-        const rgba = hexToRGB(iconColor ?? '', 0.25)
+        const rgba = hexToRGB(iconColor ?? '', 0.15)
 
         const style = {
             background: rgba,
@@ -114,12 +114,12 @@ function Render({ projects, setModalIntent }: NavProps) {
 
 
 export default function Nav({ projects, completed, setModalIntent }: NavProps): JSX.Element {
-    const rgba = hexToRGB('#328E6E', .25);
+    const rgba = hexToRGB('#328E6E', .15);
     const style = {
         background: rgba,
         width: '100%',
         backgroundImage: `linear-gradient(90deg, ${rgba} 0%,hsla(275, 19%, 88%, 1) 100%)`
-    } as CSSProperties
+    } as CSSProperties;
 
     return (
         <nav className="nav">
@@ -133,7 +133,7 @@ export default function Nav({ projects, completed, setModalIntent }: NavProps): 
                 </li>
                 {projects && <Render projects={projects} setModalIntent={setModalIntent} />}
                 <li>
-                    <NavLink to={'completed'}><FaCheck />{completed?.projectName}</NavLink>
+                    <NavLink to={'/projects/completed?tasks=completed'}><FaCheck />{completed?.projectName}</NavLink>
                 </li>
             </ul>
         </nav>
