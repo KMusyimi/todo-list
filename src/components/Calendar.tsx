@@ -44,11 +44,11 @@ function Dates({ filterChange, dateParam, activeDates }: DateProps) {
                 } key={`day-${id + idx.toString()}`}
                     type="button"
                     onClick={handleBtnClick(currentDate, fmtDate)}>
+                    <p className="day"> {moment(weekDay).format('ddd')} </p>
+                    <p className="date"> {date} </p>
                     {(activeDates) && 
                     <i className={activeDates[fmtDate] ? "active" : ''}>
                         <PiDotFill /></i>}
-                    <p className="day"> {moment(weekDay).format('ddd')} </p>
-                    <p className="date"> {date} </p>
                 </button>);
         })
     }, [activeDates, dateParam, handleBtnClick, id, moments])

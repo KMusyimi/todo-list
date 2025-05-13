@@ -659,16 +659,15 @@ i {
     place-items: center;
     justify-content: end;
     background-color: transparent;
-    color: #121212;
+    color: #252525;
     flex: 0 0 60px;
-    height: 80px;
-    gap: .35em;
+    height: fit-content;
     padding: 0.65em 0.375em;
     text-transform: uppercase;
     letter-spacing: 3px;
     border-radius: 0.5em;
-    border: 1px solid #000;
-    opacity: .5;
+    border: 1px solid #252525;
+    opacity: .6;
 }
 
 .main .task-container .calendar>button>* {
@@ -683,23 +682,24 @@ i {
     opacity: 1;
     border-color: transparent;
 }
-.main .task-container .calendar>button i {
-    font-size: 1.35rem;
-    height: .885em;
-    color: rgb(159, 159, 159);
-}
-.main .task-container .calendar>button i.active {
-    color: #0B2F9F;
-}
 
 .main .task-container .calendar>button .day {
     font-weight: 600;
     font-size: 0.75rem;
+    margin-bottom: .45em;
 }
 
 .main .task-container .calendar>button .date {
     font-weight: bold;
     font-size: 1.063rem;
+}
+.main .task-container .calendar>button i {
+    font-size: 1.35rem;
+    height: .65em;
+    color: #d9d9d9;
+}
+.main .task-container .calendar>button i.active {
+    color: #6a5acd;
 }
 
 .main .task-container>.task-section {

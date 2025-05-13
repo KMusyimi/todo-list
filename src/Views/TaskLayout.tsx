@@ -175,11 +175,10 @@ export default function TaskLayout(): JSX.Element {
 
     const handleOverlay = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
-        const dropdownMenu = dropdownRef.current;
-        if (dropdownMenu) {
-            if (dropdownMenu.classList.contains('open')) {
+        if (dropdownRef.current) {
+            if (dropdownRef.current.classList.contains('open')) {
                 document.body.style.overflow = "";
-                closeDropDownMenu(dropdownMenu);
+                closeDropDownMenu(dropdownRef.current);
             }
         }
     }, []);
@@ -194,6 +193,7 @@ export default function TaskLayout(): JSX.Element {
             closeDropDownMenu(dropdownRef.current);
         }
     }, [toggleForm]);
+    
     const handleClick = () => {
         if (dropdownRef.current) {
             const { taskId } = dropdownRef.current.dataset;
