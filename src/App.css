@@ -196,7 +196,6 @@ z-index: 0;
     height: 100dvh;
     width: 0;
     max-height: 100dvh;
-    overflow: auto;
     padding-inline: 1.8em 1.265em;
     padding-block: 2.5em;
     left: -150%;
@@ -205,6 +204,7 @@ z-index: 0;
 }
 
 .menu-mobile--open {
+    overflow: auto;
     --_ts-duration: 0ms;
     left: 0;
     width: var(--menu-width);
