@@ -75,6 +75,13 @@ button:disabled{
   color: rgba(179, 179, 179, .8) !important;
   cursor:none;
 }
+s {
+  opacity: .5;
+}
+
+i {
+  display: block;
+}
 
 .fw-500{
   font-weight: 500;

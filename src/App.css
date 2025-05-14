@@ -6,10 +6,6 @@
     min-height: inherit;
 }
 
-#root:has(.menu-mobile--open) .main {
-    position: fixed;
-}
-
 #root:has(.menu-mobile--open) .form-container {
     opacity: 0;
     visibility: hidden;
@@ -22,26 +18,13 @@
     width: 100dvw;
 }
 
-#root:has(.menu-mobile--open) .ovly,
-#root:has(.dropdown-task.open) .ovly {
-    background-color: rgba(0, 0, 0, 0.25);
-    z-index: 200;
+#root:has(.menu-mobile--open) .ovly{
+z-index: 0;
 }
 
-#root:has(.menu-mobile--open) .ovly {
-    z-index: 0;
-}
-
+#root:has(.dropdown-task.open) .ovly,
 #root:has(.task-form:not(.collapse)) .ovly {
-    z-index: 100;
-}
-
-s {
-    opacity: .5;
-}
-
-i {
-    display: block;
+    z-index: 2;
 }
 
 .ovly {
@@ -58,8 +41,6 @@ i {
     width: 15px;
     height: 15px;
 }
-
-
 
 .bg-gradient {
     background: hsla(298, 68%, 90%, 1);
@@ -219,7 +200,7 @@ i {
     padding-inline: 1.8em 1.265em;
     padding-block: 2.5em;
     left: -150%;
-    z-index: 5;
+    z-index: 2;
     transition: left 550ms cubic-bezier(0.39, 0.58, 0.57, 1), width var(--_ts-duration, 550ms) cubic-bezier(0.39, 0.58, 0.57, 1);
 }
 
@@ -235,7 +216,8 @@ i {
     position: fixed;
     top: 1.65em;
     left: 1.5em;
-    z-index: 99;
+    /* z-index: 1; */
+    -webkit-transform: translateZ(0);
     margin-bottom: 1em;
     transition: left 350ms cubic-bezier(0.39, 0.58, 0.57, 1) var(--left-delay, 0ms);
 }
@@ -868,7 +850,7 @@ i {
 
 .main .due-date {
     display: inline-flex;
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     font-weight: bold;
     align-items: center;
     grid-column: 2 / 3;
@@ -1190,17 +1172,17 @@ i {
 .main>.dropdown-task {
     --_dp-width: 0;
     position: absolute;
-    background-color: #F4F6FF;
     bottom: -100%;
     left: 0;
     width: var(--_dp-width);
     height: 0;
-    z-index: 250;
+    z-index: 10;
     overflow: hidden;
-    transition: bottom 350ms ease-in-out;
+    transition: bottom 350ms ease-in;
 }
 
 .main>.dropdown-task.open {
+    background-color: #F4F6FF;
     --_dp-width: 100dvw;
     bottom: 0;
     width: var(--_dp-width);
@@ -1251,7 +1233,7 @@ i {
     padding: 1.5em 1em;
     left: 0;
     width: 100%;
-    z-index: 150;
+    z-index: 5;
     transition: bottom 350ms ease-in;
 }
 
