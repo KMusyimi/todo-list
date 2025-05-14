@@ -1413,7 +1413,8 @@
     border: none;
     grid-column: 3 / 4;
     grid-row: 1 / 1;
-    width: fit-content;
+    width: 100%;
+    min-width: 100px;
     text-indent: 0.65em;
     line-height: 1.5em;
 }
