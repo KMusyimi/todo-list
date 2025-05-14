@@ -16,7 +16,7 @@ interface NavProps {
 function Render({ projects, setModalIntent }: NavProps) {
     const [toggleItems, setToggleItems] = useState<Record<number, boolean>>({});
     const fetcher = useFetcher();
-    const closeOptionMenu = useCallback((idx: number)=> {
+    const closeOptionMenu = useCallback((idx: number) => {
         const overlay = document.getElementById('menu-ovly');
         setToggleItems(prevState => ({
             ...prevState,
@@ -41,7 +41,7 @@ function Render({ projects, setModalIntent }: NavProps) {
             ...prevState,
             [idx]: !prevState[idx]
         }));
-        
+
     }, [setModalIntent, toggleItems]);
 
     const handleEditBtn = useCallback((project: MyProject, idx: number) => (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -54,8 +54,8 @@ function Render({ projects, setModalIntent }: NavProps) {
     }, [closeOptionMenu, setModalIntent]);
 
 
- 
-    const handleSubmit = useCallback((idx: number)=>(e: FormEvent<HTMLFormElement>) => {
+
+    const handleSubmit = useCallback((idx: number) => (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
         fetcher.submit(e.currentTarget);
@@ -89,21 +89,20 @@ function Render({ projects, setModalIntent }: NavProps) {
                 </button>
                 <span className="count">{tasks?.length}</span>
                 {toggleItems[idx] && <div id={`menu-${id ?? ''}`} className={"project-menu"}>
-                    <button className="close-btn" type="button" onClick={handleToggleOptions(idx)}><i>
+                    <button className="close-btn" type="button" onClick={handleToggleOptions(idx)}>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="size-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
                         </svg>
-                    </i></button>
+                    </button>
                     <button type="button" onClick={handleEditBtn(project, idx)}>
-                        <i>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="size-6">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-                            </svg>
-                        </i>Edit</button>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="size-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                        </svg>
+                        Edit</button>
                     <fetcher.Form method="post" action="/" onSubmit={handleSubmit(idx)}>
                         <input type="hidden" name="intent" value={'delete'} />
                         <input type="hidden" name="id" value={id} />
-                        <button className="delete-btn" type="submit"><i><LuTrash /></i>Delete</button>
+                        <button className="delete-btn" type="submit"><LuTrash />Delete</button>
                     </fetcher.Form>
 
                 </div>}

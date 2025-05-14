@@ -411,7 +411,7 @@
     align-items: center;
 }
 
-.menu>nav ul li>div button>i {
+.menu>nav ul li>div button svg {
     width: 18px;
 }
 
