@@ -1452,6 +1452,7 @@
     box-shadow: 0 0 10px #d4d4d4;
     width: min(100%, 185px);
     min-width: fit-content;
+    height: 100%;
 }
 
 .main .task-form .dueDate-container>div input::placeholder {
