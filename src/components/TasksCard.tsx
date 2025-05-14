@@ -23,7 +23,7 @@ function TasksCard({ project }: TaskCardProps): JSX.Element {
             <div id={'task'} className={`tasks ${toggle ? 'expand' : ''}`}>
 
                 <div className="heading-container" onClick={() => { setToggle(!toggle) }}>
-                    <img className="folder-icon" src={folderIcon} alt="a greyish folder icon" />
+                    <img className="folder-icon" src={folderIcon} alt="a greyish folder icon" loading="lazy" />
                     <header >
                         <h2 className="project-name"> {projectName} </h2>
                         <span className="count"> {tasks?.length} </span>
