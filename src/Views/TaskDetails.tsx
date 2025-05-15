@@ -68,15 +68,19 @@ export default function TaskDetails(): JSX.Element {
     e.preventDefault();
     displayFormRef.current = false;
     setFormIntent({ taskId: id, projectId: project?.id, intent: 'edit' } as FormIntent);
-
+    
   }, [id, project?.id]);
-
-  const handleTransitionEnd = useCallback(() => {
-    if (!displayFormRef.current) {
-      setToggleForm(!toggleForm);
-
+  
+  const handleTransitionEnd = useCallback((e: React.TransitionEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const {id} = e.currentTarget;
+    if (id === 'task-details'){
+      if (!displayFormRef.current) {
+        setToggleForm(!toggleForm);
+      }
     }
   }, [toggleForm]);
+
 
   return (
     <Main className={'main main-details'} style={toggleForm ? { overflow: 'hidden' } : {}}>
@@ -84,7 +88,6 @@ export default function TaskDetails(): JSX.Element {
       <div id="task-details" className={displayFormRef.current ? 'task-details' : "task-details hidden"}
         onTransitionEnd={handleTransitionEnd}
       >
-
         <Link to={backToLink} relative={'path'}>
           <i>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-5">
@@ -93,6 +96,7 @@ export default function TaskDetails(): JSX.Element {
           </i>
           <span>Back</span>
         </Link>
+
 
         <div className="header-container">
           <FetcherCellOnInput taskId={id ?? ''} intent="status" action={fetcherAction}>

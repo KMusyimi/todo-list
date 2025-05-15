@@ -1,7 +1,8 @@
 #root {
     position: relative;
-    max-width: 1280px;
+    max-width: 100dvw;
     margin: 0 auto;
+    background-color: #F9F5F4;
     text-align: center;
     min-height: inherit;
 }
@@ -198,25 +199,34 @@
 }
 
 .menu {
-    --menu-width: 325px;
+    --menu-width: 0;
     background-color: #F3EFEE;
     position: absolute;
     height: 100dvh;
-    width: 0;
+    width: var(--menu-width);
     max-height: 100dvh;
     padding-inline: 1.8em 1.265em;
     padding-block: 2.5em;
     left: -150%;
     z-index: 2;
-    transition: left 550ms cubic-bezier(0.39, 0.58, 0.57, 1), width var(--_ts-duration, 550ms) cubic-bezier(0.39, 0.58, 0.57, 1);
+    transition: left 550ms cubic-bezier(0.4, 0, 1, 1),
+        width var(--_ts-duration, 550ms) cubic-bezier(0.39, 0.58, 0.57, 1);
+}
+
+.menu>*:not(.menu-btn) {
+    visibility: hidden;
 }
 
 .menu-mobile--open {
+    --menu-width: 325px;
     overflow: auto;
     --_ts-duration: 0ms;
     left: 0;
-    width: var(--menu-width);
     border-radius: 0 1em 1em 0;
+}
+
+.menu-mobile--open>*:not(.menu-btn) {
+    visibility: visible;
 }
 
 .menu .menu-btn {
@@ -231,7 +241,7 @@
 }
 
 .menu-mobile--open .menu-btn {
-    --left-delay: 200ms;
+    --left-delay: 350ms;
     left: calc(var(--menu-width) - 3.75em);
 }
 
@@ -390,9 +400,11 @@
 .menu>nav ul li>.project-menu.hidden {
     display: none;
 }
-.menu>nav ul li>.project-menu button{
+
+.menu>nav ul li>.project-menu button {
     color: #121212;
 }
+
 .menu>nav ul li>.project-menu button:not(.close-btn) {
     gap: .45em;
     width: 100%;
@@ -403,10 +415,11 @@
     border-radius: .65em;
 }
 
-.menu>nav ul li>.project-menu >button {
+.menu>nav ul li>.project-menu>button {
     margin-bottom: .45em;
 }
-.menu>nav ul li>.project-menu >form {
+
+.menu>nav ul li>.project-menu>form {
     width: 100%;
 }
 
@@ -558,7 +571,6 @@
 
 /* Main styles */
 .main {
-    background-color: #F9F5F4;
     text-align: left;
     padding: 3.5em 1.158em 1em;
     min-height: 100dvh;
@@ -569,6 +581,7 @@
     display: grid;
     grid-template-rows: 2fr 80px;
     height: fit-content;
+    width: 100%;
     padding: 2em 1em;
 }
 
@@ -595,7 +608,7 @@
 .main.main-details>.btn-container::after {
     content: '';
     position: absolute;
-    background-color: inherit;
+    background-color: rgb(243, 239, 238);
     width: 100dvw;
     height: 80px;
     z-index: -1;
@@ -897,6 +910,11 @@
 
 }
 
+.main .task-details {
+    width: min(100%, 650px);
+    margin: 0 auto;
+}
+
 .main .task-details.hidden,
 .main.main-details:has(>.task-details.hidden)>.btn-container {
     opacity: 0;
@@ -911,6 +929,7 @@
     gap: .55em;
     margin-bottom: 1.25em;
     width: fit-content;
+    padding: .255em;
 }
 
 .main .task-details>a i {
@@ -1177,7 +1196,6 @@
     border-radius: .25em;
     padding: .45em 1em;
     width: 80%;
-    transition: background-color 200ms linear;
 }
 
 .main .task-details>.subtask-form .subtask-input:focus {
@@ -1200,7 +1218,7 @@
     height: 0;
     overflow: hidden;
     background-color: transparent;
-    transition: bottom 350ms ease-in ;
+    transition: bottom 350ms ease-in;
 }
 
 .main>.dropdown-task.open {
@@ -1210,7 +1228,7 @@
     width: var(--_dp-width);
     height: fit-content;
     padding: 1em .65em;
-    z-index: 10;    
+    z-index: 10;
     border-radius: 1.5em 1.5em 0 0;
 }
 
@@ -1269,7 +1287,8 @@
     overflow: hidden;
     padding-block-start: .35em;
 }
-.main:has(.dropdown-task.open) > .form-container {
+
+.main:has(.dropdown-task.open)>.form-container {
     visibility: hidden;
 }
 
@@ -1352,7 +1371,7 @@
 
 .main .task-form textarea,
 .main .task-form input:not([type='radio']) {
-    padding-inline: 1.115em;
+    padding: .685em 1.115em;
 }
 
 .main .task-form label:not(div> label) {
@@ -1446,7 +1465,6 @@
 }
 
 .main .task-form .dueDate-container>div input {
-    padding-block: .685em;
     font-size: .923rem;
     background-color: #F9F5F4;
     box-shadow: 0 0 10px #d4d4d4;
@@ -1533,7 +1551,7 @@
     --wdh-delay: var(--trs-delay);
     --mah-delay: 0ms;
     max-height: 55px;
-    width: 65%;
+    width: min(65%, 250px);
 }
 
 .main .task-form.collapse .input-container {
@@ -1552,4 +1570,79 @@
 .main .task-form.collapse>textarea {
     opacity: 0;
     visibility: hidden;
+}
+
+@media only screen and (min-width: 500px) {
+
+    .main>.dropdown-task.open,
+    .main .form-container,
+    .main {
+        width: min(90%, 800px);
+        margin: 0 auto;
+    }
+
+    .main {
+        margin: 0 auto;
+    }
+
+    .main .task-container .calendar>button {
+        /* display: flex; */
+        justify-content: center;
+    }
+
+    .main>.dropdown-task.open,
+    .main .form-container {
+        --width: min(90%, 550px);
+        width: 90%;
+        left: 5%;
+        border-radius: 1.6em;
+        bottom: 5%;
+        overflow: hidden;
+        width: var(--width);
+        left: calc((100% - var(--width))/ 2);
+    }
+
+}
+
+@media only screen and (min-width: 750px) {
+
+    .main .task-details>.header-container::after {
+        left: calc(-10% - 1em);
+    }
+}
+
+@media only screen and (min-width: 1024px) {
+    #root {
+        display: grid;
+        grid-template-columns: 1fr 3fr;
+        column-gap: .85em;
+        align-items: center;
+    }
+
+    .menu {
+        --menu-width: 355px;
+        --menu-height: calc(100dvh - 1em);
+        position: static;
+        max-height: var(--menu-height);
+        height: calc(100dvh - 2em);
+        margin-left: .5em;
+        border-radius: 1em;
+        overflow: auto;
+        padding-block: 1em;
+    }
+
+    .menu>* {
+        visibility: visible !important;
+    }
+
+    .menu .menu-btn {
+        display: none;
+    }
+
+    .main {
+        width: min(100%, 700px);
+        padding-inline: 0;
+        overflow: hidden;
+    }
+
 }

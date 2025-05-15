@@ -157,6 +157,9 @@ export default function TaskLayout(): JSX.Element {
 
     useEffect(() => {
         const timer = displaySuccessMsg();
+        if (!toggleMenu){
+            setModalIntent({});
+        }
         return () => {
             clearTimeout(timer);
         }

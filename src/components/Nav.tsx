@@ -22,7 +22,6 @@ function Render({ projects, setModalIntent }: NavProps) {
             ...prevState,
             [idx]: !prevState[idx]
         }));
-        console.log(overlay, idx);
         if (overlay) {
             overlay.style.height = '0%';
         }

@@ -40,7 +40,7 @@ function Dates({ filterChange, dateParam, activeDates }: DateProps): JSX.Element
         const currentDay = moments.weekday();
         const prevDay = currentDay - 1;
 
-        return Array.from(Array(7)).map((_, idx) => {
+        return Array.from(Array(14)).map((_, idx) => {
             const weekDay = moment().weekday(prevDay + idx);
             const fmtDate = weekDay.format('YYYY-MM-DD');
             const date = weekDay.format('DD');
