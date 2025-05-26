@@ -5,7 +5,7 @@ import TasksCard from "../components/TasksCard.tsx";
 import { getDateTask } from "../utils.ts";
 
 interface ContextParams{
-    setActiveDates: (value: React.SetStateAction<ActiveDates | null | undefined>)=> void
+    setActiveDatesHelper: (dates: ActiveDates | null | undefined) => void
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -29,15 +29,13 @@ export async function taskLoader({ params, request }: LoaderFunctionArgs) {
 // 
 export default function Task() {
     const { project, activeDates } = useLoaderData<typeof taskLoader>();
-    const { setActiveDates }: ContextParams = useOutletContext();
+    const { setActiveDatesHelper }: ContextParams = useOutletContext();
 
     const loadedTask = use(project);
     const { id, projectName, tasks } = loadedTask ?? {};
     useEffect(() => {
-        if(activeDates){
-            setActiveDates(activeDates)
-        }
-    }, [activeDates, setActiveDates]);
+        setActiveDatesHelper(activeDates);
+    }, [activeDates, setActiveDatesHelper]);
 
     return (
         <Suspense fallback={<h1> Loading... </h1>}>

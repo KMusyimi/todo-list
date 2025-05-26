@@ -10,20 +10,18 @@ interface ContextParams {
         projectName: string;
         updatedAt?: Date | string;
         createdAt: Date;
-    }[]>;
-    setActiveDates: (value: React.SetStateAction<ActiveDates | null | undefined>)=> void;
-    activeDates :ActiveDates | null | undefined
+    }[]>;    
+    setActiveDatesHelper: (dates: ActiveDates | null | undefined) => void;
+    activeDates :ActiveDates | null | undefined;
 }
 
 export default function AllTasks() {
-    const { projects, activeDates, setActiveDates }: ContextParams = useOutletContext();
+    const { projects, activeDates, setActiveDatesHelper }: ContextParams = useOutletContext();
     const idStr = useId();
 
     useEffect(()=> {
-        if (activeDates){
-            setActiveDates(activeDates);
-        }
-    }, [activeDates, setActiveDates]);
+       setActiveDatesHelper(activeDates)
+    }, [activeDates, setActiveDatesHelper]);
 
     function renderAllTasks(projects: {
         id: string;

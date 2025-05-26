@@ -154,7 +154,6 @@ export default function TaskLayout(): JSX.Element {
         }
     }, [setSearchParams, successMsg]);
 
-
     useEffect(() => {
         const timer = displaySuccessMsg();
         if (!toggleMenu){
@@ -165,6 +164,14 @@ export default function TaskLayout(): JSX.Element {
         }
     }, [displaySuccessMsg, toggleMenu]);
 
+    const setActiveDatesHelper = useCallback((dates: ActiveDates | null | undefined)=> {
+        if (dates) {
+            setActiveDates(dates);
+            return;
+        } 
+        setActiveDates({});
+        
+    }, [])
 
     const closeDropDownMenu = (dropdown: HTMLDivElement) => {
         Object.keys(dropdown.dataset).forEach((item) => {
@@ -229,7 +236,7 @@ export default function TaskLayout(): JSX.Element {
                 <Calendar activeDates={activeDate} />
                 {successMsg && <SuccessMsg successMsg={successMsg} />}
                 <section className={'task-section'}>
-                    <Outlet context={{ projects: filteredProjects, setActiveDates, activeDates }} />
+                    <Outlet context={{ projects: filteredProjects, setActiveDatesHelper, activeDates }} />
                 </section>
             </div>
 
