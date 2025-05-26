@@ -53,8 +53,8 @@
 .complete-label {
     position: relative;
     display: block;
-    height: 24px;
-    width: 24px;
+    height: 22px;
+    width: 22px;
 }
 
 .complete-label:disabled {
@@ -65,8 +65,8 @@
     --_square-url: url(assets/square.svg);
     content: '';
     display: inline-block;
-    width: 24px;
-    height: 24px;
+    width: inherit;
+    height: inherit;
     cursor: pointer;
     background-image: var(--_square-url);
     background-repeat: no-repeat;
@@ -809,23 +809,12 @@
     background-color: #EFF0F1;
     display: grid;
     grid-template-columns: 25px minmax(145px, 3fr) 25px;
-    grid-template-rows: repeat(2, minmax(25px, 1fr));
+    grid-template-rows: 1fr;
     align-items: center;
     column-gap: 1em;
     row-gap: .255em;
     border-radius: 1em;
-    padding: .355em 1em;
-}
-
-
-.main .task-container>.task-section>.tasks .task-card .task-wrapper.completed {
-    grid-template-rows: 1fr;
-    padding-block: 1em;
-}
-
-.main .task-container>.task-section>.tasks .task-card .task-wrapper>form,
-.main .task-container>.task-section>.tasks .task-card .task-wrapper>button {
-    grid-row: span 2;
+    padding: .835em 1em;
 }
 
 .main .task-container>.task-section>.tasks .task-card .task-wrapper .priority-medium::before {
@@ -878,21 +867,6 @@
     border-radius: .55em;
     transition: all 200ms linear;
 }
-
-.main .due-date {
-    display: inline-flex;
-    font-size: 0.85rem;
-    font-weight: bold;
-    align-items: center;
-    grid-column: 2 / 3;
-    gap: .4em;
-}
-
-.main .due-date svg {
-    width: 19.47px;
-    height: 17.96px;
-}
-
 
 .main .task-details {
     background-color: inherit;
@@ -1025,7 +999,12 @@
 }
 
 .main .task-details>.header-container .due-date {
+    display: inline-flex;
     font-size: .865rem;
+    font-weight: bold;
+    align-items: center;
+    grid-column: 2 / 3;
+    gap: .4em;
 }
 
 .main .task-details>.header-container .due-date svg {

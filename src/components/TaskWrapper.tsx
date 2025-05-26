@@ -101,7 +101,7 @@ export default function TaskWrapper({ id, task }: TaskProps) {
                 <button id={`btn-${id}`} type="button" onClick={handleChange} data-task-id={task.id} data-project-id={id} data-status={task.status}>
                     <HiDotsVertical />
                 </button>
-                {task.status !== 'completed' && <DueDate status={task.status} date={task.dueDate + 'T' + task.dueTime} />}
+                {/* {task.status !== 'completed' && <DueDate status={task.status} date={task.dueDate + 'T' + task.dueTime} />} */}
             </div>}
         </>
 
