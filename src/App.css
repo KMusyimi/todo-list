@@ -814,7 +814,7 @@
     column-gap: 1em;
     row-gap: .255em;
     border-radius: 1em;
-    padding: .835em 1em;
+    padding:1em;
 }
 
 .main .task-container>.task-section>.tasks .task-card .task-wrapper .priority-medium::before {
